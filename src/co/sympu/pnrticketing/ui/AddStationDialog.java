@@ -38,6 +38,13 @@ public class AddStationDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	/**
+	 * The Management frame that owns this dialog form.
+	 * Is automatically set on who instantiates an AddStationDialog,
+	 * which in this case is also StationManagementFrame, when it creates an object.
+	 */
+	protected StationManagementFrame owner;
+	
+	/**
 	 * Station Name text field.
 	 */
 	private JTextField jtxtfldStationName;
@@ -199,7 +206,11 @@ public class AddStationDialog extends JDialog {
 							exception.getMessage(),
 							"Error",
 							JOptionPane.ERROR_MESSAGE);
+					return;
 				}
+				
+				// Refresh the main table
+				owner.stationTableModel.refresh();
 				
 			}
 		});

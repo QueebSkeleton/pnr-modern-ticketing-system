@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 
 /**
  * Station Management Panel.
@@ -43,6 +42,11 @@ public class StationManagementFrame extends JFrame {
 	 * Table of Stations
 	 */
 	private JTable jtblStation;
+	
+	/**
+	 * Table Model of the station table.
+	 */
+	protected StationTableModel stationTableModel;
 
 	/**
 	 * Create the frame. All dialog initialization code here.
@@ -51,6 +55,7 @@ public class StationManagementFrame extends JFrame {
 		
 		/* addStationDialog - The Dialog Box for adding stations. */
 		addStationDialog = new AddStationDialog();
+		addStationDialog.owner = this;
 		
 		/* This frame's properties */
 		setMinimumSize(new Dimension(500, 400));
@@ -113,19 +118,14 @@ public class StationManagementFrame extends JFrame {
 		jtblStation.setIntercellSpacing(new Dimension(4, 4));
 		jtblStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		
-		// TODO: Change to actual database data.
-		// Dummy Model for the JTable.
-		jtblStation.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"1", "Test", "Test"},
-				{"2", "Test", "Test"},
-			},
-			new String[] {
-				"#", "Station Name", "Description"
-			}
-		));
+		// stationTableModel - TableModel for this Table.
+		stationTableModel = new StationTableModel();
+		jtblStation.setModel(stationTableModel);
 		jscrlpnStationTable.setViewportView(jtblStation);
 		/* END OF jtblStation */
+		
+		// Refresh the station table model initially
+		stationTableModel.refresh();
 		
 	}
 
