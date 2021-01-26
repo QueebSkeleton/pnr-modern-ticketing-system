@@ -6,15 +6,23 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import co.sympu.pnrticketing.util.DatabaseUtility;
 
 /**
  * Add form dialog for creating stations.
@@ -43,6 +51,9 @@ public class AddStationDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public AddStationDialog() {
+		
+		// Get a reference to this dialog, so we can refer to it later inside ActionListeners
+		AddStationDialog thisDialog = this;
 		
 		/* This dialog's properties */
 		setTitle("Add Station Form");
@@ -128,6 +139,70 @@ public class AddStationDialog extends JDialog {
 		jbtnOk.setActionCommand("OK");
 		jpnlButtonActions.add(jbtnOk);
 		getRootPane().setDefaultButton(jbtnOk);
+		
+		// jbtnOk's Button Click Listener.
+		// When this button is clicked, grab the inputs from the input fields
+		// then save the record.
+		jbtnOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Extract data from the form
+				String name = jtxtfldStationName.getText(),
+					   description = jtxtareaDescription.getText();
+				
+				// Clear the form
+				jtxtfldStationName.setText("");
+				jtxtareaDescription.setText("");
+				
+				// Save the inputted station data
+				try(
+					// Grab a connection to the database	
+					Connection connection = DatabaseUtility.dataSource.getConnection();
+					// Prepare an insert sql statement
+					PreparedStatement insertStationStatement =
+							connection.prepareStatement(
+									"INSERT INTO station(name, description) VALUES (?, ?)")) {
+					// Bind the inputs to the insert statement
+					insertStationStatement.setString(1, name);
+					insertStationStatement.setString(2, description);
+					
+					// Execute the insert statement
+					// If execute() returns 1, then 1 row was inserted.
+					if(insertStationStatement.executeUpdate() == 1) {
+						// Show friendly message indicating success
+						JOptionPane.showMessageDialog(
+							thisDialog,
+							"Succesfully saved station to database.\n\n" +
+							"To update its pricing, click on the row associated with it,\n" +
+							"then click on the panel's 'Update Pricing' button.",
+							"Success",
+							JOptionPane.INFORMATION_MESSAGE);
+
+						// Hide this dialog form
+						thisDialog.setVisible(false);
+					}
+					
+					// If not successful
+					else
+						// Show friendly message indicating user input failure
+						JOptionPane.showMessageDialog(
+								thisDialog,
+								"Cannot create a station with the given inputs.\n\n" +
+								"Please check your data.",
+								"Recheck!",
+								JOptionPane.WARNING_MESSAGE);
+				} catch(SQLException exception) {
+					// If an SQLException occurs, output a dialog box telling the user
+					// that the operation was not successful.
+					JOptionPane.showMessageDialog(
+							thisDialog,
+							"An error occured while trying to save station to database:\n" +
+							exception.getMessage(),
+							"Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}
+		});
 		/* END OF jbtnOk */
 		
 		/* jbtnCancel - Hide form button */
