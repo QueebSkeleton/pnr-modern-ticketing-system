@@ -85,25 +85,40 @@ public class StationTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		try {
+			// Move the current referred row in the RowSet to the specified rowIndex
+			// ( +1 since JTable is 0-based rows, RowSet is 1-based row)
 			cache.absolute(rowIndex + 1);
 			
+			// Depending on the specified columnIndex, return the proper field.
 			switch(columnIndex) {
 			
+			// First Column: Just return the rowIndex for now
 			case 0:
 				return rowIndex + 1;
 				
+			// Second Column: Return the name in the record
 			case 1:
 				return cache.getString(2);
 				
+			// Third Column: Return the description in the record
 			case 2:
 				return cache.getString(3);
 				
+			// Never gets called when getColumnCount() is properly coded.
 			default:
 				throw new IllegalArgumentException("Invalid column index.");
 			
 			}
 		} catch(SQLException exception) {
-			throw new IllegalArgumentException("Invalid column index.");
+			// If an SQLException occurs, output a dialog box telling the user
+			// that the mapping was not successful.
+			JOptionPane.showMessageDialog(
+					owner,
+					"An error occured while trying to retrieve cached data:\n" +
+					exception.getMessage(),
+					"Error",
+					JOptionPane.ERROR_MESSAGE);
+			throw new IllegalStateException("Invalid data.");
 		}
 	}
 	

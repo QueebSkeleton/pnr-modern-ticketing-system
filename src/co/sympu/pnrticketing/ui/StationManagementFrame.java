@@ -34,6 +34,11 @@ public class StationManagementFrame extends JFrame {
 	private AddStationDialog addStationDialog;
 	
 	/**
+	 * Station Pricing Dialog of this Frame. Is opened and manipulated depending on the station selected.
+	 */
+	private StationPricingDialog stationPricingDialog;
+	
+	/**
 	 * Main content panel.
 	 */
 	private JPanel jpnlContentPane;
@@ -57,8 +62,11 @@ public class StationManagementFrame extends JFrame {
 		addStationDialog = new AddStationDialog();
 		addStationDialog.owner = this;
 		
+		/* stationPricingDialog - The Dialog Box for updating station prices. */
+		stationPricingDialog = new StationPricingDialog();
+		
 		/* This frame's properties */
-		setMinimumSize(new Dimension(500, 400));
+		setMinimumSize(new Dimension(600, 400));
 		setTitle("Station Management Panel");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -96,6 +104,32 @@ public class StationManagementFrame extends JFrame {
 		JButton jbtnAddStationDialog = new JButton("Add a Station");
 		jbtnAddStationDialog.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		jpnlButtonActions.add(jbtnAddStationDialog);
+		
+		/* jbtnPricing - Button for updating a station's pricing */
+		JButton jbtnPricing = new JButton("Pricing");
+		jbtnPricing.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		
+		// Pricing Button Click Event
+		// When this button is clicked, show the Pricing Dialog.
+		jbtnPricing.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				stationPricingDialog.setVisible(true);
+			}
+		});
+		jpnlButtonActions.add(jbtnPricing);
+		/* END OF jbtnPricing */
+
+		/* jbtnUpdateStation - Button for updating a station */
+		JButton jbtnUpdateStation = new JButton("Update");
+		jbtnUpdateStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jpnlButtonActions.add(jbtnUpdateStation);
+		/* END OF jbtnUpdateStation */
+
+		/* jbtnDelete - Button for removing a station */
+		JButton jbtnDelete = new JButton("Delete");
+		jbtnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jpnlButtonActions.add(jbtnDelete);
+		/* END OF jbtnDelete */
 		
 		// CLICK EVENT HERE.
 		// When this button is clicked, show the addStationDialog.
