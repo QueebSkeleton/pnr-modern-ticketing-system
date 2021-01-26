@@ -10,6 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -57,6 +58,9 @@ public class StationManagementFrame extends JFrame {
 	 * Create the frame. All dialog initialization code here.
 	 */
 	public StationManagementFrame() {
+		
+		// Get a reference to this frame, so we can refer to it later inside ActionListeners
+		StationManagementFrame thisFrame = this;
 		
 		/* addStationDialog - The Dialog Box for adding stations. */
 		addStationDialog = new AddStationDialog();
@@ -113,6 +117,29 @@ public class StationManagementFrame extends JFrame {
 		// When this button is clicked, show the Pricing Dialog.
 		jbtnPricing.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// If there are no selected rows in the table
+				if(jtblStation.getSelectionModel().getSelectedItemsCount() == 0) {
+					// Output a friendly message telling the user to select a row first
+					JOptionPane.showMessageDialog(
+							thisFrame,
+							"Please select a station first before clicking the update pricing button.",
+							"Notice",
+							JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				// Else, grab the selected row index
+				int selectedRowIndex = jtblStation.getSelectionModel().getSelectedIndices()[0];
+				
+				// Get the id of the station in the table model depending on the given row
+				int stationId = stationTableModel.getStationId(selectedRowIndex);
+				// Get the name of the station in the table model
+				String stationName = (String) stationTableModel.getValueAt(selectedRowIndex, 1);
+				
+				// Update the dialog internal form accordingly
+				stationPricingDialog.setStation(stationId, stationName);
+				
+				// Show the dialog
 				stationPricingDialog.setVisible(true);
 			}
 		});

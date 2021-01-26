@@ -155,5 +155,16 @@ public class StationTableModel extends AbstractTableModel {
 		
 		fireTableDataChanged();
 	}
+	
+	public int getStationId(int rowIndex) {
+		try {
+			cache.absolute(rowIndex + 1);
+			return cache.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new IllegalStateException("Cache Row Set cannot be accessed.");
+		}
+		
+	}
 
 }

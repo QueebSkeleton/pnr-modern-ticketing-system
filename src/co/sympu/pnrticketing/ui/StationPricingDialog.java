@@ -27,6 +27,11 @@ public class StationPricingDialog extends JDialog {
 	 * Ignore for now, this is to avoid warnings.
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Origin Station Label header
+	 */
+	private JLabel jlblOriginStation;
 
 	/**
 	 * Create the dialog.
@@ -58,7 +63,7 @@ public class StationPricingDialog extends JDialog {
 		/* END OF SPACING */
 		
 		/* jlblOriginStation - label for origin station field input */
-		JLabel jlblOriginStation = new JLabel("Origin Station:");
+		jlblOriginStation = new JLabel("Origin Station:");
 		jlblOriginStation.setAlignmentY(0.0f);
 		jlblOriginStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		jpnlContentPane.add(jlblOriginStation);
@@ -115,6 +120,12 @@ public class StationPricingDialog extends JDialog {
 		});
 		jpnlButtonActions.add(jbtnCancel);
 		/* END OF jbtnCancel */
+	}
+	
+	public void setStation(int stationId, String stationName) {
+		
+		jlblOriginStation.setText("Origin Station: " + stationName);
+		
 	}
 
 }
