@@ -133,11 +133,9 @@ public class StationManagementFrame extends JFrame {
 				
 				// Get the id of the station in the table model depending on the given row
 				int stationId = stationTableModel.getStationId(selectedRowIndex);
-				// Get the name of the station in the table model
-				String stationName = (String) stationTableModel.getValueAt(selectedRowIndex, 1);
 				
-				// Update the dialog internal form accordingly
-				stationPricingDialog.setStation(stationId, stationName);
+				// Update the pricing dialog internal form accordingly
+				stationPricingDialog.setup(stationId);
 				
 				// Show the dialog
 				stationPricingDialog.setVisible(true);
