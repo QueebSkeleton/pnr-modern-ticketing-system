@@ -40,6 +40,11 @@ public class StationManagementFrame extends JFrame {
 	private AddStationDialog addStationDialog;
 	
 	/**
+	 * Update Form Dialog of this Frame. Is opened and manipulated depending on the station selected.
+	 */
+	private UpdateStationDialog updateStationDialog;
+	
+	/**
 	 * Station Pricing Dialog of this Frame. Is opened and manipulated depending on the station selected.
 	 */
 	private StationPricingDialog stationPricingDialog;
@@ -70,6 +75,10 @@ public class StationManagementFrame extends JFrame {
 		/* addStationDialog - The Dialog Box for adding stations. */
 		addStationDialog = new AddStationDialog();
 		addStationDialog.owner = this;
+		
+		/* updateStationDialog - The Dialog Box for updating stations */
+		updateStationDialog = new UpdateStationDialog();
+		updateStationDialog.owner = this;
 		
 		/* stationPricingDialog - The Dialog Box for updating station prices. */
 		stationPricingDialog = new StationPricingDialog();
@@ -152,6 +161,35 @@ public class StationManagementFrame extends JFrame {
 		/* jbtnUpdateStation - Button for updating a station */
 		JButton jbtnUpdateStation = new JButton("Update");
 		jbtnUpdateStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		
+		// Update Button Click Event
+		// When this button is clicked, setup the update dialog and show the selected record
+		jbtnUpdateStation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// If there are no selected rows in the table
+				if(jtblStation.getSelectionModel().getSelectedItemsCount() == 0) {
+					// Output a friendly message telling the user to select a row first
+					JOptionPane.showMessageDialog(
+							thisFrame,
+							"Please select a station first before clicking the update button.",
+							"Notice",
+							JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				// Else, grab the selected row index
+				int selectedRowIndex = jtblStation.getSelectionModel().getSelectedIndices()[0];
+				
+				// Get the id of the station in the table model depending on the given row
+				int stationId = stationTableModel.getStationId(selectedRowIndex);
+				
+				// Setup update station dialog to accomodate this record
+				updateStationDialog.setup(stationId);
+				
+				// Show update station dialog
+				updateStationDialog.setVisible(true);
+			}
+		});
 		jpnlButtonActions.add(jbtnUpdateStation);
 		/* END OF jbtnUpdateStation */
 
