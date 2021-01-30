@@ -35,14 +35,9 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Add Form Dialog of this Frame. Is opened when add button is clicked.
+	 * Main Form Dialog for Adding and Updating Stations.
 	 */
-	private AddDialog addStationDialog;
-	
-	/**
-	 * Update Form Dialog of this Frame. Is opened and manipulated depending on the station selected.
-	 */
-	private UpdateDialog updateStationDialog;
+	private FormDialog formDialog;
 	
 	/**
 	 * Station Pricing Dialog of this Frame. Is opened and manipulated depending on the station selected.
@@ -72,13 +67,9 @@ public class MainFrame extends JFrame {
 		// Get a reference to this frame, so we can refer to it later inside ActionListeners
 		MainFrame thisFrame = this;
 		
-		/* addStationDialog - The Dialog Box for adding stations. */
-		addStationDialog = new AddDialog();
-		addStationDialog.owner = this;
-		
-		/* updateStationDialog - The Dialog Box for updating stations */
-		updateStationDialog = new UpdateDialog();
-		updateStationDialog.owner = this;
+		/* formDialog - dialog box for adding or updating stations */
+		formDialog = new FormDialog();
+		formDialog.owner = this;
 		
 		/* stationPricingDialog - The Dialog Box for updating station prices. */
 		stationPricingDialog = new PricingDialog();
@@ -119,9 +110,28 @@ public class MainFrame extends JFrame {
 		/* END OF jpnlButtonActions */
 		
 		/* jbtnAddStationDialog - Button for showing an add form dialog box */
-		JButton jbtnAddStationDialog = new JButton("Add a Station");
-		jbtnAddStationDialog.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		jpnlButtonActions.add(jbtnAddStationDialog);
+		JButton jbtnAddStation = new JButton("Add a Station");
+		jbtnAddStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		
+		// Add Station Button Click Event
+		// When this button is clicked, initialize form dialog then show
+		jbtnAddStation.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				// Initialize formDialog for a new station
+				formDialog.initialize();
+				
+				// Update formDialog's title appropriately
+				formDialog.setTitle("Add Station");
+				
+				// Show formDialog
+				formDialog.setVisible(true);
+				
+			}
+		});
+		jpnlButtonActions.add(jbtnAddStation);
+		/* END OF jbtnAddStationDialog */
 		
 		/* jbtnPricing - Button for updating a station's pricing */
 		JButton jbtnPricing = new JButton("Pricing");
@@ -183,11 +193,14 @@ public class MainFrame extends JFrame {
 				// Get the id of the station in the table model depending on the given row
 				int stationId = stationTableModel.getStationId(selectedRowIndex);
 				
-				// Setup update station dialog to accomodate this record
-				updateStationDialog.setup(stationId);
+				// Initialize form dialog with the retrieved station id
+				formDialog.initialize(stationId);
 				
-				// Show update station dialog
-				updateStationDialog.setVisible(true);
+				// Update formDialog's title appropriately
+				formDialog.setTitle("Update Station");
+				
+				// Show form dialog
+				formDialog.setVisible(true);
 			}
 		});
 		jpnlButtonActions.add(jbtnUpdateStation);
@@ -255,16 +268,6 @@ public class MainFrame extends JFrame {
 		});
 		jpnlButtonActions.add(jbtnDelete);
 		/* END OF jbtnDelete */
-		
-		// CLICK EVENT HERE.
-		// When this button is clicked, show the addStationDialog.
-		jbtnAddStationDialog.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Show addStationDialog
-				addStationDialog.setVisible(true);
-			}
-		});
-		/* END OF jbtnAddStationDialog */
 		
 		/* jscrlpnStationTable - Scrollable Container for the JTable */
 		JScrollPane jscrlpnStationTable = new JScrollPane();
