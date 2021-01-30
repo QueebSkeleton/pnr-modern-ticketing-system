@@ -73,6 +73,9 @@ public class StationTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public int getRowCount() {
+		if(cache == null)
+			return 0;
+		
 		return cache.size();
 	}
 
@@ -156,6 +159,13 @@ public class StationTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 	
+	/**
+	 * Gets the identifier of the station record in the database,
+	 * depending on its row index.
+	 * 
+	 * @param rowIndex the index of the record
+	 * @return the database id
+	 */
 	public int getStationId(int rowIndex) {
 		try {
 			cache.absolute(rowIndex + 1);
