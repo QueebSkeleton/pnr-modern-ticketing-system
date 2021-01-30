@@ -2,9 +2,11 @@ package co.sympu.pnrticketing.ui.stationmgmt;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 import co.sympu.pnrticketing.domain.Station;
+import co.sympu.pnrticketing.exception.RepositoryAccessException;
 
 /**
  * The Main Table Model of the Station Management Frame's JTable.<br><br>
@@ -115,10 +117,20 @@ public class StationTableModel extends AbstractTableModel {
 	 * and also initially called by StationManagementFrame to initialize the Table at first start.
 	 */
 	public void refresh() {
-		// Refresh the cache with new data from the station repository
-		stationListCache = owner.stationRepository.getAll();
-		// Prompt redraw of listening JTable
-		fireTableDataChanged();
+		try {
+			// Refresh the cache with new data from the station repository
+			stationListCache = owner.stationRepository.getAll();
+			// Prompt redraw of listening JTable
+			fireTableDataChanged();
+		} catch(RepositoryAccessException e) {
+			// Show error message
+			if(e.type == RepositoryAccessException.Type.GENERAL)
+				JOptionPane.showMessageDialog(
+						owner,
+						"An error occured while retrieving station information from the database.\n\nMessage: " + e.getMessage(),
+						"Error",
+						JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	/**

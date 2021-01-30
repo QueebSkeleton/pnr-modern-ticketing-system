@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
+import co.sympu.pnrticketing.exception.RepositoryAccessException;
 
 /**
  * Main Form Dialog of the Station Management Panel.
@@ -148,25 +149,42 @@ public class FormDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				// If the current bound station to this dialog is null,
-				// perform an insert
-				if(station == null) {
-					// Create a new station object out of the inputted fields
-					station = new Station(jtxtfldStationName.getText());
-					station.setDescription(jtxtareaDescription.getText());
+				try {
+					// If the current bound station to this dialog is null,
+					// perform an insert
+					if(station == null) {
+						// Create a new station object out of the inputted fields
+						station = new Station(jtxtfldStationName.getText());
+						station.setDescription(jtxtareaDescription.getText());
+						
+						// Save this station object
+						owner.stationRepository.save(station);
+					}
 					
-					// Save this station object
-					owner.stationRepository.save(station);
-				}
-				
-				// Else, perform an update
-				else {
-					// Update the fields of the bound station object accordingly
-					station.setName(jtxtfldStationName.getText());
-					station.setDescription(jtxtareaDescription.getText());
-					
-					// Update this station object
-					owner.stationRepository.update(station);
+					// Else, perform an update
+					else {
+						// Update the fields of the bound station object accordingly
+						station.setName(jtxtfldStationName.getText());
+						station.setDescription(jtxtareaDescription.getText());
+						
+						// Update this station object
+						owner.stationRepository.update(station);
+					}
+				} catch(RepositoryAccessException exception) {
+					// Show error message
+					if(exception.type == RepositoryAccessException.Type.GENERAL)
+						JOptionPane.showMessageDialog(
+								owner,
+								"An error occured while saving station information to the database.\n\nMessage: " + exception.getMessage(),
+								"Error",
+								JOptionPane.ERROR_MESSAGE);
+					else if(exception.type == RepositoryAccessException.Type.INPUT)
+						JOptionPane.showMessageDialog(
+								owner,
+								"Error occured while saving to database. Please check your inputs.\n\nMessage: " + exception.getMessage(),
+								"Error",
+								JOptionPane.ERROR_MESSAGE);
+					return;
 				}
 
 				// If execution reaches here, the station was successfully saved or updated.

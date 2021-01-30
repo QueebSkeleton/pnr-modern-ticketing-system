@@ -11,6 +11,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import co.sympu.pnrticketing.domain.Station;
+import co.sympu.pnrticketing.exception.RepositoryAccessException;
 
 /**
  * Main repository for saving and managing persisted Stations.
@@ -59,7 +60,7 @@ public class StationRepository {
 						stationResultSet.getString(2),
 						stationResultSet.getString(3)));
 		} catch(SQLException e) {
-			e.printStackTrace();
+			throw new RepositoryAccessException(e.getMessage(), RepositoryAccessException.Type.GENERAL);
 		}
 		
 		// Return the final constructed station list
@@ -124,10 +125,12 @@ public class StationRepository {
 									stationResultSet.getInt(5),
 									stationResultSet.getDouble(6));
 					}
+				} else {
+					throw new RepositoryAccessException("Invalid id.", RepositoryAccessException.Type.INPUT);
 				}
 			}
 		} catch(SQLException e) {
-			e.printStackTrace();
+			throw new RepositoryAccessException(e.getMessage(), RepositoryAccessException.Type.GENERAL);
 		}
 		
 		// Return the station object
@@ -152,7 +155,7 @@ public class StationRepository {
 			// Execute the insert statement
 			insertStationStatement.execute();
 		} catch(SQLException e) {
-			e.printStackTrace();
+			throw new RepositoryAccessException(e.getMessage(), RepositoryAccessException.Type.GENERAL);
 		}
 	}
 	
@@ -175,7 +178,7 @@ public class StationRepository {
 			// Execute the update statement
 			updateStationStatement.execute();
 		} catch(SQLException e) {
-			e.printStackTrace();
+			throw new RepositoryAccessException(e.getMessage(), RepositoryAccessException.Type.GENERAL);
 		}
 	}
 	
@@ -211,7 +214,7 @@ public class StationRepository {
 			// Execute all pricings as a batch insert
 			insertPricingStatement.executeBatch();
 		} catch(SQLException e) {
-			e.printStackTrace();
+			throw new RepositoryAccessException(e.getMessage(), RepositoryAccessException.Type.GENERAL);
 		}
 	}
 	
@@ -233,7 +236,7 @@ public class StationRepository {
 			// Execute the delete statement
 			deleteStationStatement.execute();
 		} catch(SQLException e) {
-			e.printStackTrace();
+			throw new RepositoryAccessException(e.getMessage(), RepositoryAccessException.Type.GENERAL);
 		}
 	}
 

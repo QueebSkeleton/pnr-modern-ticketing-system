@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
+import co.sympu.pnrticketing.exception.RepositoryAccessException;
 
 /**
  * Station pricing dialog for updating ticket prices.
@@ -191,8 +192,21 @@ public class PricingDialog extends JDialog {
 	 */
 	public void initialize(Station station) {
 		
-		// Bind the stationId to this object
-		this.station = owner.stationRepository.getById(station.getId(), true);
+		try {
+			// Bind the stationId to this object
+			this.station = owner.stationRepository.getById(station.getId(), true);
+		} catch(RepositoryAccessException e) {
+			// Show error message
+			if(e.type == RepositoryAccessException.Type.GENERAL)
+				JOptionPane.showMessageDialog(
+						owner,
+						"An error occured while retrieving station information from the database.\n\nMessage: " + e.getMessage(),
+						"Error",
+						JOptionPane.ERROR_MESSAGE);
+			// Hide dialog
+			setVisible(false);
+			return;
+		}
 		
 		// Set the origin label's text to the station name
 		jlblOriginStation.setText("Origin Station: " + station.getName());
@@ -202,8 +216,22 @@ public class PricingDialog extends JDialog {
 
 		// Initialize the JTextFields of ticket pricings
 		stationPricingTextFields = new HashMap<>();
-		// Retrieve all other stations from the database
-		List<Station> allStations = owner.stationRepository.getAll();
+		// Retrieve all stations from the database
+		List<Station> allStations = null;
+		try {
+			allStations = owner.stationRepository.getAll();
+		} catch(RepositoryAccessException e) {
+			// Show error message
+			if(e.type == RepositoryAccessException.Type.GENERAL)
+				JOptionPane.showMessageDialog(
+						owner,
+						"An error occured while retrieving stations information from the database.\n\nMessage: " + e.getMessage(),
+						"Error",
+						JOptionPane.ERROR_MESSAGE);
+			// Hide dialog
+			setVisible(false);
+			return;
+		}
 		
 		// For every station retrieved, create a JLabel and a JTextField for it
 		int currentRow = 0; // For the GridBagConstraints. See GridBagLayout.
