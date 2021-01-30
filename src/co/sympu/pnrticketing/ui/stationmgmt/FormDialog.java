@@ -8,10 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -24,7 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import co.sympu.pnrticketing.util.DatabaseUtility;
+import co.sympu.pnrticketing.domain.Station;
 
 /**
  * Main Form Dialog of the Station Management Panel.
@@ -53,10 +49,9 @@ public class FormDialog extends JDialog {
 	private JTextArea jtxtareaDescription;
 	
 	/**
-	 * Current stationId bound to this dialog.
-	 * Determines if an insert or an update is to be performed
+	 * Current station bound to this dialog.
 	 */
-	private int stationId;
+	private Station station;
 	
 	public FormDialog() {
 		
@@ -153,42 +148,28 @@ public class FormDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				// Retrieve inputs from the input fields
-				String stationName = jtxtfldStationName.getText(),
-					   stationDescription = jtxtareaDescription.getText();
+				// If the current bound station to this dialog is null,
+				// perform an insert
+				if(station == null) {
+					// Create a new station object out of the inputted fields
+					station = new Station(jtxtfldStationName.getText());
+					station.setDescription(jtxtareaDescription.getText());
+					
+					// Save this station object
+					owner.stationRepository.save(station);
+				}
 				
-				try(
-					// Grab a connection to the database
-					Connection connection = DatabaseUtility.dataSource.getConnection();
-					// Prepare either an insert or update statement
-					PreparedStatement actionStatement = connection.prepareStatement(
-							stationId == 0 ?
-									"INSERT INTO station (name, description) VALUES (?, ?)" :
-									"UPDATE station SET name = ?, description = ? WHERE id = ?")) {
+				// Else, perform an update
+				else {
+					// Update the fields of the bound station object accordingly
+					station.setName(jtxtfldStationName.getText());
+					station.setDescription(jtxtareaDescription.getText());
 					
-					// Bind the inputs to the prepared statement
-					actionStatement.setString(1, stationName);
-					actionStatement.setString(2, stationDescription);
-					
-					// If stationId is any value other than 0,
-					// we can assume we're making an update instead of an insert
-					if(stationId != 0)
-						actionStatement.setInt(3, stationId);
-					
-					// Execute the statement
-					actionStatement.execute();
-				} catch(SQLException exception) {
-					// If an error occured on connection or statement execution level
-					// Output a friendly message.
-					JOptionPane.showMessageDialog(
-							thisDialog,
-							"An error occured while trying to save station. Message:\n\n" + exception.getMessage(),
-							"Error",
-							JOptionPane.ERROR_MESSAGE);
-					return;
+					// Update this station object
+					owner.stationRepository.update(station);
 				}
 
-				// If execution reaches here, the station was successfully saved.
+				// If execution reaches here, the station was successfully saved or updated.
 				// Output a friendly message.
 				JOptionPane.showMessageDialog(
 						thisDialog,
@@ -215,7 +196,9 @@ public class FormDialog extends JDialog {
 		jbtnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// Re-initialize the table
 				initialize();
+				// Hide this dialog
 				setVisible(false);
 			}
 		});
@@ -228,8 +211,6 @@ public class FormDialog extends JDialog {
 	 * Initializes this dialog for inserting a new station.
 	 */
 	public void initialize() {
-		// Set stationId to 0
-		stationId = 0;
 		// Clear the input fields
 		jtxtfldStationName.setText("");
 		jtxtareaDescription.setText("");
@@ -239,68 +220,12 @@ public class FormDialog extends JDialog {
 	 * Initializes this dialog for updating a station, with a specified id.
 	 * @param stationId the id of the station to update
 	 */
-	public void initialize(int stationId) {
-		
-		// Placeholder for the station data in the database
-		String stationName = null,
-			   stationDescription = null;
-		
-		// Retrieve from database
-		try(
-			// Grab a connection to the database
-			Connection connection = DatabaseUtility.dataSource.getConnection();
-			// Create a select station statement holder
-			PreparedStatement retrieveStationStatement = connection.prepareStatement("SELECT name, description FROM station WHERE id = ?")) {
-			
-			// Bind the station id to the retrieve statement
-			retrieveStationStatement.setInt(1, stationId);
-			
-			// Grab the ResultSet from executing the retrieve statement
-			try(ResultSet stationResultSet = retrieveStationStatement.executeQuery()) {
-				// If the ResultSet has contents, retrieve it
-				if(stationResultSet.next()) {
-					stationName = stationResultSet.getString(1);
-					stationDescription = stationResultSet.getString(2);
-				}
-				// If the ResultSet has no contents
-				else {
-					// If there are no results found, the given id was not valid.
-					// Output a friendly message.
-					JOptionPane.showMessageDialog(
-							this,
-							"There was no station associated with the record you selected.",
-							"Warning",
-							JOptionPane.WARNING_MESSAGE);
-					// Hide this dialog
-					setVisible(false);
-				}
-			} catch(SQLException e) {
-				// If an error occured while parsing the ResultSet,
-				// output a dialog box
-				JOptionPane.showMessageDialog(
-						this,
-						"An error occured while parsing the station from the database. Message:\n\n" + e.getMessage(),
-						"Warning",
-						JOptionPane.WARNING_MESSAGE);
-				// Hide this dialog
-				setVisible(false);
-			}
-		} catch(SQLException e) {
-			// If an error occured while connecting to the database or creating the statement,
-			// output a dialog box
-			JOptionPane.showMessageDialog(
-					this,
-					"An error occured while retrieving the station from the database. Message:\n\n" + e.getMessage(),
-					"Warning",
-					JOptionPane.WARNING_MESSAGE);
-			// Hide this dialog
-			setVisible(false);
-		}
-		
-		this.stationId = stationId;
-		jtxtfldStationName.setText(stationName);
-		jtxtareaDescription.setText(stationDescription);
-		
+	public void initialize(Station station) {
+		// Bind the given station to this dialog
+		this.station = station;
+		// Update the input fields with the station fields
+		jtxtfldStationName.setText(station.getName());
+		jtxtareaDescription.setText(station.getDescription());
 	}
 
 }

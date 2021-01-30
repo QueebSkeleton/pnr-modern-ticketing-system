@@ -5,9 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,7 +16,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
-import co.sympu.pnrticketing.util.DatabaseUtility;
+import co.sympu.pnrticketing.domain.Station;
+import co.sympu.pnrticketing.repository.StationRepository;
 
 /**
  * Station Management Panel.
@@ -33,6 +31,11 @@ public class MainFrame extends JFrame {
 	 * Ignore for now, this is to avoid warnings.
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Station Repository for persisting Station Information.
+	 */
+	protected StationRepository stationRepository;
 	
 	/**
 	 * Main Form Dialog for Adding and Updating Stations.
@@ -73,6 +76,7 @@ public class MainFrame extends JFrame {
 		
 		/* stationPricingDialog - The Dialog Box for updating station prices. */
 		stationPricingDialog = new PricingDialog();
+		stationPricingDialog.owner = this;
 		
 		/* This frame's properties */
 		setMinimumSize(new Dimension(600, 400));
@@ -154,12 +158,12 @@ public class MainFrame extends JFrame {
 				
 				// Else, grab the selected row index
 				int selectedRowIndex = jtblStation.getSelectionModel().getSelectedIndices()[0];
-				
+
 				// Get the id of the station in the table model depending on the given row
-				int stationId = stationTableModel.getStationId(selectedRowIndex);
+				Station station = stationTableModel.getStationByRow(selectedRowIndex);
 				
 				// Update the pricing dialog internal form accordingly
-				stationPricingDialog.setup(stationId);
+				stationPricingDialog.initialize(station);
 				
 				// Show the dialog
 				stationPricingDialog.setVisible(true);
@@ -191,10 +195,10 @@ public class MainFrame extends JFrame {
 				int selectedRowIndex = jtblStation.getSelectionModel().getSelectedIndices()[0];
 				
 				// Get the id of the station in the table model depending on the given row
-				int stationId = stationTableModel.getStationId(selectedRowIndex);
+				Station station = stationTableModel.getStationByRow(selectedRowIndex);
 				
-				// Initialize form dialog with the retrieved station id
-				formDialog.initialize(stationId);
+				// Initialize form dialog with the retrieved station
+				formDialog.initialize(station);
 				
 				// Update formDialog's title appropriately
 				formDialog.setTitle("Update Station");
@@ -227,32 +231,12 @@ public class MainFrame extends JFrame {
 				
 				// Else, grab the selected row index
 				int selectedRowIndex = jtblStation.getSelectionModel().getSelectedIndices()[0];
-				
+
 				// Get the id of the station in the table model depending on the given row
-				int stationId = stationTableModel.getStationId(selectedRowIndex);
+				Station station = stationTableModel.getStationByRow(selectedRowIndex);
 				
-				// TODO: Start database transaction here
-				try(
-					// Grab a connection to the database
-					Connection connection = DatabaseUtility.dataSource.getConnection();
-					// Create a delete station statement holder
-					PreparedStatement deleteStationStatement = connection.prepareStatement("DELETE FROM station WHERE id = ?")) {
-					
-					// Bind the station id to the delete statement
-					deleteStationStatement.setInt(1, stationId);
-					
-					// Execute the delete
-					deleteStationStatement.execute();
-				} catch(SQLException exception) {
-					// In the case where anything above causes an SQLException,
-					// output a message stating that the delete failed. Prompt the user to try again.
-					JOptionPane.showMessageDialog(
-							thisFrame,
-							"Delete failed. Please try again later.",
-							"Notice",
-							JOptionPane.WARNING_MESSAGE);
-					return;
-				}
+				// Delete the station by its id
+				stationRepository.deleteById(station.getId());
 				
 				// When execution reaches here,
 				// the delete was successful. Output a friendly message.
@@ -282,13 +266,23 @@ public class MainFrame extends JFrame {
 		
 		// stationTableModel - TableModel for this Table.
 		stationTableModel = new StationTableModel();
+		stationTableModel.owner = this;
 		jtblStation.setModel(stationTableModel);
 		jscrlpnStationTable.setViewportView(jtblStation);
 		/* END OF jtblStation */
 		
-		// Refresh the station table model initially
+	}
+	
+	/**
+	 * Binds a station repository object to this frame. This is also
+	 * effectively bound to the other UI components of this management panel.
+	 * 
+	 * @param stationRepository the repository to set
+	 */
+	public void setStationRepository(StationRepository stationRepository) {
+		this.stationRepository = stationRepository;
+		// Also, refresh the tablemodel with the given repository's data
 		stationTableModel.refresh();
-		
 	}
 
 }
