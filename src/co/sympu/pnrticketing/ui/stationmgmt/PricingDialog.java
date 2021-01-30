@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui;
+package co.sympu.pnrticketing.ui.stationmgmt;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -35,7 +35,7 @@ import co.sympu.pnrticketing.util.DatabaseUtility;
  * @author Rian Carlo Reyes
  *
  */
-public class StationPricingDialog extends JDialog {
+public class PricingDialog extends JDialog {
 	
 	/**
 	 * Ignore for now, this is to avoid warnings.
@@ -66,10 +66,10 @@ public class StationPricingDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public StationPricingDialog() {
+	public PricingDialog() {
 		
 		// Get a reference to this dialog, so we can refer to it later inside ActionListeners
-		StationPricingDialog thisDialog = this;
+		PricingDialog thisDialog = this;
 		
 		/* This dialog's properties */
 		setMinimumSize(new Dimension(400, 400));

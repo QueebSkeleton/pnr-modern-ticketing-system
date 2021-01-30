@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui;
+package co.sympu.pnrticketing.ui.stationmgmt;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -27,7 +27,7 @@ import co.sympu.pnrticketing.util.DatabaseUtility;
  * @author Rian Carlo Reyes
  *
  */
-public class StationManagementFrame extends JFrame {
+public class MainFrame extends JFrame {
 	
 	/**
 	 * Ignore for now, this is to avoid warnings.
@@ -37,17 +37,17 @@ public class StationManagementFrame extends JFrame {
 	/**
 	 * Add Form Dialog of this Frame. Is opened when add button is clicked.
 	 */
-	private AddStationDialog addStationDialog;
+	private AddDialog addStationDialog;
 	
 	/**
 	 * Update Form Dialog of this Frame. Is opened and manipulated depending on the station selected.
 	 */
-	private UpdateStationDialog updateStationDialog;
+	private UpdateDialog updateStationDialog;
 	
 	/**
 	 * Station Pricing Dialog of this Frame. Is opened and manipulated depending on the station selected.
 	 */
-	private StationPricingDialog stationPricingDialog;
+	private PricingDialog stationPricingDialog;
 	
 	/**
 	 * Main content panel.
@@ -67,21 +67,21 @@ public class StationManagementFrame extends JFrame {
 	/**
 	 * Create the frame. All dialog initialization code here.
 	 */
-	public StationManagementFrame() {
+	public MainFrame() {
 		
 		// Get a reference to this frame, so we can refer to it later inside ActionListeners
-		StationManagementFrame thisFrame = this;
+		MainFrame thisFrame = this;
 		
 		/* addStationDialog - The Dialog Box for adding stations. */
-		addStationDialog = new AddStationDialog();
+		addStationDialog = new AddDialog();
 		addStationDialog.owner = this;
 		
 		/* updateStationDialog - The Dialog Box for updating stations */
-		updateStationDialog = new UpdateStationDialog();
+		updateStationDialog = new UpdateDialog();
 		updateStationDialog.owner = this;
 		
 		/* stationPricingDialog - The Dialog Box for updating station prices. */
-		stationPricingDialog = new StationPricingDialog();
+		stationPricingDialog = new PricingDialog();
 		
 		/* This frame's properties */
 		setMinimumSize(new Dimension(600, 400));

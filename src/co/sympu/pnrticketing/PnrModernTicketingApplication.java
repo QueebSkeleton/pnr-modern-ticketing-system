@@ -2,7 +2,7 @@ package co.sympu.pnrticketing;
 
 import javax.swing.SwingUtilities;
 
-import co.sympu.pnrticketing.ui.StationManagementFrame;
+import co.sympu.pnrticketing.ui.stationmgmt.MainFrame;
 
 /**
  * Main entry point of the application.<br><br>
@@ -15,7 +15,7 @@ public class PnrModernTicketingApplication {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				StationManagementFrame stationManagementFrame = new StationManagementFrame();
+				MainFrame stationManagementFrame = new MainFrame();
 				stationManagementFrame.setVisible(true);
 			}
 		});

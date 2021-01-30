@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui;
+package co.sympu.pnrticketing.ui.stationmgmt;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -30,7 +31,7 @@ import co.sympu.pnrticketing.util.DatabaseUtility;
  * @author Rian Carlo Reyes
  *
  */
-public class AddStationDialog extends JDialog {
+public class UpdateDialog extends JDialog {
 	
 	/**
 	 * Ignore for now, this is to avoid warnings.
@@ -38,11 +39,16 @@ public class AddStationDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	/**
+	 * Current station bound to this dialog form
+	 */
+	private int stationId;
+	
+	/**
 	 * The Management frame that owns this dialog form.
 	 * Is automatically set on who instantiates an AddStationDialog,
 	 * which in this case is also StationManagementFrame, when it creates an object.
 	 */
-	protected StationManagementFrame owner;
+	protected MainFrame owner;
 	
 	/**
 	 * Station Name text field.
@@ -57,13 +63,13 @@ public class AddStationDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public AddStationDialog() {
+	public UpdateDialog() {
 		
 		// Get a reference to this dialog, so we can refer to it later inside ActionListeners
-		AddStationDialog thisDialog = this;
+		UpdateDialog thisDialog = this;
 		
 		/* This dialog's properties */
-		setTitle("Add Station Form");
+		setTitle("Update Station Form");
 		setBounds(100, 100, 450, 300);
 		// Use BorderLayout for the whole dialog. Center the form, bottom border for the action buttons panel.
 		getContentPane().setLayout(new BorderLayout());
@@ -164,24 +170,23 @@ public class AddStationDialog extends JDialog {
 				try(
 					// Grab a connection to the database	
 					Connection connection = DatabaseUtility.dataSource.getConnection();
-					// Prepare an insert sql statement
-					PreparedStatement insertStationStatement =
+					// Prepare an update sql statement
+					PreparedStatement updateStationStatement =
 							connection.prepareStatement(
-									"INSERT INTO station(name, description) VALUES (?, ?)")) {
+									"UPDATE station SET name = ?, description = ? WHERE id = ?")) {
 					// Bind the inputs to the insert statement
-					insertStationStatement.setString(1, name);
-					insertStationStatement.setString(2, description);
+					updateStationStatement.setString(1, name);
+					updateStationStatement.setString(2, description);
+					updateStationStatement.setInt(3, stationId);
 					
 					// Execute the insert statement
 					// If execute() returns 1, then 1 row was inserted.
-					if(insertStationStatement.executeUpdate() == 1) {
+					if(updateStationStatement.executeUpdate() == 1) {
 						// Show friendly message indicating success
 						JOptionPane.showMessageDialog(
 							thisDialog,
-							"Succesfully saved station to database.\n\n" +
-							"To update its pricing, click on the row associated with it,\n" +
-							"then click on the panel's 'Update Pricing' button.",
-							"Success",
+							"Succesfully updated station to database.",
+							"Success!",
 							JOptionPane.INFORMATION_MESSAGE);
 
 						// Hide this dialog form
@@ -193,7 +198,7 @@ public class AddStationDialog extends JDialog {
 						// Show friendly message indicating user input failure
 						JOptionPane.showMessageDialog(
 								thisDialog,
-								"Cannot create a station with the given inputs.\n\n" +
+								"Cannot update the station with the given inputs.\n\n" +
 								"Please check your data.",
 								"Recheck!",
 								JOptionPane.WARNING_MESSAGE);
@@ -202,7 +207,7 @@ public class AddStationDialog extends JDialog {
 					// that the operation was not successful.
 					JOptionPane.showMessageDialog(
 							thisDialog,
-							"An error occured while trying to save station to database:\n" +
+							"An error occured while trying to update station to database:\n" +
 							exception.getMessage(),
 							"Error",
 							JOptionPane.ERROR_MESSAGE);
@@ -211,7 +216,6 @@ public class AddStationDialog extends JDialog {
 				
 				// Refresh the main table
 				owner.stationTableModel.refresh();
-				
 			}
 		});
 		/* END OF jbtnOk */
@@ -219,10 +223,69 @@ public class AddStationDialog extends JDialog {
 		/* jbtnCancel - Hide form button */
 		JButton jbtnCancel = new JButton("Cancel");
 		jbtnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		jbtnCancel.setActionCommand("Cancel");
+		
+		// jbtnCancel's Button Click Listener.
+		// When this button is clicked, reset the form then hide the dialog
+		jbtnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Clear the form
+				jtxtfldStationName.setText("");
+				jtxtareaDescription.setText("");
+				
+				// Hide the dialog
+				setVisible(false);
+			}
+		});
 		jpnlButtonActions.add(jbtnCancel);
 		/* END OF jbtnCancel */
 		
+	}
+	
+	public void setup(int stationId) {
+		// Retrieve the station first
+		try(
+			// Grab a connection to the database
+			Connection connection = DatabaseUtility.dataSource.getConnection();
+			// Create a select station statement holder
+			PreparedStatement selectStationStatement = connection.prepareStatement("SELECT name, description FROM station WHERE id = ?")) {
+			
+			// Bind the station id to the select statement
+			selectStationStatement.setInt(1, stationId);
+			
+			// Execute the select statement and retrieve the station from the ResultSet
+			try(ResultSet stationResultSet = selectStationStatement.executeQuery()) {
+				if(stationResultSet.next()) {
+					this.stationId = stationId;
+					jtxtfldStationName.setText(stationResultSet.getString(1));
+					jtxtareaDescription.setText(stationResultSet.getString(2));
+				}
+			} catch(SQLException exception) {
+				// In the case where parsing the ResultSet fails,
+				// output a message stating that the select failed. Prompt the user to try again.
+				JOptionPane.showMessageDialog(
+						this,
+						"An error occured while parsing station data. Message:\n\n" + exception.getMessage() +
+						"\n\nPlease try again.",
+						"Notice",
+						JOptionPane.WARNING_MESSAGE);
+				// Hide this dialog
+				setVisible(false);
+				return;
+			}
+			
+		} catch(SQLException exception) {
+			// In the case where connection fails,
+			// output a message stating that the connection failed. Prompt the user to try again.
+			JOptionPane.showMessageDialog(
+					this,
+					"An error occured while connecting to the database to retrieve station data. Message:\n\n" + exception.getMessage() +
+					"\n\nPlease try again.",
+					"Notice",
+					JOptionPane.WARNING_MESSAGE);
+			// Hide this dialog
+			setVisible(false);
+			return;
+		}
 	}
 
 }

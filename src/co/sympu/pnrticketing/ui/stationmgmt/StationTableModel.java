@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui;
+package co.sympu.pnrticketing.ui.stationmgmt;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -34,7 +34,7 @@ public class StationTableModel extends AbstractTableModel {
 	 * Why need this?
 	 * So we can create JOptionPanes later.
 	 */
-	protected StationManagementFrame owner;
+	protected MainFrame owner;
 	
 	/**
 	 * Column names.
