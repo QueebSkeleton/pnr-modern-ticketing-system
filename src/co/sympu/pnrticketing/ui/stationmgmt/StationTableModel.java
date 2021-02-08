@@ -25,12 +25,10 @@ public class StationTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * The Management frame that owns this TableModel.
+	 * The management panel that owns this TableModel.
 	 * Is automatically set on the owner class itself.
-	 * Why need this?
-	 * So we can create JOptionPanes later.
 	 */
-	protected MainFrame owner;
+	protected StationManagementPanel stationManagementPanel;
 	
 	/**
 	 * Column names.
@@ -119,14 +117,14 @@ public class StationTableModel extends AbstractTableModel {
 	public void refresh() {
 		try {
 			// Refresh the cache with new data from the station repository
-			stationListCache = owner.stationRepository.getAll();
+			stationListCache = stationManagementPanel.stationRepository.getAll();
 			// Prompt redraw of listening JTable
 			fireTableDataChanged();
 		} catch(RepositoryAccessException e) {
 			// Show error message
 			if(e.type == RepositoryAccessException.Type.GENERAL)
 				JOptionPane.showMessageDialog(
-						owner,
+						stationManagementPanel.mainFrame,
 						"An error occured while retrieving station information from the database.\n\nMessage: " + e.getMessage(),
 						"Error",
 						JOptionPane.ERROR_MESSAGE);

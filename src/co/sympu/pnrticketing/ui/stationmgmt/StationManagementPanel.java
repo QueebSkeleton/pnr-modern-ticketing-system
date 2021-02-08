@@ -8,16 +8,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
 import co.sympu.pnrticketing.repository.StationRepository;
+import co.sympu.pnrticketing.ui.MainFrame;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Station Management Panel.
@@ -25,7 +25,7 @@ import co.sympu.pnrticketing.repository.StationRepository;
  * @author Rian Carlo Reyes
  *
  */
-public class MainFrame extends JFrame {
+public class StationManagementPanel extends JPanel {
 	
 	/**
 	 * Ignore for now, this is to avoid warnings.
@@ -38,6 +38,11 @@ public class MainFrame extends JFrame {
 	protected StationRepository stationRepository;
 	
 	/**
+	 * Main Frame that owns this management panel.
+	 */
+	protected MainFrame mainFrame;
+	
+	/**
 	 * Main Form Dialog for Adding and Updating Stations.
 	 */
 	private FormDialog formDialog;
@@ -46,11 +51,6 @@ public class MainFrame extends JFrame {
 	 * Station Pricing Dialog of this Frame. Is opened and manipulated depending on the station selected.
 	 */
 	private PricingDialog stationPricingDialog;
-	
-	/**
-	 * Main content panel.
-	 */
-	private JPanel jpnlContentPane;
 	
 	/**
 	 * Table of Stations
@@ -63,40 +63,25 @@ public class MainFrame extends JFrame {
 	protected StationTableModel stationTableModel;
 
 	/**
-	 * Create the frame. All dialog initialization code here.
+	 * Create the panel. All dialog initialization code here.
 	 */
-	public MainFrame() {
-		
-		// Get a reference to this frame, so we can refer to it later inside ActionListeners
-		MainFrame thisFrame = this;
+	public StationManagementPanel() {
+		setBorder(new EmptyBorder(10, 10, 10, 10));
 		
 		/* formDialog - dialog box for adding or updating stations */
 		formDialog = new FormDialog();
-		formDialog.owner = this;
+		formDialog.stationManagementPanel = this;
 		
 		/* stationPricingDialog - The Dialog Box for updating station prices. */
 		stationPricingDialog = new PricingDialog();
-		stationPricingDialog.owner = this;
-		
-		/* This frame's properties */
-		setMinimumSize(new Dimension(600, 400));
-		setTitle("Station Management Panel");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		/* END OF frame properties */
-		
-		/* jpnlContentPane - main content JPanel that contains two panels, the header panel and the table panel. */
-		jpnlContentPane = new JPanel();
-		jpnlContentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-		setContentPane(jpnlContentPane);
-		jpnlContentPane.setLayout(new BoxLayout(jpnlContentPane, BoxLayout.Y_AXIS));
-		/* END OF jpnlContentPane */
+		stationPricingDialog.stationManagementPanel = this;
 		
 		/* jpnlHeader - header panel. Contains a header label and a button for adding stations */
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JPanel jpnlHeader = new JPanel();
 		jpnlHeader.setMaximumSize(new Dimension(32767, 50));
 		jpnlHeader.setMinimumSize(new Dimension(10, 50));
-		jpnlContentPane.add(jpnlHeader);
+		add(jpnlHeader);
 		jpnlHeader.setLayout(new BoxLayout(jpnlHeader, BoxLayout.X_AXIS));
 		/* END OF jpnlHeader */
 		
@@ -115,7 +100,7 @@ public class MainFrame extends JFrame {
 		
 		/* jbtnAddStationDialog - Button for showing an add form dialog box */
 		JButton jbtnAddStation = new JButton("Add a Station");
-		jbtnAddStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnAddStation.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		
 		// Add Station Button Click Event
 		// When this button is clicked, initialize form dialog then show
@@ -139,7 +124,7 @@ public class MainFrame extends JFrame {
 		
 		/* jbtnPricing - Button for updating a station's pricing */
 		JButton jbtnPricing = new JButton("Pricing");
-		jbtnPricing.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnPricing.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		
 		// Pricing Button Click Event
 		// When this button is clicked, show the Pricing Dialog.
@@ -149,7 +134,7 @@ public class MainFrame extends JFrame {
 				if(jtblStation.getSelectionModel().getSelectedItemsCount() == 0) {
 					// Output a friendly message telling the user to select a row first
 					JOptionPane.showMessageDialog(
-							thisFrame,
+							mainFrame,
 							"Please select a station first before clicking the update pricing button.",
 							"Notice",
 							JOptionPane.WARNING_MESSAGE);
@@ -174,7 +159,7 @@ public class MainFrame extends JFrame {
 
 		/* jbtnUpdateStation - Button for updating a station */
 		JButton jbtnUpdateStation = new JButton("Update");
-		jbtnUpdateStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnUpdateStation.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		
 		// Update Button Click Event
 		// When this button is clicked, setup the update dialog and show the selected record
@@ -184,7 +169,7 @@ public class MainFrame extends JFrame {
 				if(jtblStation.getSelectionModel().getSelectedItemsCount() == 0) {
 					// Output a friendly message telling the user to select a row first
 					JOptionPane.showMessageDialog(
-							thisFrame,
+							mainFrame,
 							"Please select a station first before clicking the update button.",
 							"Notice",
 							JOptionPane.WARNING_MESSAGE);
@@ -212,7 +197,7 @@ public class MainFrame extends JFrame {
 
 		/* jbtnDelete - Button for removing a station */
 		JButton jbtnDelete = new JButton("Delete");
-		jbtnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		
 		// Delete Button Click Event
 		// When this button is clicked, delete the selected row on the table
@@ -222,7 +207,7 @@ public class MainFrame extends JFrame {
 				if(jtblStation.getSelectionModel().getSelectedItemsCount() == 0) {
 					// Output a friendly message telling the user to select a row first
 					JOptionPane.showMessageDialog(
-							thisFrame,
+							mainFrame,
 							"Please select a station first before clicking the delete button.",
 							"Notice",
 							JOptionPane.WARNING_MESSAGE);
@@ -241,7 +226,7 @@ public class MainFrame extends JFrame {
 				// When execution reaches here,
 				// the delete was successful. Output a friendly message.
 				JOptionPane.showMessageDialog(
-						thisFrame,
+						mainFrame,
 						"Successfully removed the station.",
 						"Success!",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -255,18 +240,18 @@ public class MainFrame extends JFrame {
 		
 		/* jscrlpnStationTable - Scrollable Container for the JTable */
 		JScrollPane jscrlpnStationTable = new JScrollPane();
-		jpnlContentPane.add(jscrlpnStationTable);
+		add(jscrlpnStationTable);
 		/* END OF jscrlpnStationTable */
 		
 		/* jtblStation - Table of Stations */
 		jtblStation = new JTable();
 		jtblStation.setRowHeight(22);
 		jtblStation.setIntercellSpacing(new Dimension(4, 4));
-		jtblStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jtblStation.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		
 		// stationTableModel - TableModel for this Table.
 		stationTableModel = new StationTableModel();
-		stationTableModel.owner = this;
+		stationTableModel.stationManagementPanel = this;
 		jtblStation.setModel(stationTableModel);
 		jscrlpnStationTable.setViewportView(jtblStation);
 		/* END OF jtblStation */
@@ -274,8 +259,8 @@ public class MainFrame extends JFrame {
 	}
 	
 	/**
-	 * Binds a station repository object to this frame. This is also
-	 * effectively bound to the other UI components of this management panel.
+	 * Binds a station repository object to this management panel. This is also
+	 * effectively bound to the other UI components.
 	 * 
 	 * @param stationRepository the repository to set
 	 */

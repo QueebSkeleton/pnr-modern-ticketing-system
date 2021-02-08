@@ -42,7 +42,7 @@ public class PricingDialog extends JDialog {
 	 * The Management Panel that this Dialog is owned by.
 	 * Used to refer to the StationRepository object in there.
 	 */
-	protected MainFrame owner;
+	protected StationManagementPanel stationManagementPanel;
 	
 	/**
 	 * Current station bound to this dialog form
@@ -150,7 +150,7 @@ public class PricingDialog extends JDialog {
 					station.setTicketPrice(stationId, Double.parseDouble(stationPricingTextFields.get(stationId).getText()));
 				
 				// Re-update the pricing table in the database
-				owner.stationRepository.updatePricing(station);
+				stationManagementPanel.stationRepository.updatePricing(station);
 				
 				// When execution reaches here,
 				// the update was successful. Output a friendly message.
@@ -194,12 +194,12 @@ public class PricingDialog extends JDialog {
 		
 		try {
 			// Bind the stationId to this object
-			this.station = owner.stationRepository.getById(station.getId(), true);
+			this.station = stationManagementPanel.stationRepository.getById(station.getId(), true);
 		} catch(RepositoryAccessException e) {
 			// Show error message
 			if(e.type == RepositoryAccessException.Type.GENERAL)
 				JOptionPane.showMessageDialog(
-						owner,
+						stationManagementPanel.mainFrame,
 						"An error occured while retrieving station information from the database.\n\nMessage: " + e.getMessage(),
 						"Error",
 						JOptionPane.ERROR_MESSAGE);
@@ -219,12 +219,12 @@ public class PricingDialog extends JDialog {
 		// Retrieve all stations from the database
 		List<Station> allStations = null;
 		try {
-			allStations = owner.stationRepository.getAll();
+			allStations = stationManagementPanel.stationRepository.getAll();
 		} catch(RepositoryAccessException e) {
 			// Show error message
 			if(e.type == RepositoryAccessException.Type.GENERAL)
 				JOptionPane.showMessageDialog(
-						owner,
+						stationManagementPanel.mainFrame,
 						"An error occured while retrieving stations information from the database.\n\nMessage: " + e.getMessage(),
 						"Error",
 						JOptionPane.ERROR_MESSAGE);

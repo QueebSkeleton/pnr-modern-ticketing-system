@@ -39,11 +39,11 @@ public class FormDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * The Management frame that owns this Dialog.
+	 * The Management panel that owns this Dialog.
 	 * Is automatically set on the owner class itself.
 	 * Needed so that we can refresh its TableModel after saving a station.
 	 */
-	protected MainFrame owner;
+	protected StationManagementPanel stationManagementPanel;
 	
 	// Field Inputs
 	private JTextField jtxtfldStationName;
@@ -158,7 +158,7 @@ public class FormDialog extends JDialog {
 						station.setDescription(jtxtareaDescription.getText());
 						
 						// Save this station object
-						owner.stationRepository.save(station);
+						stationManagementPanel.stationRepository.save(station);
 					}
 					
 					// Else, perform an update
@@ -168,19 +168,19 @@ public class FormDialog extends JDialog {
 						station.setDescription(jtxtareaDescription.getText());
 						
 						// Update this station object
-						owner.stationRepository.update(station);
+						stationManagementPanel.stationRepository.update(station);
 					}
 				} catch(RepositoryAccessException exception) {
 					// Show error message
 					if(exception.type == RepositoryAccessException.Type.GENERAL)
 						JOptionPane.showMessageDialog(
-								owner,
+								thisDialog,
 								"An error occured while saving station information to the database.\n\nMessage: " + exception.getMessage(),
 								"Error",
 								JOptionPane.ERROR_MESSAGE);
 					else if(exception.type == RepositoryAccessException.Type.INPUT)
 						JOptionPane.showMessageDialog(
-								owner,
+								thisDialog,
 								"Error occured while saving to database. Please check your inputs.\n\nMessage: " + exception.getMessage(),
 								"Error",
 								JOptionPane.ERROR_MESSAGE);
@@ -199,7 +199,7 @@ public class FormDialog extends JDialog {
 				setVisible(false);
 				
 				// Update the StationTableModel in the owner frame
-				owner.stationTableModel.refresh();
+				stationManagementPanel.stationTableModel.refresh();
 			}
 		});
 		jbtnSave.setFont(new Font("Segoe UI", Font.PLAIN, 14));
