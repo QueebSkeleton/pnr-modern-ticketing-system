@@ -93,8 +93,6 @@ public class Station {
 	 * @return the price
 	 */
 	public double getTicketPrice(int otherStationId) {
-		if(pricingTable == null)
-			return 0;
 		try {
 			return pricingTable.get(otherStationId);
 		} catch(NullPointerException e) {

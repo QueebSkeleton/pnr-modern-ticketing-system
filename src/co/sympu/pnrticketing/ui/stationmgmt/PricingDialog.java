@@ -24,6 +24,7 @@ import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
 import co.sympu.pnrticketing.exception.RepositoryAccessException;
+import java.awt.FlowLayout;
 
 /**
  * Station pricing dialog for updating ticket prices.
@@ -81,26 +82,15 @@ public class PricingDialog extends JDialog {
 		
 		/* jpnlContentPane - Main panel of this dialog. Contains 3 JPanels: Header, Main Form, and Buttons Panel */
 		JPanel jpnlContentPane = new JPanel();
-		jpnlContentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+		jpnlContentPane.setBorder(new EmptyBorder(10, 10, 0, 10));
 		jpnlContentPane.setLayout(new BoxLayout(jpnlContentPane, BoxLayout.Y_AXIS));
 		setContentPane(jpnlContentPane);
-		/* END OF jpnlContentPane */
-		
-		/* jlblHeader - header of this dialog */
-		JLabel jlblHeader = new JLabel("Set Pricing");
-		jlblHeader.setAlignmentY(0.0f);
-		jlblHeader.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 24));
-		jpnlContentPane.add(jlblHeader);
-		/* END OF jlblHeader */
-		
-		/* SPACING */
-		jpnlContentPane.add(Box.createRigidArea(new Dimension(0, 10)));
 		/* END OF SPACING */
 		
 		/* jlblOriginStation - label for origin station field input */
 		jlblOriginStation = new JLabel("Origin Station:");
 		jlblOriginStation.setAlignmentY(0.0f);
-		jlblOriginStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jlblOriginStation.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		jpnlContentPane.add(jlblOriginStation);
 		/* END OF jlblOriginStation */
 		
@@ -117,26 +107,45 @@ public class PricingDialog extends JDialog {
 
 		/* jpnlMainForm - main form panel, placed inside a scroller pane. Dynamically contains Labels and Textfields */
 		jpnlMainForm = new JPanel();
+		jpnlMainForm.setBorder(new EmptyBorder(10, 10, 0, 10));
 		jscrlpnMainForm.setViewportView(jpnlMainForm);
 		GridBagLayout gbl_jpnlMainForm = new GridBagLayout();
 		gbl_jpnlMainForm.columnWidths = new int[]{0, 0};
-		gbl_jpnlMainForm.columnWeights = new double[] {0.15, 0.85};
+		gbl_jpnlMainForm.columnWeights = new double[] {0.10, 0.90};
 		jpnlMainForm.setLayout(gbl_jpnlMainForm);
 		/* END OF jpnlMainForm */
 
 		/* jpnlButtonActions - button actions panel */
 		JPanel jpnlButtonActions = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) jpnlButtonActions.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
 		jpnlButtonActions.setMaximumSize(new Dimension(32767, 70));
 		jpnlButtonActions.setMinimumSize(new Dimension(10, 70));
-		jpnlButtonActions.setBorder(new EmptyBorder(10, 0, 0, 0));
+		jpnlButtonActions.setBorder(new EmptyBorder(10, 0, 5, 0));
 		jpnlButtonActions.setAlignmentY(0.0f);
 		jpnlButtonActions.setAlignmentX(0.0f);
 		jpnlContentPane.add(jpnlButtonActions);
 		/* END OF jpnlButtonActions */
 
 		/* jbtnSave - save button */
-		JButton jbtnSave = new JButton("Save");
-		jbtnSave.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		/* END OF jbtnSave */
+
+		/* jbtnCancel - close dialog button */
+		JButton jbtnCancel = new JButton("Cancel");
+		jbtnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		
+		// Cancel Button Click Event
+		// When this button is clicked, just hide this dialog
+		jbtnCancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Hide this dialog
+				setVisible(false);
+			}
+		});
+		jpnlButtonActions.add(jbtnCancel);
+		JButton jbtnSave = new JButton("Finalize");
+		jbtnSave.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		
 		// Save Button Click Event
 		// When this button is clicked, save ticket prices
@@ -165,22 +174,6 @@ public class PricingDialog extends JDialog {
 			}
 		});
 		jpnlButtonActions.add(jbtnSave);
-		/* END OF jbtnSave */
-
-		/* jbtnCancel - close dialog button */
-		JButton jbtnCancel = new JButton("Cancel");
-		jbtnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		
-		// Cancel Button Click Event
-		// When this button is clicked, just hide this dialog
-		jbtnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Hide this dialog
-				setVisible(false);
-			}
-		});
-		jpnlButtonActions.add(jbtnCancel);
 		/* END OF jbtnCancel */
 	}
 	
