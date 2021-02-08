@@ -13,11 +13,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
 import co.sympu.pnrticketing.repository.StationRepository;
 import co.sympu.pnrticketing.ui.MainFrame;
-import javax.swing.border.EmptyBorder;
 
 /**
  * Station Management Panel.
@@ -214,25 +214,28 @@ public class StationManagementPanel extends JPanel {
 					return;
 				}
 				
-				// Else, grab the selected row index
-				int selectedRowIndex = jtblStation.getSelectionModel().getSelectedIndices()[0];
-
-				// Get the id of the station in the table model depending on the given row
-				Station station = stationTableModel.getStationByRow(selectedRowIndex);
-				
-				// Delete the station by its id
-				stationRepository.deleteById(station.getId());
-				
-				// When execution reaches here,
-				// the delete was successful. Output a friendly message.
-				JOptionPane.showMessageDialog(
-						mainFrame,
-						"Successfully removed the station.",
-						"Success!",
-						JOptionPane.INFORMATION_MESSAGE);
-				
-				// Refresh the table.
-				stationTableModel.refresh();
+				// Ask confirmation from the user first
+				if(JOptionPane.showConfirmDialog(mainFrame, "Delete this station?") == JOptionPane.YES_OPTION) {
+					// Else, grab the selected row index
+					int selectedRowIndex = jtblStation.getSelectionModel().getSelectedIndices()[0];
+	
+					// Get the id of the station in the table model depending on the given row
+					Station station = stationTableModel.getStationByRow(selectedRowIndex);
+					
+					// Delete the station by its id
+					stationRepository.deleteById(station.getId());
+					
+					// When execution reaches here,
+					// the delete was successful. Output a friendly message.
+					JOptionPane.showMessageDialog(
+							mainFrame,
+							"Successfully removed the station.",
+							"Success!",
+							JOptionPane.INFORMATION_MESSAGE);
+					
+					// Refresh the table.
+					stationTableModel.refresh();
+				}
 			}
 		});
 		jpnlButtonActions.add(jbtnDelete);
