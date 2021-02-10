@@ -1,17 +1,18 @@
 package co.sympu.pnrticketing.ui.ticketmachine;
 import java.awt.BorderLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import javax.swing.ButtonGroup;
 import java.awt.FlowLayout;
-import javax.swing.JRadioButton;
-import javax.swing.JLabel;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
 public class KioskTicketingFrame extends JFrame {
@@ -19,8 +20,9 @@ public class KioskTicketingFrame extends JFrame {
 	private JPanel contentPane;
 	
 	public KioskTicketingFrame() {
+		setTitle("Destination Details");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 484, 271);
+		setBounds(100, 100, 628, 345);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -30,7 +32,7 @@ public class KioskTicketingFrame extends JFrame {
 		contentPane.add(panel, BorderLayout.SOUTH);
 		
 		JButton btnNewButton = new JButton(">");
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel.setLayout(new FlowLayout(FlowLayout.TRAILING, 5, 5));
 		
 		JButton btnNewButton_1 = new JButton("<");
 		panel.add(btnNewButton_1);
@@ -38,7 +40,7 @@ public class KioskTicketingFrame extends JFrame {
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.NORTH);
-		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel_2.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		JLabel lblNewLabel = new JLabel("Choose Destination");
 		lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 20));
