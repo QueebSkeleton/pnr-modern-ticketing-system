@@ -16,6 +16,7 @@ public class LoginDialog extends JDialog {
 	private JTextField txtpassword ;
 	
 	public LoginDialog() {
+		setTitle("Machine Login ");
 		setResizable(false);
 		
 		
@@ -26,7 +27,7 @@ public class LoginDialog extends JDialog {
 		gridBagLayout.rowWeights = new double[]{10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, Double.MIN_VALUE};
 		
 		getContentPane().setLayout(gridBagLayout);
-		setBounds(500, 250, 300, 300);
+		setBounds(500, 250, 333, 300);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		JLabel lblmachineid = new JLabel("Enter machine ID:");
