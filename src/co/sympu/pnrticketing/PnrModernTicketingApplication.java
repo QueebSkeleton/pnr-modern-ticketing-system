@@ -6,6 +6,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 
 import co.sympu.pnrticketing.repository.StationRepository;
 import co.sympu.pnrticketing.ui.MainFrame;
+import co.sympu.pnrticketing.ui.machinemngmt.MachineManagementPanel;
 import co.sympu.pnrticketing.ui.stationmgmt.StationManagementPanel;
 
 /**
@@ -32,6 +33,8 @@ public class PnrModernTicketingApplication {
 		StationManagementPanel stationManagementPanel = new StationManagementPanel();
 		stationManagementPanel.setStationRepository(stationRepository);
 		
+		MachineManagementPanel machineManagementPanel = new MachineManagementPanel();
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -39,6 +42,7 @@ public class PnrModernTicketingApplication {
 				MainFrame mainFrame = new MainFrame();
 				// Set everything it needs
 				mainFrame.setStationManagementPanel(stationManagementPanel);
+				mainFrame.setMachineManagementPanel(machineManagementPanel);
 				// Show the frame
 				mainFrame.setVisible(true);
 			}

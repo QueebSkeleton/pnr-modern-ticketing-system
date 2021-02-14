@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui.stationmgmt;
+package co.sympu.pnrticketing.ui.machinemngmt;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -17,6 +17,8 @@ import javax.swing.BoxLayout;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MachineManagementAdd extends JDialog {
 
@@ -24,11 +26,14 @@ public class MachineManagementAdd extends JDialog {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	
+	protected MachineManagementPanel machineManagementPanel;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public void main(String[] args) {
+		
 		try {
 			MachineManagementAdd dialog = new MachineManagementAdd();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -42,6 +47,7 @@ public class MachineManagementAdd extends JDialog {
 	 * Create the dialog.
 	 */
 	public MachineManagementAdd() {
+		setTitle("Add Machine");
 		setBounds(100, 100, 450, 263);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -162,12 +168,24 @@ public class MachineManagementAdd extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						setVisible(false);
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						setVisible(false);
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}

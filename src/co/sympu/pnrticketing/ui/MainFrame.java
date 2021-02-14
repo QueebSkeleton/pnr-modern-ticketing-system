@@ -14,8 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import co.sympu.pnrticketing.ui.machinemngmt.MachineManagementPanel;
 import co.sympu.pnrticketing.ui.stationmgmt.StationManagementPanel;
-import co.sympu.pnrticketing.ui.stationmgmt.MachineManagementPanel;
+
 import javax.swing.SwingConstants;
 
 /**
