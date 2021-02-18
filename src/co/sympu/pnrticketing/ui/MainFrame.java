@@ -103,14 +103,15 @@ public class MainFrame extends JFrame {
 				// remove it from the content pane
 				else if(jpnlCurrentShownPanel != null)
 					jpnlContentPane.remove(jpnlCurrentShownPanel);
-				
+
+				// Refresh the table
+				stationManagementPanel.refreshTable();
 				// Set current shown panel (pointer) to stationManagementPanel
 				jpnlCurrentShownPanel = stationManagementPanel;
 				// Add stationManagementPanel to the content pane
 				jpnlContentPane.add(stationManagementPanel);
 				// Redraw the frame
 				revalidate();
-				repaint();
 			}
 		});
 		jbtnStationPanel.setMinimumSize(new Dimension(200, 35));
