@@ -12,10 +12,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.ui.stationmgmt.StationManagementPanel;
-import javax.swing.SwingConstants;
 
 /**
  * Administrator Module's sole window frame. All administrator operations
@@ -58,7 +58,6 @@ public class MainFrame extends JFrame {
 		
 		/* Frame Properties */
 		setTitle("PNR Administrator");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 727, 482);
 		/* END OF Frame Properties */
 		
