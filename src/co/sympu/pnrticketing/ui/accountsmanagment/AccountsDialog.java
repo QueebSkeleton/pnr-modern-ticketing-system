@@ -33,6 +33,10 @@ public class AccountsDialog extends JDialog{
 	 * Main Content Pane of this Frame
 	 */
 	private JPanel jpnlContentPane;
+	/**
+	 * Accounts Management Panel that owns this dialog box.
+	 */
+	protected ManagementPanel accountsManagementPanel;
 	
 	//form components
 	private JTextField jtxtfldUsername;
@@ -56,6 +60,8 @@ public class AccountsDialog extends JDialog{
 	private JTextField jtxtfldTIN;
 	private JPanel panel;
 	private JButton jbtnSave;
+	
+	
 	
 	public AccountsDialog() {
 		//prevent user to resize the dialog
