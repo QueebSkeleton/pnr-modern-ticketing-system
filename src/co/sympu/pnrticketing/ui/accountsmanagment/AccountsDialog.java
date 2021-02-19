@@ -62,7 +62,6 @@ public class AccountsDialog extends JDialog{
 	private JButton jbtnSave;
 	
 	
-	
 	public AccountsDialog() {
 		//prevent user to resize the dialog
 		setResizable(false);
