@@ -7,6 +7,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import co.sympu.pnrticketing.repository.StationRepository;
 import co.sympu.pnrticketing.ui.EntryFrame;
 import co.sympu.pnrticketing.ui.MainFrame;
+import co.sympu.pnrticketing.ui.machinemngmt.MachineManagementPanel;
 import co.sympu.pnrticketing.ui.stationmgmt.StationManagementPanel;
 import co.sympu.pnrticketing.ui.ticketerrorhandling.LoginFrame;
 import co.sympu.pnrticketing.ui.ticketmachine.LoginDialog;
@@ -30,16 +31,19 @@ public class PnrModernTicketingApplication {
 		// wiring its needed datasource.
 		StationRepository stationRepository = new StationRepository(dataSource);
 		
-		// Create the station management panel that the whole application will use,
-		// wiring its needed repository.
+		// Create the station management panel
 		StationManagementPanel stationManagementPanel = new StationManagementPanel();
 		stationManagementPanel.setStationRepository(stationRepository);
-		
+    
+		// Create the machine management panel
+		MachineManagementPanel machineManagementPanel = new MachineManagementPanel();
+    
 		// Create the 3 Entry Point Frames (or whatever)
 		// TODO: THIS SHOULD BE 3 LOGIN DIALOGS! (JDialog)
 		/* MainFrame - Administrator Entry Point */
 		MainFrame mainFrame = new MainFrame();
 		mainFrame.setStationManagementPanel(stationManagementPanel);
+		mainFrame.setMachineManagementPanel(machineManagementPanel);
 		/* END OF MainFrame */
 		/* LoginFrame - Cashier Entry Point */
 		LoginFrame loginFrame = new LoginFrame();
