@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import co.sympu.pnrticketing.ui.machinemngmt.MachineManagementPanel;
 import co.sympu.pnrticketing.ui.stationmgmt.StationManagementPanel;
 
 /**
@@ -49,6 +50,11 @@ public class MainFrame extends JFrame {
 	 * Station Management Panel of this module.
 	 */
 	private StationManagementPanel stationManagementPanel;
+	
+	/**
+	 * Machine Management Panel of this module.
+	 */
+	private MachineManagementPanel machineManagementPanel;
 
 	/**
 	 * Create the frame.
@@ -123,6 +129,37 @@ public class MainFrame extends JFrame {
 		jbtnStationPanel.setBorderPainted(false);
 		jbtnStationPanel.setMaximumSize(new Dimension(32767, 35));
 		jpnlSidebar.add(jbtnStationPanel);
+		
+		JButton jbtnMachinesPanel = new JButton("Machine Management");
+		jbtnMachinesPanel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				
+				if(jpnlCurrentShownPanel == machineManagementPanel)
+					return;
+				
+				else if(jpnlCurrentShownPanel != null)
+					jpnlContentPane.remove(jpnlCurrentShownPanel);
+				
+				// Set current shown panel (pointer) to MachineManagementPanel
+				jpnlCurrentShownPanel = machineManagementPanel;
+				// Add MachineManagementPanel to the content pane
+				jpnlContentPane.add(machineManagementPanel);
+				// Redraw the frame
+				revalidate();
+				repaint();
+			}
+		});
+		jbtnMachinesPanel.setMinimumSize(new Dimension(200, 35));
+		jbtnMachinesPanel.setMaximumSize(new Dimension(32767, 35));
+		jbtnMachinesPanel.setHorizontalAlignment(SwingConstants.LEFT);
+		jbtnMachinesPanel.setForeground(Color.WHITE);
+		jbtnMachinesPanel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnMachinesPanel.setFocusPainted(false);
+		jbtnMachinesPanel.setBorderPainted(false);
+		jbtnMachinesPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
+		jbtnMachinesPanel.setBackground(Color.BLUE);
+		jpnlSidebar.add(jbtnMachinesPanel);
 		/* END OF jbtnStationPanel */
 	}
 	
@@ -137,6 +174,10 @@ public class MainFrame extends JFrame {
 	 */
 	public void setStationManagementPanel(StationManagementPanel stationManagementPanel) {
 		this.stationManagementPanel = stationManagementPanel;
+	}
+	
+	public void setMachineManagementPanel(MachineManagementPanel machineManagementPanel) {
+		this.machineManagementPanel = machineManagementPanel;
 	}
 
 }
