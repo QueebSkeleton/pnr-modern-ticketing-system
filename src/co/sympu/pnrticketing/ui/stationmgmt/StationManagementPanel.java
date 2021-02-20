@@ -269,8 +269,13 @@ public class StationManagementPanel extends JPanel {
 	 */
 	public void setStationRepository(StationRepository stationRepository) {
 		this.stationRepository = stationRepository;
-		// Also, refresh the tablemodel with the given repository's data
-		stationTableModel.refresh();
+	}
+	
+	/**
+	 * Refresh the JTable.
+	 */
+	public void refreshTable() {
+		this.stationTableModel.refresh();
 	}
 
 }
