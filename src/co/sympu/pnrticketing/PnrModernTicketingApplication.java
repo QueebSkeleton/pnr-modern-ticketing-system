@@ -6,10 +6,10 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 
 import co.sympu.pnrticketing.repository.StationRepository;
 import co.sympu.pnrticketing.ui.EntryFrame;
-import co.sympu.pnrticketing.ui.MainFrame;
-import co.sympu.pnrticketing.ui.machinemngmt.MachineManagementPanel;
-import co.sympu.pnrticketing.ui.stationmgmt.StationManagementPanel;
-import co.sympu.pnrticketing.ui.ticketerrorhandling.LoginFrame;
+import co.sympu.pnrticketing.ui.admin.MainFrame;
+import co.sympu.pnrticketing.ui.admin.machinemngmt.MachineManagementPanel;
+import co.sympu.pnrticketing.ui.admin.stationmgmt.StationManagementPanel;
+import co.sympu.pnrticketing.ui.cashier.LoginFrame;
 import co.sympu.pnrticketing.ui.ticketmachine.LoginDialog;
 
 /**

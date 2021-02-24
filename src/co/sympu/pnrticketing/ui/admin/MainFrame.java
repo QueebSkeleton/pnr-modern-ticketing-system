@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui;
+package co.sympu.pnrticketing.ui.admin;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,8 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import co.sympu.pnrticketing.ui.machinemngmt.MachineManagementPanel;
-import co.sympu.pnrticketing.ui.stationmgmt.StationManagementPanel;
+import co.sympu.pnrticketing.ui.admin.machinemngmt.MachineManagementPanel;
+import co.sympu.pnrticketing.ui.admin.stationmgmt.StationManagementPanel;
 
 /**
  * Administrator Module's sole window frame. All administrator operations

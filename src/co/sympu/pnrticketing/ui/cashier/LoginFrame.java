@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui.ticketerrorhandling;
+package co.sympu.pnrticketing.ui.cashier;
 
 import java.awt.Dimension;
 import java.awt.Font;

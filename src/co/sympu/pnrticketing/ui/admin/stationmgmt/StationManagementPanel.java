@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui.stationmgmt;
+package co.sympu.pnrticketing.ui.admin.stationmgmt;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
 import co.sympu.pnrticketing.repository.StationRepository;
-import co.sympu.pnrticketing.ui.MainFrame;
+import co.sympu.pnrticketing.ui.admin.MainFrame;
 
 /**
  * Station Management Panel.

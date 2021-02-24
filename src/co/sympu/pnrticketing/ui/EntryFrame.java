@@ -18,7 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
 
-import co.sympu.pnrticketing.ui.ticketerrorhandling.LoginFrame;
+import co.sympu.pnrticketing.ui.admin.MainFrame;
+import co.sympu.pnrticketing.ui.cashier.LoginFrame;
 import co.sympu.pnrticketing.ui.ticketmachine.LoginDialog;
 
 /**
