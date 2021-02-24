@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui.stationmgmt;
+package co.sympu.pnrticketing.ui.admin.stationmgmt;
 
 import java.awt.Dimension;
 import java.awt.Font;

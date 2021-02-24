@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui.accountsmanagment;
+package co.sympu.pnrticketing.ui.admin.accountsmanagment;
 
 import java.awt.Dimension;
 import java.awt.Font;

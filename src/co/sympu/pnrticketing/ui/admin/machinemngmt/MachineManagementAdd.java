@@ -1,4 +1,4 @@
-package co.sympu.pnrticketing.ui.machinemngmt;
+package co.sympu.pnrticketing.ui.admin.machinemngmt;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
