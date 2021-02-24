@@ -40,6 +40,9 @@ public class PnrModernTicketingApplication {
     
 		// Create the 3 Entry Point Frames (or whatever)
 		// TODO: THIS SHOULD BE 3 LOGIN DIALOGS! (JDialog)
+		/* AdminLoginDialog - Administrator Login Entry Point */
+		co.sympu.pnrticketing.ui.admin.LoginDialog adminLoginDialog = new co.sympu.pnrticketing.ui.admin.LoginDialog();
+		
 		/* MainFrame - Administrator Entry Point */
 		MainFrame mainFrame = new MainFrame();
 		mainFrame.setStationManagementPanel(stationManagementPanel);
@@ -55,6 +58,7 @@ public class PnrModernTicketingApplication {
 		// Create the Main Entry Frame
 		EntryFrame entryFrame = new EntryFrame();
 		// Wire the three login entry points to this frame
+		entryFrame.setAdminLoginDialog(adminLoginDialog);
 		entryFrame.setAdministratorEntryPoint(mainFrame);
 		entryFrame.setCashierEntryPoint(loginFrame);
 		entryFrame.setTicketMachineEntryPoint(loginDialog);

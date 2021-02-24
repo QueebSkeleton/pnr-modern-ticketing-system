@@ -34,6 +34,9 @@ public class EntryFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
+	// Administrator Login Dialog
+	private co.sympu.pnrticketing.ui.admin.LoginDialog adminLoginDialog;
+	
 	// Administrator Main Frame
 	private MainFrame administratorEntryPoint;
 	
@@ -141,8 +144,30 @@ public class EntryFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				// If administrator module is selected
-				if(jrdbtnAdministrator.isSelected())
-					administratorEntryPoint.setVisible(true);
+				if(jrdbtnAdministrator.isSelected()) {
+					
+					switch(adminLoginDialog.prompt()) {
+					
+					case LOGGED_IN:
+						JOptionPane.showMessageDialog(thisFrame,
+								"Successfully logged in.",
+								"Success!",
+								JOptionPane.INFORMATION_MESSAGE);
+						administratorEntryPoint.setVisible(true);
+						break;
+					
+					case INVALID_CREDENTIALS:
+						JOptionPane.showMessageDialog(thisFrame,
+								"You have entered invalid credentials. Please try again",
+								"Invalid!",
+								JOptionPane.WARNING_MESSAGE);
+						break;
+					
+					default:
+						break;
+						
+					}
+				}
 				
 				// If cashier module is selected
 				else if(jrdbtnCashier.isSelected())
@@ -164,6 +189,10 @@ public class EntryFrame extends JFrame {
 		});
 		jpnlButtonActions.add(jbtnProceed);
 		/* END OF jbtnProceed */
+	}
+
+	public void setAdminLoginDialog(co.sympu.pnrticketing.ui.admin.LoginDialog adminLoginDialog) {
+		this.adminLoginDialog = adminLoginDialog;
 	}
 
 	/**
