@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,9 +14,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
+import co.sympu.pnrticketing.exception.RepositoryAccessException;
 import co.sympu.pnrticketing.repository.StationRepository;
 import co.sympu.pnrticketing.ui.admin.MainFrame;
 
@@ -222,19 +225,54 @@ public class StationManagementPanel extends JPanel {
 					// Get the id of the station in the table model depending on the given row
 					Station station = stationTableModel.getStationByRow(selectedRowIndex);
 					
-					// Delete the station by its id
-					stationRepository.deleteById(station.getId());
-					
-					// When execution reaches here,
-					// the delete was successful. Output a friendly message.
-					JOptionPane.showMessageDialog(
-							mainFrame,
-							"Successfully removed the station.",
-							"Success!",
-							JOptionPane.INFORMATION_MESSAGE);
-					
-					// Refresh the table.
-					stationTableModel.refresh();
+					// Construct a SwingWorker to perform the delete in another thread,
+					// so the UI remains responsive
+					new SwingWorker<Boolean, Void>() {
+
+						@Override
+						protected Boolean doInBackground() throws Exception {
+							try {
+								// Delete the station by its id
+								stationRepository.deleteById(station.getId());
+								
+								return true;
+							} catch(RepositoryAccessException e) {
+								// Show error message
+								if(e.type == RepositoryAccessException.Type.GENERAL)
+									JOptionPane.showMessageDialog(
+											mainFrame,
+											"An error occured while retrieving station information from the database.\n\nMessage: " + e.getMessage(),
+											"Error",
+											JOptionPane.ERROR_MESSAGE);
+							}
+							return false;
+						}
+						
+						@Override
+						protected void done() {
+							try {
+								if(get()) {
+									// When execution reaches here,
+									// the delete was successful. Output a friendly message.
+									JOptionPane.showMessageDialog(
+											mainFrame,
+											"Successfully removed the station.",
+											"Success!",
+											JOptionPane.INFORMATION_MESSAGE);
+									
+									// Refresh the table.
+									stationTableModel.refresh();
+								}
+							} catch (InterruptedException | ExecutionException e) {
+								JOptionPane.showMessageDialog(
+										mainFrame,
+										"The station was removed but an error occured afterwards.\n\nMessage: " + e.getMessage(),
+										"Error",
+										JOptionPane.ERROR_MESSAGE);
+							}
+						}
+						
+					}.execute();
 				}
 			}
 		});

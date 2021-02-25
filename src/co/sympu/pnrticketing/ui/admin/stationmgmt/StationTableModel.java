@@ -1,8 +1,10 @@
 package co.sympu.pnrticketing.ui.admin.stationmgmt;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
 
 import co.sympu.pnrticketing.domain.Station;
@@ -115,20 +117,44 @@ public class StationTableModel extends AbstractTableModel {
 	 * and also initially called by StationManagementFrame to initialize the Table at first start.
 	 */
 	public void refresh() {
-		try {
-			// Refresh the cache with new data from the station repository
-			stationListCache = stationManagementPanel.stationRepository.getAll();
-			// Prompt redraw of listening JTable
-			fireTableDataChanged();
-		} catch(RepositoryAccessException e) {
-			// Show error message
-			if(e.type == RepositoryAccessException.Type.GENERAL)
-				JOptionPane.showMessageDialog(
-						stationManagementPanel.mainFrame,
-						"An error occured while retrieving station information from the database.\n\nMessage: " + e.getMessage(),
-						"Error",
-						JOptionPane.ERROR_MESSAGE);
-		}
+		// Construct a SwingWorker so it fetches the information from the database with another thread,
+		// therefore not blocking the calling method.
+		new SwingWorker<List<Station>, Void>() {
+
+			@Override
+			protected List<Station> doInBackground() throws Exception {
+				try {
+					// Refresh the cache with new data from the station repository
+					return stationManagementPanel.stationRepository.getAll();
+				} catch(RepositoryAccessException e) {
+					// Show error message
+					if(e.type == RepositoryAccessException.Type.GENERAL)
+						JOptionPane.showMessageDialog(
+								stationManagementPanel.mainFrame,
+								"An error occured while retrieving station information from the database.\n\nMessage: " + e.getMessage(),
+								"Error",
+								JOptionPane.ERROR_MESSAGE);
+				}
+				return null;
+			}
+			
+			@Override
+			protected void done() {
+				try {
+					// Get the retrieved data processed from background
+					stationListCache = get();
+					// Prompt redraw of listening JTable
+					fireTableDataChanged();
+				} catch (InterruptedException | ExecutionException e) {
+					JOptionPane.showMessageDialog(
+							stationManagementPanel.mainFrame,
+							"An error occured while refreshing the table.\n\nMessage: " + e.getMessage(),
+							"Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			
+		}.execute();
 	}
 	
 	/**

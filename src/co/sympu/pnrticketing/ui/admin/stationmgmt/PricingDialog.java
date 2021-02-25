@@ -1,15 +1,18 @@
 package co.sympu.pnrticketing.ui.admin.stationmgmt;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -20,11 +23,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
 import co.sympu.pnrticketing.exception.RepositoryAccessException;
-import java.awt.FlowLayout;
 
 /**
  * Station pricing dialog for updating ticket prices.
@@ -158,16 +161,50 @@ public class PricingDialog extends JDialog {
 				for(Integer stationId : stationPricingTextFields.keySet())
 					station.setTicketPrice(stationId, Double.parseDouble(stationPricingTextFields.get(stationId).getText()));
 				
-				// Re-update the pricing table in the database
-				stationManagementPanel.stationRepository.updatePricing(station);
+				// Make a SwingWorker perform the update in another thread,
+				// so the UI remains responsive.
+				new SwingWorker<Boolean, Void>() {
+					@Override
+					protected Boolean doInBackground() {
+						// Save this station object
+						try {
+							// Re-update the pricing table in the database
+							stationManagementPanel.stationRepository.updatePricing(station);
+							return true;
+						} catch (RepositoryAccessException exception) {
+							// Show error message
+							if (exception.type == RepositoryAccessException.Type.GENERAL)
+								JOptionPane.showMessageDialog(thisDialog,
+										"An error occured while saving station information to the database.\n\nMessage: "
+												+ exception.getMessage(),
+										"Error", JOptionPane.ERROR_MESSAGE);
+							else if (exception.type == RepositoryAccessException.Type.INPUT)
+								JOptionPane.showMessageDialog(thisDialog,
+										"Error occured while saving to database. Please check your inputs.\n\nMessage: "
+												+ exception.getMessage(),
+										"Error", JOptionPane.ERROR_MESSAGE);
+						}
+						
+						return false;
+					}
+
+					@Override
+					protected void done() {
+						try {
+							if(get()) {
+								// Output a friendly message.
+								JOptionPane.showMessageDialog(thisDialog, "Station pricing was successfully saved.", "Success",
+										JOptionPane.INFORMATION_MESSAGE);
+							}
+						} catch (HeadlessException | InterruptedException | ExecutionException e) {
+							JOptionPane.showMessageDialog(thisDialog,
+									"The station pricing was successfully saved, but an error occured afterwards.\n\nMessage: "
+											+ e.getMessage(),
+									"Error", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}.execute();
 				
-				// When execution reaches here,
-				// the update was successful. Output a friendly message.
-				JOptionPane.showMessageDialog(
-						thisDialog,
-						"Successfully updated all ticket prices with this station.",
-						"Success!",
-						JOptionPane.INFORMATION_MESSAGE);
 				// Hide this dialog
 				setVisible(false);
 				
