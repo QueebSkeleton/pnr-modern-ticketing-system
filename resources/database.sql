@@ -12,9 +12,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 DROP SCHEMA IF EXISTS `pnr_db` ;
 
--- -----------------------------------------------------
--- Schema pnr_db
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `pnr_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 USE `pnr_db` ;
 
@@ -65,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `pnr_db`.`ticket` (
   `control_number` INT NOT NULL AUTO_INCREMENT,
   `origin_station_id` INT NULL DEFAULT NULL,
   `destination_station_id` INT NULL DEFAULT NULL,
+  `processed_on` DATETIME NOT NULL,
   `price` DOUBLE NOT NULL,
   PRIMARY KEY (`control_number`),
   INDEX `FK_STATION_ORIGIN_idx` (`origin_station_id` ASC) VISIBLE,
