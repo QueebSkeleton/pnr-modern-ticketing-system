@@ -1,21 +1,21 @@
 package co.sympu.pnrticketing.ui.admin.accountsmanagment;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
-import javax.swing.JButton;
-import java.awt.FlowLayout;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Add form dialog for Accounts management.

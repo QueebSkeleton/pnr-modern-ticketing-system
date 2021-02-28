@@ -1,131 +1,127 @@
 package co.sympu.pnrticketing.ui.admin.machinemngmt;
 
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.JTable;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import javax.swing.JButton;
-import java.awt.Component;
-import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.FlowLayout;
-import javax.swing.JSplitPane;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionListener;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import java.awt.SystemColor;
+
+import java.sql.*;
 
 public class MachineManagementPanel extends JPanel {
 
+	static Connection objConn;
+	static ResultSet objResultSet;
+	static Statement objSQLQuery;
+
 	private static final long serialVersionUID = 1L;
 	private JTable tblMachineManagementTable;
-	
+
 	private MachineManagementAdd machineManagementAdd;
+	private JScrollPane scrMachineManagementPanel;
+
 	/**
 	 * Create the panel.
 	 */
 	public MachineManagementPanel() {
-		
+
 		machineManagementAdd = new MachineManagementAdd();
 		machineManagementAdd.machineManagementPanel = this;
-		
+		// machineManagementAdd.machineManagementAdd = this;
+
 		setBorder(new EmptyBorder(10, 10, 10, 10));
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 172, 0};
-		gridBagLayout.rowHeights = new int[]{74, 216, 0, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, 1.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 0, 172, 0 };
+		gridBagLayout.rowHeights = new int[] { 74, 216, 0, 0 };
+		gridBagLayout.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 1.0, 1.0, 1.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
-		
+
 		JPanel panel = new JPanel();
-		panel.setBorder(new EmptyBorder(0, 1, 0, 10));
+		panel.setBackground(SystemColor.activeCaption);
+		panel.setBorder(new EmptyBorder(0, 5, 0, 5));
 		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.insets = new Insets(0, 0, 5, 5);
+		gbc_panel.gridwidth = 2;
+		gbc_panel.insets = new Insets(0, 0, 5, 0);
 		gbc_panel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 0;
 		add(panel, gbc_panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{106, 108, 0};
-		gbl_panel.rowHeights = new int[]{32, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[] { 106, 108, 51, 67, 63, 0 };
+		gbl_panel.rowHeights = new int[] { 32, 0 };
+		gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
-		
+
 		JLabel lblNewLabel = new JLabel("Machine\r\n: ");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNewLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 24));
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
+		gbc_lblNewLabel.anchor = GridBagConstraints.NORTHWEST;
 		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
 		gbc_lblNewLabel.gridx = 0;
 		gbc_lblNewLabel.gridy = 0;
 		panel.add(lblNewLabel, gbc_lblNewLabel);
-		
+
 		JLabel lblNewLabel_1 = new JLabel("New label");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_1.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 24));
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.anchor = GridBagConstraints.WEST;
+		gbc_lblNewLabel_1.anchor = GridBagConstraints.NORTHWEST;
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 0, 5);
 		gbc_lblNewLabel_1.gridx = 1;
 		gbc_lblNewLabel_1.gridy = 0;
 		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
-		
-		JPanel panel_2 = new JPanel();
-		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_panel_2.gridx = 1;
-		gbc_panel_2.gridy = 0;
-		add(panel_2, gbc_panel_2);
-		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[]{51, 65, 63, 0};
-		gbl_panel_2.rowHeights = new int[]{23, 0};
-		gbl_panel_2.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-		panel_2.setLayout(gbl_panel_2);
-		
+
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
 				machineManagementAdd.setVisible(true);
-				
 			}
 		});
+		btnAdd.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.anchor = GridBagConstraints.WEST;
 		gbc_btnAdd.insets = new Insets(0, 0, 0, 5);
-		gbc_btnAdd.gridx = 0;
+		gbc_btnAdd.gridx = 2;
 		gbc_btnAdd.gridy = 0;
-		panel_2.add(btnAdd, gbc_btnAdd);
-		
-		JButton btnUpload = new JButton("Upload");
+		panel.add(btnAdd, gbc_btnAdd);
+
+		JButton btnUpload = new JButton("Update");
+		btnUpload.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_btnUpload = new GridBagConstraints();
 		gbc_btnUpload.anchor = GridBagConstraints.WEST;
 		gbc_btnUpload.insets = new Insets(0, 0, 0, 5);
-		gbc_btnUpload.gridx = 1;
+		gbc_btnUpload.gridx = 3;
 		gbc_btnUpload.gridy = 0;
-		panel_2.add(btnUpload, gbc_btnUpload);
-		
+		panel.add(btnUpload, gbc_btnUpload);
+
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
 		gbc_btnDelete.anchor = GridBagConstraints.WEST;
-		gbc_btnDelete.gridx = 2;
+		gbc_btnDelete.gridx = 4;
 		gbc_btnDelete.gridy = 0;
-		panel_2.add(btnDelete, gbc_btnDelete);
-		
-		JScrollPane scrMachineManagementPanel = new JScrollPane();
+		panel.add(btnDelete, gbc_btnDelete);
+
+		scrMachineManagementPanel = new JScrollPane();
 		scrMachineManagementPanel.setToolTipText("Station\r\n");
 		scrMachineManagementPanel.setViewportBorder(null);
-		scrMachineManagementPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		GridBagConstraints gbc_scrMachineManagementPanel = new GridBagConstraints();
 		gbc_scrMachineManagementPanel.gridwidth = 2;
 		gbc_scrMachineManagementPanel.insets = new Insets(0, 0, 5, 0);
@@ -133,24 +129,39 @@ public class MachineManagementPanel extends JPanel {
 		gbc_scrMachineManagementPanel.gridx = 0;
 		gbc_scrMachineManagementPanel.gridy = 1;
 		add(scrMachineManagementPanel, gbc_scrMachineManagementPanel);
-		
-		tblMachineManagementTable = new JTable();
-		tblMachineManagementTable.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"#", "Name", "Description"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
-		scrMachineManagementPanel.setViewportView(tblMachineManagementTable);
 
-		
+		tblMachineManagementTable = new JTable();
+		scrMachineManagementPanel.add(tblMachineManagementTable);
+		scrMachineManagementPanel.setViewportView(tblMachineManagementTable);
+	}
+
+	public void refreshtbl() {
+		DefaultTableModel model = new DefaultTableModel();
+		model.addColumn("ID");
+		model.addColumn("Status");
+		model.addColumn("Station");
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app",
+					"password123");
+
+			String query = "select serial_number, status, assigned_station_id from machine";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				model.addRow(new Object[] { rs.getString("serial_number"), rs.getString("status"),
+						rs.getString("assigned_station_id") });
+			}
+
+			rs.close();
+			stmt.close();
+			con.close();
+
+			tblMachineManagementTable.setModel(model);
+		} catch (Exception e) {
+			// JOptionPane.showMessageDialog(null, e.printStackTrace());
+			e.printStackTrace();
+		}
 	}
 }

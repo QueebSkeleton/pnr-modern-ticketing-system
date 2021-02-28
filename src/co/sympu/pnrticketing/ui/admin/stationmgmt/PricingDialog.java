@@ -1,6 +1,7 @@
 package co.sympu.pnrticketing.ui.admin.stationmgmt;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -24,7 +25,6 @@ import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
 import co.sympu.pnrticketing.exception.RepositoryAccessException;
-import java.awt.FlowLayout;
 
 /**
  * Station pricing dialog for updating ticket prices.
