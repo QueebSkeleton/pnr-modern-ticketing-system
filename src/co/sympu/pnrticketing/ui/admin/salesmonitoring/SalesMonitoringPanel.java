@@ -6,10 +6,13 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,6 +22,8 @@ import javax.swing.border.EmptyBorder;
 public class SalesMonitoringPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
+	
+	private DaySalesDialog daySalesDialog;
 	
 	protected PastWeekSalesTableModel pastWeekSalesTableModel;
 	protected TicketTableModel ticketTableModel;
@@ -62,6 +67,17 @@ public class SalesMonitoringPanel extends JPanel {
 		jtxtfldSalesDay.setColumns(7);
 		
 		JButton jbtnView = new JButton("View");
+		jbtnView.addActionListener(event -> {
+			try {
+				daySalesDialog.initialize(LocalDate.parse(jtxtfldSalesDay.getText()));
+				daySalesDialog.setVisible(true);
+			} catch(DateTimeParseException e) {
+				JOptionPane.showMessageDialog(null, "Please check your input. It must be of the format yyyy-MM-dd\n"
+						+ "Example: 2021-01-01",
+						"Check your inputs!",
+						JOptionPane.WARNING_MESSAGE);
+			}
+		});
 		jbtnView.setFont(new Font("Tahoma", Font.PLAIN, 8));
 		panel.add(jbtnView);
 		
@@ -120,6 +136,8 @@ public class SalesMonitoringPanel extends JPanel {
 		ticketTableModel = new TicketTableModel();
 		jtblTicketsSold.setModel(ticketTableModel);
 		jscrlpnTicketsSoldTable.setViewportView(jtblTicketsSold);
+		
+		daySalesDialog = new DaySalesDialog();
 	}
 	
 	public void refresh() {
