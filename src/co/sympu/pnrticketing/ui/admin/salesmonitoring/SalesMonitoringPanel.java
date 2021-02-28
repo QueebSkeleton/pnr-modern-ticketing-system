@@ -1,23 +1,31 @@
 package co.sympu.pnrticketing.ui.admin.salesmonitoring;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.FlowLayout;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 public class SalesMonitoringPanel extends JPanel {
+	
+	private static final long serialVersionUID = 1L;
+	
+	protected PastWeekSalesTableModel pastWeekSalesTableModel;
+	
+	private JTable jtblPastWeekSales;
+	private JTable jtblTicketsSold;
+	private JTextField jtxtfldSalesDay;
 	
 	public SalesMonitoringPanel() {
 		setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -95,13 +103,9 @@ public class SalesMonitoringPanel extends JPanel {
 		jpnlMainContent.add(jscrlpnPastWeekSalesTable, gbc_jscrlpnPastWeekSalesTable);
 		
 		jtblPastWeekSales = new JTable();
-		jtblPastWeekSales.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Day", "Tickets Sold", "Total Sales"
-			}
-		));
+		
+		pastWeekSalesTableModel = new PastWeekSalesTableModel();
+		jtblPastWeekSales.setModel(pastWeekSalesTableModel);
 		jscrlpnPastWeekSalesTable.setViewportView(jtblPastWeekSales);
 		
 		JScrollPane jscrlpnTicketsSoldTable = new JScrollPane();
@@ -124,9 +128,8 @@ public class SalesMonitoringPanel extends JPanel {
 		/* END OF jlblHeader */
 	}
 	
-	private static final long serialVersionUID = 1L;
-	private JTable jtblPastWeekSales;
-	private JTable jtblTicketsSold;
-	private JTextField jtxtfldSalesDay;
+	public void refresh() {
+		pastWeekSalesTableModel.refresh();
+	}
 
 }

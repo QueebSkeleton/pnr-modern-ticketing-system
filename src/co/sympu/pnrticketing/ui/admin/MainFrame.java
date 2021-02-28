@@ -180,6 +180,8 @@ public class MainFrame extends JFrame {
 				else if(jpnlCurrentShownPanel != null)
 					jpnlContentPane.remove(jpnlCurrentShownPanel);
 				
+				// Refresh the panel
+				salesMonitoringPanel.refresh();
 				// Set current shown panel (pointer) to salesMonitoringPanel
 				jpnlCurrentShownPanel = salesMonitoringPanel;
 				// Add salesMonitoringPanel to the content pane
