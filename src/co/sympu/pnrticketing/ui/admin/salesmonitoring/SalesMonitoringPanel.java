@@ -15,13 +15,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 
 public class SalesMonitoringPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	
 	protected PastWeekSalesTableModel pastWeekSalesTableModel;
+	protected TicketTableModel ticketTableModel;
 	
 	private JTable jtblPastWeekSales;
 	private JTable jtblTicketsSold;
@@ -117,19 +117,14 @@ public class SalesMonitoringPanel extends JPanel {
 		jpnlMainContent.add(jscrlpnTicketsSoldTable, gbc_jscrlpnTicketsSoldTable);
 		
 		jtblTicketsSold = new JTable();
-		jtblTicketsSold.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Control #", "Date", "Origin", "Destination", "Price"
-			}
-		));
+		ticketTableModel = new TicketTableModel();
+		jtblTicketsSold.setModel(ticketTableModel);
 		jscrlpnTicketsSoldTable.setViewportView(jtblTicketsSold);
-		/* END OF jlblHeader */
 	}
 	
 	public void refresh() {
 		pastWeekSalesTableModel.refresh();
+		ticketTableModel.refresh();
 	}
 
 }
