@@ -5,9 +5,11 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -18,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
@@ -148,52 +151,115 @@ public class FormDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				try {
-					// If the current bound station to this dialog is null,
-					// perform an insert
-					if (station == null) {
-						// Create a new station object out of the inputted fields
-						station = new Station(jtxtfldStationName.getText());
-						station.setDescription(jtxtareaDescription.getText());
+				// If the current bound station to this dialog is null,
+				// perform an insert
+				if (station == null) {
+					// Create a new station object out of the inputted fields
+					station = new Station(jtxtfldStationName.getText());
+					station.setDescription(jtxtareaDescription.getText());
 
-						// Save this station object
-						stationManagementPanel.stationRepository.save(station);
-					}
+					// Make a SwingWorker perform the save in another thread,
+					// so the UI remains responsive.
+					new SwingWorker<Boolean, Void>() {
+						@Override
+						protected Boolean doInBackground() {
+							// Save this station object
+							try {
+								stationManagementPanel.stationRepository.save(station);
+								return true;
+							} catch (RepositoryAccessException exception) {
+								// Show error message
+								if (exception.type == RepositoryAccessException.Type.GENERAL)
+									JOptionPane.showMessageDialog(thisDialog,
+											"An error occured while saving station information to the database.\n\nMessage: "
+													+ exception.getMessage(),
+											"Error", JOptionPane.ERROR_MESSAGE);
+								else if (exception.type == RepositoryAccessException.Type.INPUT)
+									JOptionPane.showMessageDialog(thisDialog,
+											"Error occured while saving to database. Please check your inputs.\n\nMessage: "
+													+ exception.getMessage(),
+											"Error", JOptionPane.ERROR_MESSAGE);
+							}
 
-					// Else, perform an update
-					else {
-						// Update the fields of the bound station object accordingly
-						station.setName(jtxtfldStationName.getText());
-						station.setDescription(jtxtareaDescription.getText());
+							return false;
+						}
 
-						// Update this station object
-						stationManagementPanel.stationRepository.update(station);
-					}
-				} catch (RepositoryAccessException exception) {
-					// Show error message
-					if (exception.type == RepositoryAccessException.Type.GENERAL)
-						JOptionPane.showMessageDialog(thisDialog,
-								"An error occured while saving station information to the database.\n\nMessage: "
-										+ exception.getMessage(),
-								"Error", JOptionPane.ERROR_MESSAGE);
-					else if (exception.type == RepositoryAccessException.Type.INPUT)
-						JOptionPane.showMessageDialog(thisDialog,
-								"Error occured while saving to database. Please check your inputs.\n\nMessage: "
-										+ exception.getMessage(),
-								"Error", JOptionPane.ERROR_MESSAGE);
-					return;
+						@Override
+						protected void done() {
+							try {
+								if (get()) {
+									// Update the StationTableModel in the owner frame
+									stationManagementPanel.stationTableModel.refresh();
+
+									// Output a friendly message.
+									JOptionPane.showMessageDialog(thisDialog, "Station was successfully saved.",
+											"Success", JOptionPane.INFORMATION_MESSAGE);
+								}
+							} catch (HeadlessException | InterruptedException | ExecutionException e) {
+								JOptionPane.showMessageDialog(thisDialog,
+										"The station was successfully added, but an error occured afterwards.\n\nMessage: "
+												+ e.getMessage(),
+										"Error", JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					}.execute();
 				}
 
-				// If execution reaches here, the station was successfully saved or updated.
-				// Output a friendly message.
-				JOptionPane.showMessageDialog(thisDialog, "Station was successfully saved.", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
+				// Else, perform an update
+				else {
+					// Update the fields of the bound station object accordingly
+					station.setName(jtxtfldStationName.getText());
+					station.setDescription(jtxtareaDescription.getText());
+
+					// Make a SwingWorker perform the update in another thread,
+					// so the UI remains responsive.
+					new SwingWorker<Boolean, Void>() {
+						@Override
+						protected Boolean doInBackground() {
+							// Save this station object
+							try {
+								stationManagementPanel.stationRepository.update(station);
+								return true;
+							} catch (RepositoryAccessException exception) {
+								// Show error message
+								if (exception.type == RepositoryAccessException.Type.GENERAL)
+									JOptionPane.showMessageDialog(thisDialog,
+											"An error occured while saving station information to the database.\n\nMessage: "
+													+ exception.getMessage(),
+											"Error", JOptionPane.ERROR_MESSAGE);
+								else if (exception.type == RepositoryAccessException.Type.INPUT)
+									JOptionPane.showMessageDialog(thisDialog,
+											"Error occured while saving to database. Please check your inputs.\n\nMessage: "
+													+ exception.getMessage(),
+											"Error", JOptionPane.ERROR_MESSAGE);
+							}
+
+							return false;
+						}
+
+						@Override
+						protected void done() {
+							try {
+								if (get()) {
+									// Update the StationTableModel in the owner frame
+									stationManagementPanel.stationTableModel.refresh();
+
+									// Output a friendly message.
+									JOptionPane.showMessageDialog(thisDialog, "Station was successfully saved.",
+											"Success", JOptionPane.INFORMATION_MESSAGE);
+								}
+							} catch (HeadlessException | InterruptedException | ExecutionException e) {
+								JOptionPane.showMessageDialog(thisDialog,
+										"The station was successfully added, but an error occured afterwards.\n\nMessage: "
+												+ e.getMessage(),
+										"Error", JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					}.execute();
+				}
 
 				// Hide this dialog
 				setVisible(false);
-
-				// Update the StationTableModel in the owner frame
-				stationManagementPanel.stationTableModel.refresh();
 			}
 		});
 		jbtnSave.setFont(new Font("Segoe UI", Font.PLAIN, 14));

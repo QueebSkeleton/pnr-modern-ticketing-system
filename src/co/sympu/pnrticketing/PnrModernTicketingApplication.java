@@ -8,6 +8,7 @@ import co.sympu.pnrticketing.repository.StationRepository;
 import co.sympu.pnrticketing.ui.EntryFrame;
 import co.sympu.pnrticketing.ui.admin.MainFrame;
 import co.sympu.pnrticketing.ui.admin.machinemngmt.MachineManagementPanel;
+import co.sympu.pnrticketing.ui.admin.salesmonitoring.SalesMonitoringPanel;
 import co.sympu.pnrticketing.ui.admin.stationmgmt.StationManagementPanel;
 import co.sympu.pnrticketing.ui.cashier.LoginFrame;
 import co.sympu.pnrticketing.ui.ticketmachine.LoginDialog;
@@ -37,13 +38,20 @@ public class PnrModernTicketingApplication {
     
 		// Create the machine management panel
 		MachineManagementPanel machineManagementPanel = new MachineManagementPanel();
+		
+		// Create the sales monitoring panel
+		SalesMonitoringPanel salesMonitoringPanel = new SalesMonitoringPanel();
     
 		// Create the 3 Entry Point Frames (or whatever)
 		// TODO: THIS SHOULD BE 3 LOGIN DIALOGS! (JDialog)
+		/* AdminLoginDialog - Administrator Login Entry Point */
+		co.sympu.pnrticketing.ui.admin.LoginDialog adminLoginDialog = new co.sympu.pnrticketing.ui.admin.LoginDialog();
+		
 		/* MainFrame - Administrator Entry Point */
 		MainFrame mainFrame = new MainFrame();
 		mainFrame.setStationManagementPanel(stationManagementPanel);
 		mainFrame.setMachineManagementPanel(machineManagementPanel);
+		mainFrame.setSalesMonitoringPanel(salesMonitoringPanel);
 		/* END OF MainFrame */
 		/* LoginFrame - Cashier Entry Point */
 		LoginFrame loginFrame = new LoginFrame();
@@ -55,6 +63,7 @@ public class PnrModernTicketingApplication {
 		// Create the Main Entry Frame
 		EntryFrame entryFrame = new EntryFrame();
 		// Wire the three login entry points to this frame
+		entryFrame.setAdminLoginDialog(adminLoginDialog);
 		entryFrame.setAdministratorEntryPoint(mainFrame);
 		entryFrame.setCashierEntryPoint(loginFrame);
 		entryFrame.setTicketMachineEntryPoint(loginDialog);
