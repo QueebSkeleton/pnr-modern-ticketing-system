@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.ui.admin.machinemngmt.MachineManagementPanel;
+import co.sympu.pnrticketing.ui.admin.salesmonitoring.SalesMonitoringPanel;
 import co.sympu.pnrticketing.ui.admin.stationmgmt.StationManagementPanel;
 
 /**
@@ -55,6 +56,11 @@ public class MainFrame extends JFrame {
 	 * Machine Management Panel of this module.
 	 */
 	private MachineManagementPanel machineManagementPanel;
+	
+	/**
+	 * Sales Monitoring Panel of this module.
+	 */
+	private SalesMonitoringPanel salesMonitoringPanel;
 
 	/**
 	 * Create the frame.
@@ -160,6 +166,40 @@ public class MainFrame extends JFrame {
 		jbtnMachinesPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
 		jbtnMachinesPanel.setBackground(Color.BLUE);
 		jpnlSidebar.add(jbtnMachinesPanel);
+		
+		JButton jbtnSalesPanel = new JButton("Ticket Sales");
+		jbtnSalesPanel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// If the current shown panel is sales monitoring panel
+				if(jpnlCurrentShownPanel == salesMonitoringPanel)
+					return;
+				
+				// Else, if the current shown panel is another,
+				// remove it from the content pane
+				else if(jpnlCurrentShownPanel != null)
+					jpnlContentPane.remove(jpnlCurrentShownPanel);
+				
+				// Refresh the panel
+				salesMonitoringPanel.refresh();
+				// Set current shown panel (pointer) to salesMonitoringPanel
+				jpnlCurrentShownPanel = salesMonitoringPanel;
+				// Add salesMonitoringPanel to the content pane
+				jpnlContentPane.add(salesMonitoringPanel);
+				// Redraw the frame
+				revalidate();
+			}
+		});
+		jbtnSalesPanel.setMinimumSize(new Dimension(200, 35));
+		jbtnSalesPanel.setMaximumSize(new Dimension(32767, 35));
+		jbtnSalesPanel.setHorizontalAlignment(SwingConstants.LEFT);
+		jbtnSalesPanel.setForeground(Color.WHITE);
+		jbtnSalesPanel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnSalesPanel.setFocusPainted(false);
+		jbtnSalesPanel.setBorderPainted(false);
+		jbtnSalesPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
+		jbtnSalesPanel.setBackground(Color.BLUE);
+		jpnlSidebar.add(jbtnSalesPanel);
 		/* END OF jbtnStationPanel */
 	}
 	
@@ -178,6 +218,10 @@ public class MainFrame extends JFrame {
 	
 	public void setMachineManagementPanel(MachineManagementPanel machineManagementPanel) {
 		this.machineManagementPanel = machineManagementPanel;
+	}
+	
+	public void setSalesMonitoringPanel(SalesMonitoringPanel salesMonitoringPanel) {
+		this.salesMonitoringPanel = salesMonitoringPanel;
 	}
 
 }
