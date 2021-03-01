@@ -299,6 +299,7 @@ public class StationManagementPanel extends JPanel {
 		
 	}
 	
+	
 	/**
 	 * Binds a station repository object to this management panel. This is also
 	 * effectively bound to the other UI components.

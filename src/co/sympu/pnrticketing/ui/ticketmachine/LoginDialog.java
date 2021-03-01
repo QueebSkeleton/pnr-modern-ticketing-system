@@ -1,13 +1,14 @@
 package co.sympu.pnrticketing.ui.ticketmachine;
 
 
-import javax.swing.JDialog;
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
-import javax.swing.JTextField;
+
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class LoginDialog extends JDialog {

@@ -147,6 +147,7 @@ public class MainFrame extends JFrame {
 				else if(jpnlCurrentShownPanel != null)
 					jpnlContentPane.remove(jpnlCurrentShownPanel);
 				
+				machineManagementPanel.refreshtbl();
 				// Set current shown panel (pointer) to MachineManagementPanel
 				jpnlCurrentShownPanel = machineManagementPanel;
 				// Add MachineManagementPanel to the content pane
