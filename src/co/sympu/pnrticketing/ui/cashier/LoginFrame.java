@@ -10,10 +10,18 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.ActionListener;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.awt.event.ActionEvent;
 
 public class LoginFrame extends JFrame {
 
@@ -82,6 +90,28 @@ public class LoginFrame extends JFrame {
 		jpnlLogin.add(jpsswrdfldPassword, gbc_jpsswrdfldPassword);
 		
 		JButton jbtnLogin = new JButton("Login");
+		jbtnLogin.addActionListener(event -> {
+			try {
+			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
+			Statement statement = connection.createStatement();
+			
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM cashier WHERE username = '" + jtxtfldUsername.getText() +
+								 "' AND password = '" + String.valueOf(jpsswrdfldPassword.getPassword()) + "'");
+			
+			if (resultSet.next())
+				JOptionPane.showMessageDialog(null, "Login Successfully!");
+			else 
+				JOptionPane.showMessageDialog(null, "Failed to login. Please double check your credentials and try again.");
+			
+			resultSet.close();
+			statement.close();
+			connection.close();
+			
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 		GridBagConstraints gbc_jbtnLogin = new GridBagConstraints();
 		gbc_jbtnLogin.insets = new Insets(0, 0, 5, 0);
 		gbc_jbtnLogin.anchor = GridBagConstraints.EAST;
