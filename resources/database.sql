@@ -15,6 +15,22 @@ DROP SCHEMA IF EXISTS `pnr_db` ;
 CREATE SCHEMA IF NOT EXISTS `pnr_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 USE `pnr_db` ;
 
+
+-- -----------------------------------------------------
+-- Table `pnr_db`.`station`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pnr_db`.`station` ;
+
+CREATE TABLE IF NOT EXISTS `pnr_db`.`station` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `description` VARCHAR(90) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 64
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
 -- -----------------------------------------------------
 -- Table `pnr_db`.`cashier`
 -- -----------------------------------------------------
@@ -31,24 +47,14 @@ CREATE TABLE IF NOT EXISTS `pnr_db`.`cashier` (
   `tax_identification_number` VARCHAR(45) NOT NULL,
   `username` VARCHAR(45) NOT NULL,
   `password` CHAR(20) NOT NULL,
-  PRIMARY KEY (`id`))
+  `assigned_station_id` INT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_ASSIGNED_STATION`
+    FOREIGN KEY (`assigned_station_id`)
+    REFERENCES `pnr_db`.`station` (`id`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `pnr_db`.`station`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `pnr_db`.`station` ;
-
-CREATE TABLE IF NOT EXISTS `pnr_db`.`station` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `description` VARCHAR(90) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-AUTO_INCREMENT = 64
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
