@@ -1,7 +1,7 @@
 package co.sympu.pnrticketing.ui.cashier;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -11,14 +11,19 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
@@ -26,30 +31,35 @@ import javax.swing.border.EmptyBorder;
 
 public class TicketCashierPrompt extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
 	private JPanel contentPane;
 	private JTextField jtxtfldNoOfTickets;
 	private JTextField textField_1;
+	private JLabel jlblSoBDestinationOutput;
+	private JComboBox jcmbStations;
+	
+	// reference for LoginFrame
+	protected LoginFrame loginFrame; 
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TicketCashierPrompt frame = new TicketCashierPrompt();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	// reference for cashier's credentials 
+	protected int cashierID; 
+	protected String cashierName;
+	protected int assignedStationID;
+	
+	// Self referencing 
+	TicketCashierPrompt ticketCashierPrompt = this;
+	
 
 	/**
 	 * Create the frame.
 	 */
 	public TicketCashierPrompt() {
+		setResizable(false);
 		setTitle("Cashier Module");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 664, 490);
@@ -63,272 +73,11 @@ public class TicketCashierPrompt extends JFrame {
 		contentPane.add(jpnlDestinationHeader);
 		jpnlDestinationHeader.setLayout(null);
 		
-		JLabel jlblDestinationHeader = new JLabel("Choose destination");
-		jlblDestinationHeader.setFont(new Font("Tahoma", Font.BOLD, 12));
-		jlblDestinationHeader.setBounds(10, 11, 130, 25);
+		JLabel jlblDestinationHeader = new JLabel("Philippine National Railways ");
+		jlblDestinationHeader.setFont(new Font("Times New Roman", Font.BOLD, 26));
+		jlblDestinationHeader.setBounds(151, 11, 338, 25);
 		jpnlDestinationHeader.add(jlblDestinationHeader);
 		
-		JPanel jpnlDestinationOption = new JPanel();
-		jpnlDestinationOption.setMaximumSize(new Dimension(32767, 10000));
-		contentPane.add(jpnlDestinationOption);
-		contentPane.add(jpnlDestinationOption, BorderLayout.CENTER);
-		GridBagLayout gbl_jpnlDestinationOption = new GridBagLayout();
-		gbl_jpnlDestinationOption.columnWidths = new int[]{42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_jpnlDestinationOption.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
-		gbl_jpnlDestinationOption.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_jpnlDestinationOption.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		jpnlDestinationOption.setLayout(gbl_jpnlDestinationOption);
-		
-		JRadioButton jrdbtnBluementrit = new JRadioButton("Blumentrit");
-		jrdbtnBluementrit.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnBluementrit = new GridBagConstraints();
-		gbc_jrdbtnBluementrit.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnBluementrit.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnBluementrit.gridx = 1;
-		gbc_jrdbtnBluementrit.gridy = 0;
-		jpnlDestinationOption.add(jrdbtnBluementrit, gbc_jrdbtnBluementrit);
-		
-		JRadioButton jrdbtnPaco = new JRadioButton("Paco");
-		jrdbtnPaco.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnPaco = new GridBagConstraints();
-		gbc_jrdbtnPaco.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnPaco.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnPaco.gridx = 3;
-		gbc_jrdbtnPaco.gridy = 0;
-		jpnlDestinationOption.add(jrdbtnPaco, gbc_jrdbtnPaco);
-		
-		JRadioButton jrdbtnEDSA = new JRadioButton("EDSA");
-		jrdbtnEDSA.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnEDSA = new GridBagConstraints();
-		gbc_jrdbtnEDSA.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnEDSA.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnEDSA.gridx = 5;
-		gbc_jrdbtnEDSA.gridy = 0;
-		jpnlDestinationOption.add(jrdbtnEDSA, gbc_jrdbtnEDSA);
-		
-		JRadioButton jrdbtnAlabang = new JRadioButton("Alabang");
-		jrdbtnAlabang.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnAlabang= new GridBagConstraints();
-		gbc_jrdbtnAlabang.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnAlabang.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnAlabang.gridx = 7;
-		gbc_jrdbtnAlabang.gridy = 0;
-		jpnlDestinationOption.add(jrdbtnAlabang, gbc_jrdbtnAlabang);
-		
-		JRadioButton jrdbtnBinan = new JRadioButton("Bi\u00F1an");
-		jrdbtnBinan.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnBinan = new GridBagConstraints();
-		gbc_jrdbtnBinan.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnBinan.insets = new Insets(0, 0, 5, 0);
-		gbc_jrdbtnBinan.gridx = 9;
-		gbc_jrdbtnBinan.gridy = 0;
-		jpnlDestinationOption.add(jrdbtnBinan, gbc_jrdbtnBinan);
-		
-		JRadioButton jrdbtnLaonLaan = new JRadioButton("Laon Laan");
-		jrdbtnLaonLaan.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnLaonLaan = new GridBagConstraints();
-		gbc_jrdbtnLaonLaan.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnLaonLaan.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnLaonLaan.gridx = 1;
-		gbc_jrdbtnLaonLaan.gridy = 1;
-		jpnlDestinationOption.add(jrdbtnLaonLaan, gbc_jrdbtnLaonLaan);
-		
-		JRadioButton jrdbtnSanAndreas = new JRadioButton("San Andres");
-		jrdbtnSanAndreas.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnSanAndreas = new GridBagConstraints();
-		gbc_jrdbtnSanAndreas.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnSanAndreas.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnSanAndreas.gridx = 3;
-		gbc_jrdbtnSanAndreas.gridy = 1;
-		jpnlDestinationOption.add(jrdbtnSanAndreas, gbc_jrdbtnSanAndreas);
-		
-		JRadioButton jrdbtnNichols = new JRadioButton("Nichols");
-		jrdbtnNichols.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnNichols = new GridBagConstraints();
-		gbc_jrdbtnNichols.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnNichols.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnNichols.gridx = 5;
-		gbc_jrdbtnNichols.gridy = 1;
-		jpnlDestinationOption.add(jrdbtnNichols, gbc_jrdbtnNichols);
-		
-		JRadioButton jrdbtnMuntinlupa = new JRadioButton("Muntinlupa");
-		jrdbtnMuntinlupa.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnMuntinlupa = new GridBagConstraints();
-		gbc_jrdbtnMuntinlupa.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnMuntinlupa.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnMuntinlupa.gridx = 7;
-		gbc_jrdbtnMuntinlupa.gridy = 1;
-		jpnlDestinationOption.add(jrdbtnMuntinlupa, gbc_jrdbtnMuntinlupa);
-		
-		JRadioButton jrdbtnStaRosa = new JRadioButton("Sta. Rosa");
-		jrdbtnStaRosa.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnStaRosa = new GridBagConstraints();
-		gbc_jrdbtnStaRosa.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnStaRosa.insets = new Insets(0, 0, 5, 0);
-		gbc_jrdbtnStaRosa.gridx = 9;
-		gbc_jrdbtnStaRosa.gridy = 1;
-		jpnlDestinationOption.add(jrdbtnStaRosa, gbc_jrdbtnStaRosa);
-		
-		JRadioButton jrdbtnEspana = new JRadioButton("Espa\u00F1a");
-		jrdbtnEspana.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnEspana = new GridBagConstraints();
-		gbc_jrdbtnEspana.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnEspana.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnEspana.gridx = 1;
-		gbc_jrdbtnEspana.gridy = 2;
-		jpnlDestinationOption.add(jrdbtnEspana, gbc_jrdbtnEspana);
-		
-		JRadioButton jrdbtnVitoCruz = new JRadioButton("Vito Cruz");
-		jrdbtnVitoCruz.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnVitoCruz = new GridBagConstraints();
-		gbc_jrdbtnVitoCruz.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnVitoCruz.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnVitoCruz.gridx = 3;
-		gbc_jrdbtnVitoCruz.gridy = 2;
-		jpnlDestinationOption.add(jrdbtnVitoCruz, gbc_jrdbtnVitoCruz);
-		
-		JRadioButton jrdbtnFTI = new JRadioButton("FTI");
-		jrdbtnFTI.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnFTI = new GridBagConstraints();
-		gbc_jrdbtnFTI.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnFTI.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnFTI.gridx = 5;
-		gbc_jrdbtnFTI.gridy = 2;
-		jpnlDestinationOption.add(jrdbtnFTI, gbc_jrdbtnFTI);
-		
-		JRadioButton jrdbtnSanPedro = new JRadioButton("San Pedro");
-		jrdbtnSanPedro.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnSanPedro = new GridBagConstraints();
-		gbc_jrdbtnSanPedro.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnSanPedro.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnSanPedro.gridx = 7;
-		gbc_jrdbtnSanPedro.gridy = 2;
-		jpnlDestinationOption.add(jrdbtnSanPedro, gbc_jrdbtnSanPedro);
-		
-		JRadioButton jrdbtnCabuyao = new JRadioButton("Cabuyao");
-		jrdbtnCabuyao.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnCabuyao = new GridBagConstraints();
-		gbc_jrdbtnCabuyao.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnCabuyao.insets = new Insets(0, 0, 5, 0);
-		gbc_jrdbtnCabuyao.gridx = 9;
-		gbc_jrdbtnCabuyao.gridy = 2;
-		jpnlDestinationOption.add(jrdbtnCabuyao, gbc_jrdbtnCabuyao);
-		
-		JRadioButton jrdbtnStaMesa = new JRadioButton("Sta. Mesa");
-		jrdbtnStaMesa.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnStaMesa = new GridBagConstraints();
-		gbc_jrdbtnStaMesa.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnStaMesa.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnStaMesa.gridx = 1;
-		gbc_jrdbtnStaMesa.gridy = 3;
-		jpnlDestinationOption.add(jrdbtnStaMesa, gbc_jrdbtnStaMesa);
-		
-		JRadioButton jrdbtnBuendia = new JRadioButton("Buendia");
-		jrdbtnBuendia.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnBuendia = new GridBagConstraints();
-		gbc_jrdbtnBuendia.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnBuendia.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnBuendia.gridx = 3;
-		gbc_jrdbtnBuendia.gridy = 3;
-		jpnlDestinationOption.add(jrdbtnBuendia, gbc_jrdbtnBuendia);
-		
-		JRadioButton jrdbtnBicutan = new JRadioButton("Bicutan");
-		jrdbtnBicutan.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnBicutan = new GridBagConstraints();
-		gbc_jrdbtnBicutan.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnBicutan.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnBicutan.gridx = 5;
-		gbc_jrdbtnBicutan.gridy = 3;
-		jpnlDestinationOption.add(jrdbtnBicutan, gbc_jrdbtnBicutan);
-		
-		JRadioButton jrdbtnPacitaMainGate = new JRadioButton("Pacita Main Gate");
-		jrdbtnPacitaMainGate.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnPacitaMainGate = new GridBagConstraints();
-		gbc_jrdbtnPacitaMainGate.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnPacitaMainGate.insets = new Insets(0, 0, 5, 5);
-		gbc_jrdbtnPacitaMainGate.gridx = 7;
-		gbc_jrdbtnPacitaMainGate.gridy = 3;
-		jpnlDestinationOption.add(jrdbtnPacitaMainGate, gbc_jrdbtnPacitaMainGate);
-		
-		JRadioButton jrdbtnMamatid = new JRadioButton("Mamatid");
-		jrdbtnMamatid.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnMamatid = new GridBagConstraints();
-		gbc_jrdbtnMamatid.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnMamatid.insets = new Insets(0, 0, 5, 0);
-		gbc_jrdbtnMamatid.gridx = 9;
-		gbc_jrdbtnMamatid.gridy = 3;
-		jpnlDestinationOption.add(jrdbtnMamatid, gbc_jrdbtnMamatid);
-		
-		JRadioButton jrdbtnPandacan = new JRadioButton("Pandacan");
-		jrdbtnPandacan.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnPandacan = new GridBagConstraints();
-		gbc_jrdbtnPandacan.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnPandacan.insets = new Insets(0, 0, 0, 5);
-		gbc_jrdbtnPandacan.gridx = 1;
-		gbc_jrdbtnPandacan.gridy = 4;
-		jpnlDestinationOption.add(jrdbtnPandacan, gbc_jrdbtnPandacan);
-		
-		JRadioButton jrdbtnPasayRoad = new JRadioButton("Pasay Road");
-		jrdbtnPasayRoad.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnPasayRoad = new GridBagConstraints();
-		gbc_jrdbtnPasayRoad.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnPasayRoad.insets = new Insets(0, 0, 0, 5);
-		gbc_jrdbtnPasayRoad.gridx = 3;
-		gbc_jrdbtnPasayRoad.gridy = 4;
-		jpnlDestinationOption.add(jrdbtnPasayRoad, gbc_jrdbtnPasayRoad);
-		
-		JRadioButton jrdbtnSucat = new JRadioButton("Sucat");
-		jrdbtnSucat.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnSucat = new GridBagConstraints();
-		gbc_jrdbtnSucat.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnSucat.insets = new Insets(0, 0, 0, 5);
-		gbc_jrdbtnSucat.gridx = 5;
-		gbc_jrdbtnSucat.gridy = 4;
-		jpnlDestinationOption.add(jrdbtnSucat, gbc_jrdbtnSucat);
-		
-		JRadioButton jrdbtnGoldenCity1 = new JRadioButton("Golden City 1");
-		jrdbtnGoldenCity1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnGoldenCity1 = new GridBagConstraints();
-		gbc_jrdbtnGoldenCity1.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnGoldenCity1.insets = new Insets(0, 0, 0, 5);
-		gbc_jrdbtnGoldenCity1.gridx = 7;
-		gbc_jrdbtnGoldenCity1.gridy = 4;
-		jpnlDestinationOption.add(jrdbtnGoldenCity1, gbc_jrdbtnGoldenCity1);
-		
-		JRadioButton jrdbtnCalamba = new JRadioButton("Calamba");
-		jrdbtnCalamba.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_jrdbtnCalamba = new GridBagConstraints();
-		gbc_jrdbtnCalamba.anchor = GridBagConstraints.WEST;
-		gbc_jrdbtnCalamba.gridx = 9;
-		gbc_jrdbtnCalamba.gridy = 4;
-		jpnlDestinationOption.add(jrdbtnCalamba, gbc_jrdbtnCalamba);
-		
-		ButtonGroup grpDestination = new ButtonGroup();
-		grpDestination.add(jrdbtnBluementrit);
-		grpDestination.add(jrdbtnLaonLaan);
-		grpDestination.add(jrdbtnEspana);
-		grpDestination.add(jrdbtnStaMesa);
-		grpDestination.add(jrdbtnPandacan);
-		grpDestination.add(jrdbtnPaco);
-		grpDestination.add(jrdbtnSanAndreas);
-		grpDestination.add(jrdbtnVitoCruz);
-		grpDestination.add(jrdbtnBuendia);
-		grpDestination.add(jrdbtnPasayRoad);
-		grpDestination.add(jrdbtnEDSA);
-		grpDestination.add(jrdbtnNichols);
-		grpDestination.add(jrdbtnFTI);
-		grpDestination.add(jrdbtnBicutan);
-		grpDestination.add(jrdbtnSucat);
-		grpDestination.add(jrdbtnAlabang);
-		grpDestination.add(jrdbtnMuntinlupa);
-		grpDestination.add(jrdbtnSanPedro);
-		grpDestination.add(jrdbtnPacitaMainGate);
-		grpDestination.add(jrdbtnGoldenCity1);
-		grpDestination.add(jrdbtnBinan);
-		grpDestination.add(jrdbtnStaRosa);
-		grpDestination.add(jrdbtnCabuyao);
-		grpDestination.add(jrdbtnMamatid);
-		grpDestination.add(jrdbtnCalamba);
 		
 		JPanel jpnlPayment = new JPanel();
 		contentPane.add(jpnlPayment);
@@ -336,21 +85,44 @@ public class TicketCashierPrompt extends JFrame {
 		
 		JPanel jpnlTicketAndPayment = new JPanel();
 		jpnlTicketAndPayment.setBorder(new EmptyBorder(0, 10, 0, 0));
-		jpnlTicketAndPayment.setMaximumSize(new Dimension(3000, 80000));
+		jpnlTicketAndPayment.setMaximumSize(new Dimension(3000, 1000));
 		jpnlPayment.add(jpnlTicketAndPayment);
 		GridBagLayout gbl_jpnlTicketAndPayment = new GridBagLayout();
 		gbl_jpnlTicketAndPayment.columnWidths = new int[]{0, 109, 68, 0};
-		gbl_jpnlTicketAndPayment.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_jpnlTicketAndPayment.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_jpnlTicketAndPayment.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_jpnlTicketAndPayment.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		gbl_jpnlTicketAndPayment.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_jpnlTicketAndPayment.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		jpnlTicketAndPayment.setLayout(gbl_jpnlTicketAndPayment);
+		
+		JLabel jlblStations = new JLabel("Stations:");
+		GridBagConstraints gbc_jlblStations = new GridBagConstraints();
+		gbc_jlblStations.insets = new Insets(0, 0, 5, 5);
+		gbc_jlblStations.anchor = GridBagConstraints.EAST;
+		gbc_jlblStations.gridx = 0;
+		gbc_jlblStations.gridy = 1;
+		jpnlTicketAndPayment.add(jlblStations, gbc_jlblStations);
+		
+		jcmbStations = new JComboBox();
+		GridBagConstraints gbc_jcmbStations = new GridBagConstraints();
+		gbc_jcmbStations.insets = new Insets(0, 0, 5, 5);
+		gbc_jcmbStations.fill = GridBagConstraints.HORIZONTAL;
+		gbc_jcmbStations.gridx = 1;
+		gbc_jcmbStations.gridy = 1;
+		jpnlTicketAndPayment.add(jcmbStations, gbc_jcmbStations);
+		
+		Component verticalStrut = Box.createVerticalStrut(20);
+		GridBagConstraints gbc_verticalStrut = new GridBagConstraints();
+		gbc_verticalStrut.insets = new Insets(0, 0, 5, 5);
+		gbc_verticalStrut.gridx = 1;
+		gbc_verticalStrut.gridy = 2;
+		jpnlTicketAndPayment.add(verticalStrut, gbc_verticalStrut);
 		
 		JLabel jlblNoOfTickets = new JLabel("No. Of Tickets:");
 		GridBagConstraints gbc_jlblNoOfTickets = new GridBagConstraints();
 		gbc_jlblNoOfTickets.anchor = GridBagConstraints.EAST;
 		gbc_jlblNoOfTickets.insets = new Insets(0, 0, 5, 5);
 		gbc_jlblNoOfTickets.gridx = 0;
-		gbc_jlblNoOfTickets.gridy = 0;
+		gbc_jlblNoOfTickets.gridy = 3;
 		jpnlTicketAndPayment.add(jlblNoOfTickets, gbc_jlblNoOfTickets);
 		
 		jtxtfldNoOfTickets = new JTextField();
@@ -360,7 +132,7 @@ public class TicketCashierPrompt extends JFrame {
 		GridBagConstraints gbc_jtxtfldNoOfTickets = new GridBagConstraints();
 		gbc_jtxtfldNoOfTickets.insets = new Insets(0, 0, 5, 5);
 		gbc_jtxtfldNoOfTickets.gridx = 1;
-		gbc_jtxtfldNoOfTickets.gridy = 0;
+		gbc_jtxtfldNoOfTickets.gridy = 3;
 		jpnlTicketAndPayment.add(jtxtfldNoOfTickets, gbc_jtxtfldNoOfTickets);
 		jtxtfldNoOfTickets.setColumns(10);
 		
@@ -369,7 +141,7 @@ public class TicketCashierPrompt extends JFrame {
 		gbc_panel.insets = new Insets(0, 0, 5, 0);
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.gridx = 2;
-		gbc_panel.gridy = 0;
+		gbc_panel.gridy = 3;
 		jpnlTicketAndPayment.add(panel, gbc_panel);
 		
 		JButton jbtnDecrement = new JButton("-");
@@ -388,14 +160,14 @@ public class TicketCashierPrompt extends JFrame {
 		gbc_jlblCash.anchor = GridBagConstraints.EAST;
 		gbc_jlblCash.insets = new Insets(0, 0, 0, 5);
 		gbc_jlblCash.gridx = 0;
-		gbc_jlblCash.gridy = 2;
+		gbc_jlblCash.gridy = 5;
 		jpnlTicketAndPayment.add(jlblCash, gbc_jlblCash);
 		
 		textField_1 = new JTextField();
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
 		gbc_textField_1.insets = new Insets(0, 0, 0, 5);
 		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 2;
+		gbc_textField_1.gridy = 5;
 		jpnlTicketAndPayment.add(textField_1, gbc_textField_1);
 		textField_1.setColumns(10);
 		
@@ -403,7 +175,7 @@ public class TicketCashierPrompt extends JFrame {
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.fill = GridBagConstraints.BOTH;
 		gbc_panel_1.gridx = 2;
-		gbc_panel_1.gridy = 2;
+		gbc_panel_1.gridy = 5;
 		jpnlTicketAndPayment.add(panel_1, gbc_panel_1);
 		
 		JButton btnNewButton_3 = new JButton("CLEAR");
@@ -441,7 +213,7 @@ public class TicketCashierPrompt extends JFrame {
 		jlblSoBCash.setBounds(20, 118, 46, 14);
 		jpnlBilling.add(jlblSoBCash);
 		
-		JLabel jlblSoBDestinationOutput = new JLabel("Pacita Main Gate");
+		jlblSoBDestinationOutput = new JLabel("Pacita Main Gate");
 		jlblSoBDestinationOutput.setVerticalAlignment(SwingConstants.BOTTOM);
 		jlblSoBDestinationOutput.setFont(new Font("Tahoma", Font.BOLD, 14));
 		jlblSoBDestinationOutput.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -498,6 +270,8 @@ public class TicketCashierPrompt extends JFrame {
 		jpnlBilling.add(lblPleaseDoubleCheck);
 		
 		JPanel jpnlButtons = new JPanel();
+		jpnlButtons.setMinimumSize(new Dimension(10, 1000));
+		jpnlButtons.setMaximumSize(new Dimension(32767, 10000));
 		contentPane.add(jpnlButtons);
 		jpnlButtons.setLayout(null);
 		
@@ -514,7 +288,34 @@ public class TicketCashierPrompt extends JFrame {
 		jbtnPrintTicket.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		jbtnPrintTicket.setBounds(509, 11, 119, 23);
 		jpnlButtons.add(jbtnPrintTicket);
-		
-		
+	
+	}
+	
+	
+
+
+
+	//method to initialize the UI component of cashier account right after login
+	// will create station options based on its credentials 
+	public void initializeUI() {
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
+			Statement statement = connection.createStatement();
+			
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM station");
+			
+			while (resultSet.next()) {
+				jcmbStations.addItem(resultSet.getString("name") + " " + resultSet.getString("id"));
+			}
+			
+			revalidate(); 
+			resultSet.close();
+			statement.close();
+			connection.close();
+			
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 }

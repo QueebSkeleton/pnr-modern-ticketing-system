@@ -5,6 +5,11 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -15,13 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
-import java.sql.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.awt.event.ActionEvent;
 
 public class LoginFrame extends JFrame {
 
@@ -32,11 +30,20 @@ public class LoginFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField jtxtfldUsername;
 	private JPasswordField jpsswrdfldPassword;
+	
+	
+	// reference for the main application of cashier
+	protected TicketCashierPrompt ticketCashierPrompt; 
+	
+	
 
 	/**
 	 * Create the frame.
 	 */
 	public LoginFrame() {
+		
+		ticketCashierPrompt = new TicketCashierPrompt();
+		
 		setTitle("Cashier Login ");
 		setBounds(100, 100, 293, 217);
 		contentPane = new JPanel();
@@ -98,8 +105,16 @@ public class LoginFrame extends JFrame {
 			ResultSet resultSet = statement.executeQuery("SELECT * FROM cashier WHERE username = '" + jtxtfldUsername.getText() +
 								 "' AND password = '" + String.valueOf(jpsswrdfldPassword.getPassword()) + "'");
 			
-			if (resultSet.next())
+			if (resultSet.next()) {
+				ticketCashierPrompt.cashierID = resultSet.getInt("id");
+				ticketCashierPrompt.cashierName = resultSet.getString("first_name") + " " + resultSet.getString("last_name");
+				ticketCashierPrompt.assignedStationID = resultSet.getInt("assigned_station_id") ;
+				
+				
 				JOptionPane.showMessageDialog(null, "Login Successfully!");
+				ticketCashierPrompt.setVisible(true);
+				ticketCashierPrompt.initializeUI();
+			}
 			else 
 				JOptionPane.showMessageDialog(null, "Failed to login. Please double check your credentials and try again.");
 			
