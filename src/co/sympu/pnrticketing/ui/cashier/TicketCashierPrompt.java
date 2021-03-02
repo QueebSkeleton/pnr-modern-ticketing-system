@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -39,8 +38,16 @@ public class TicketCashierPrompt extends JFrame {
 	
 	private JPanel contentPane;
 	private JTextField jtxtfldNoOfTickets;
-	private JTextField textField_1;
+	private JTextField jtxtfldCash;
+	
+	// output variables for Summary of Billing
 	private JLabel jlblSoBDestinationOutput;
+	private JLabel jlblSoBNoOfTicketsOutput;
+	private JLabel jlblSoBTotalOutput;
+	private JLabel jlblSoBCashOutput;
+	private JLabel jlblSoBChangeOutput;
+	
+	
 	private JComboBox jcmbStations;
 	
 	// reference for LoginFrame
@@ -50,9 +57,18 @@ public class TicketCashierPrompt extends JFrame {
 	protected int cashierID; 
 	protected String cashierName;
 	protected int assignedStationID;
-	
+
 	// Self referencing 
 	TicketCashierPrompt ticketCashierPrompt = this;
+	
+	// value holders for calculatePrice method
+	private String strVHDestination;  
+	private int intVHStationID; 
+	
+	private float fltAmount;
+	private float fltChange;
+	
+	
 	
 
 	/**
@@ -62,7 +78,7 @@ public class TicketCashierPrompt extends JFrame {
 		setResizable(false);
 		setTitle("Cashier Module");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 664, 490);
+		setBounds(100, 100, 752, 521);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -136,24 +152,6 @@ public class TicketCashierPrompt extends JFrame {
 		jpnlTicketAndPayment.add(jtxtfldNoOfTickets, gbc_jtxtfldNoOfTickets);
 		jtxtfldNoOfTickets.setColumns(10);
 		
-		JPanel panel = new JPanel();
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.insets = new Insets(0, 0, 5, 0);
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 2;
-		gbc_panel.gridy = 3;
-		jpnlTicketAndPayment.add(panel, gbc_panel);
-		
-		JButton jbtnDecrement = new JButton("-");
-		jbtnDecrement.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		panel.add(jbtnDecrement);
-		jbtnDecrement.setFont(new Font("Tahoma", Font.BOLD, 14));
-		
-		JButton jbtnIncrement = new JButton("+");
-		jbtnIncrement.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		jbtnIncrement.setFont(new Font("Tahoma", Font.BOLD, 14));
-		panel.add(jbtnIncrement);
-		
 		JLabel jlblCash = new JLabel("Cash:");
 		jlblCash.setHorizontalAlignment(SwingConstants.TRAILING);
 		GridBagConstraints gbc_jlblCash = new GridBagConstraints();
@@ -163,30 +161,21 @@ public class TicketCashierPrompt extends JFrame {
 		gbc_jlblCash.gridy = 5;
 		jpnlTicketAndPayment.add(jlblCash, gbc_jlblCash);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 0, 5);
-		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 5;
-		jpnlTicketAndPayment.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
-		
-		JPanel panel_1 = new JPanel();
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 2;
-		gbc_panel_1.gridy = 5;
-		jpnlTicketAndPayment.add(panel_1, gbc_panel_1);
-		
-		JButton btnNewButton_3 = new JButton("CLEAR");
-		btnNewButton_3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		panel_1.add(btnNewButton_3);
+		jtxtfldCash = new JTextField();
+		GridBagConstraints gbc_jtxtfldCash = new GridBagConstraints();
+		gbc_jtxtfldCash.insets = new Insets(0, 0, 0, 5);
+		gbc_jtxtfldCash.gridx = 1;
+		gbc_jtxtfldCash.gridy = 5;
+		jpnlTicketAndPayment.add(jtxtfldCash, gbc_jtxtfldCash);
+		jtxtfldCash.setColumns(10);
 		
 		JPanel jpnlBilling = new JPanel();
 		jpnlBilling.setBorder(new BevelBorder(BevelBorder.RAISED, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.DARK_GRAY, null));
 		jpnlPayment.add(jpnlBilling);
 		jpnlBilling.setLayout(null);
 		
+		
+		/* START of Summary Billing GUI*/
 		JLabel jlblSummary = new JLabel("Summary of Billing");
 		jlblSummary.setFont(new Font("Tahoma", Font.BOLD, 12));
 		jlblSummary.setBounds(20, 11, 121, 14);
@@ -220,14 +209,14 @@ public class TicketCashierPrompt extends JFrame {
 		jlblSoBDestinationOutput.setBounds(183, 37, 113, 26);
 		jpnlBilling.add(jlblSoBDestinationOutput);
 		
-		JLabel jlblSoBNoOfTicketsOutput = new JLabel("1");
+		jlblSoBNoOfTicketsOutput = new JLabel("1");
 		jlblSoBNoOfTicketsOutput.setVerticalAlignment(SwingConstants.BOTTOM);
 		jlblSoBNoOfTicketsOutput.setHorizontalAlignment(SwingConstants.TRAILING);
 		jlblSoBNoOfTicketsOutput.setFont(new Font("Tahoma", Font.BOLD, 14));
 		jlblSoBNoOfTicketsOutput.setBounds(183, 58, 113, 26);
 		jpnlBilling.add(jlblSoBNoOfTicketsOutput);
 		
-		JLabel jlblSoBTotalOutput = new JLabel("20.00");
+		jlblSoBTotalOutput = new JLabel("20.00");
 		jlblSoBTotalOutput.setHorizontalAlignment(SwingConstants.TRAILING);
 		jlblSoBTotalOutput.setFont(new Font("Tahoma", Font.BOLD, 14));
 		jlblSoBTotalOutput.setBounds(183, 93, 113, 14);
@@ -250,18 +239,18 @@ public class TicketCashierPrompt extends JFrame {
 		jlblSoBPesoSign_1.setBounds(137, 142, 28, 26);
 		jpnlBilling.add(jlblSoBPesoSign_1);
 		
-		JLabel jlblSoBChangeOutput = new JLabel("30.00");
+		jlblSoBChangeOutput = new JLabel("30.00");
 		jlblSoBChangeOutput.setForeground(Color.BLUE);
 		jlblSoBChangeOutput.setHorizontalAlignment(SwingConstants.TRAILING);
 		jlblSoBChangeOutput.setFont(new Font("Tahoma", Font.BOLD, 18));
 		jlblSoBChangeOutput.setBounds(183, 150, 113, 14);
 		jpnlBilling.add(jlblSoBChangeOutput);
 		
-		JLabel jlblSoBTotalOutput_1 = new JLabel("50.00");
-		jlblSoBTotalOutput_1.setHorizontalAlignment(SwingConstants.TRAILING);
-		jlblSoBTotalOutput_1.setFont(new Font("Tahoma", Font.BOLD, 14));
-		jlblSoBTotalOutput_1.setBounds(175, 120, 121, 14);
-		jpnlBilling.add(jlblSoBTotalOutput_1);
+		jlblSoBCashOutput = new JLabel("50.00");
+		jlblSoBCashOutput.setHorizontalAlignment(SwingConstants.TRAILING);
+		jlblSoBCashOutput.setFont(new Font("Tahoma", Font.BOLD, 14));
+		jlblSoBCashOutput.setBounds(175, 116, 121, 14);
+		jpnlBilling.add(jlblSoBCashOutput);
 		
 		JLabel lblPleaseDoubleCheck = new JLabel("Please double check before printing");
 		lblPleaseDoubleCheck.setFont(new Font("Tahoma", Font.ITALIC, 11));
@@ -269,6 +258,9 @@ public class TicketCashierPrompt extends JFrame {
 		lblPleaseDoubleCheck.setBounds(10, 189, 223, 14);
 		jpnlBilling.add(lblPleaseDoubleCheck);
 		
+		/*END of Summary of Billing GUI*/
+		
+		// Buttons Panel for Ticket Error Handling, Update Billing, and Print Ticket
 		JPanel jpnlButtons = new JPanel();
 		jpnlButtons.setMinimumSize(new Dimension(10, 1000));
 		jpnlButtons.setMaximumSize(new Dimension(32767, 10000));
@@ -280,21 +272,34 @@ public class TicketCashierPrompt extends JFrame {
 		jbtnTicketError.setBounds(10, 11, 119, 23);
 		jpnlButtons.add(jbtnTicketError);
 		
-		JButton jbtnPrintTicket = new JButton("PRINT TICKET");
+		JButton jbtnPrintTicket = new JButton("UPDATE BILLING");
 		jbtnPrintTicket.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
+					try {
+						calculatePrice();
+						updateBilling();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 			}
 		});
 		jbtnPrintTicket.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		jbtnPrintTicket.setBounds(509, 11, 119, 23);
 		jpnlButtons.add(jbtnPrintTicket);
+		
+		JButton btnNewButton = new JButton("PRINT TICKET");
+		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnNewButton.setBackground(Color.ORANGE);
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnNewButton.setBounds(266, 11, 119, 23);
+		jpnlButtons.add(btnNewButton);
+		
+		
 	
 	}
 	
-	
-
-
-
 	//method to initialize the UI component of cashier account right after login
 	// will create station options based on its credentials 
 	public void initializeUI() {
@@ -302,10 +307,10 @@ public class TicketCashierPrompt extends JFrame {
 			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
 			Statement statement = connection.createStatement();
 			
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM station");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM station WHERE id != " + assignedStationID);
 			
 			while (resultSet.next()) {
-				jcmbStations.addItem(resultSet.getString("name") + " " + resultSet.getString("id"));
+				jcmbStations.addItem(resultSet.getString("id") + " " + resultSet.getString("name"));
 			}
 			
 			revalidate(); 
@@ -317,5 +322,49 @@ public class TicketCashierPrompt extends JFrame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	}
+	
+	// Method to calculate the price based from user's input 
+	public void calculatePrice() throws SQLException {
+		strVHDestination = (String) jcmbStations.getItemAt(jcmbStations.getSelectedIndex());
+		
+		//temporary value holder for the split strVHStation
+		String tempStringHolder = strVHDestination.split(" ")[0];
+		intVHStationID = Integer.parseInt(tempStringHolder); 
+				
+	
+		// Retrieving price from the station_pricing table 
+		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
+		Statement statement = connection.createStatement();
+		
+		
+		ResultSet resultSetPricing = statement.executeQuery("SELECT * FROM station_pricing WHERE from_id =" + assignedStationID + " AND to_id =" + intVHStationID);
+		
+		// Value Holder for the price from station_pricing
+		resultSetPricing.next();
+		float fltVHPrice = resultSetPricing.getFloat("price");
+		
+		// Calculations for the Payable amount 
+		fltAmount = fltVHPrice * (Integer.parseInt(jtxtfldNoOfTickets.getText())); 
+		
+		// Calculation for passenger's change
+		fltChange = (Float.parseFloat(jtxtfldCash.getText())) - fltAmount; 
+		
+	}
+	
+	/*This method updates the following variables: 
+	 * private JLabel jlblSoBDestinationOutput;
+	 * private JLabel jlblSoBNoOfTicketsOutput;
+	 * private JLabel jlblSoBTotalOutput;
+	 * private JLabel jlblSoBCashOutput;
+	 * private JLabel jlblSoBChangeOutput;*/
+	public void updateBilling() { 
+		
+		jlblSoBDestinationOutput.setText(strVHDestination);
+		jlblSoBNoOfTicketsOutput.setText(jtxtfldNoOfTickets.getText());
+		jlblSoBTotalOutput.setText("" + fltAmount);
+		jlblSoBCashOutput.setText(jtxtfldCash.getText());
+		jlblSoBChangeOutput.setText("" + fltChange);
+	
 	}
 }
