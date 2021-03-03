@@ -36,9 +36,18 @@ public class MachineManagementAdd extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtSerial;
-	private JTextField txtPassword;
-	private JTextField txtRePassword;
+	
+	protected JTextField txtSerial = new JTextField();
+	protected JTextField txtPassword = new JTextField();
+	protected JTextField txtRePassword = new JTextField();
+	
+	protected JButton okButton = new JButton("OK");
+	protected JButton editButton = new JButton("Edit");
+	protected JButton deleteButton = new JButton("Delete");
+	
+	protected JComboBox cmbStation = new JComboBox();
+	protected JComboBox cmbStatus = new JComboBox();
+	
 
 	static Connection objConn;
 	static ResultSet objResultSet;
@@ -66,9 +75,7 @@ public class MachineManagementAdd extends JDialog {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowActivated(WindowEvent e) {
-				txtSerial.setText("");
-				txtPassword.setText("");
-				txtRePassword.setText("");
+				
 			}
 		});
 
@@ -96,6 +103,7 @@ public class MachineManagementAdd extends JDialog {
 		}
 		{
 			txtSerial = new JTextField();
+			//txtSerial = new JTextField();
 			txtSerial.setBackground(new Color(255, 255, 255));
 			GridBagConstraints gbc_txtSerial = new GridBagConstraints();
 			gbc_txtSerial.fill = GridBagConstraints.BOTH;
@@ -118,7 +126,7 @@ public class MachineManagementAdd extends JDialog {
 			contentPanel.add(lblStation, gbc_lblStation);
 		}
 
-		JComboBox cmbStation = new JComboBox();
+		//JComboBox cmbStation = new JComboBox();
 		GridBagConstraints gbc_cmbStation = new GridBagConstraints();
 		gbc_cmbStation.fill = GridBagConstraints.BOTH;
 		gbc_cmbStation.insets = new Insets(0, 0, 5, 0);
@@ -158,7 +166,7 @@ public class MachineManagementAdd extends JDialog {
 			JOptionPane.showMessageDialog(null, "Error");
 		}
 
-		JComboBox cmbStatus = new JComboBox();
+		//JComboBox cmbStatus = new JComboBox();
 		cmbStatus.setModel(new DefaultComboBoxModel(new String[] { "active", "inactive" }));
 		GridBagConstraints gbc_cmbStatus = new GridBagConstraints();
 		gbc_cmbStatus.fill = GridBagConstraints.BOTH;
@@ -179,7 +187,7 @@ public class MachineManagementAdd extends JDialog {
 			contentPanel.add(lblPassword, gbc_lblPassword);
 		}
 
-		txtPassword = new JTextField();
+		//txtPassword = new JTextField();
 		txtPassword.setColumns(20);
 		txtPassword.setBackground(Color.WHITE);
 		GridBagConstraints gbc_txtPassword = new GridBagConstraints();
@@ -201,7 +209,7 @@ public class MachineManagementAdd extends JDialog {
 			contentPanel.add(lblRetypePassword, gbc_lblRetypePassword);
 		}
 
-		txtRePassword = new JTextField();
+		//txtRePassword = new JTextField();
 		txtRePassword.setColumns(20);
 		txtRePassword.setBackground(Color.WHITE);
 		GridBagConstraints gbc_txtRePassword = new GridBagConstraints();
@@ -214,7 +222,7 @@ public class MachineManagementAdd extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				//JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
@@ -224,6 +232,7 @@ public class MachineManagementAdd extends JDialog {
 									"pnr_app", "password123");
 
 							Statement stmt = con.createStatement();
+							
 							stmt.execute("INSERT INTO machine (serial_number, password, status, assigned_station_id) "
 									+ "VALUES ('" + txtSerial.getText() + "','" + txtPassword.getText() + "', '"
 									+ ((String) cmbStatus.getSelectedItem()) + "', '"
@@ -238,11 +247,72 @@ public class MachineManagementAdd extends JDialog {
 					}
 
 				});
+				
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
+				
+				
+				//JButton editButton = new JButton("Edit");
+				editButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						 try {
+							 	String strID = machineManagementPanel.getTblMachineManagementTable().getValueAt(machineManagementPanel.getTblMachineManagementTable().getSelectedRow(), 0).toString();
+					            Class.forName("com.mysql.cj.jdbc.Driver");
+					            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db",
+										"pnr_app", "password123");
+					                        
+					            java.sql.Statement stmt = con.createStatement();
+					            String query = "SELECT serial_number from machine "
+					            		+ "WHERE serial_number = '" + strID + "'";
+								ResultSet rs = stmt.executeQuery(query);
+								if(rs.next()) {
+								
+					            stmt.execute("UPDATE machine "
+					                + "SET serial_number = '" + txtSerial.getText() + "', "
+					                	+ "password = '" + txtPassword.getText() + "', "
+					                	+ "status = '" + ((String) cmbStatus.getSelectedItem()) + "', "
+					                	+ "assigned_station_id = '" + ((String) cmbStation.getSelectedItem()).split(" - ")[0].trim() + "' "
+					                + "WHERE serial_number = '" +  rs.getString("serial_number") + "'");
+
+					            
+					            rs.close();
+					            stmt.close();
+					            con.close();
+								}else {
+									JOptionPane.showMessageDialog(
+											editButton, 
+											"No such ID",
+											"Notice",
+											JOptionPane.WARNING_MESSAGE);
+								}
+					            
+					            machineManagementPanel.refreshtbl();
+					            dispose();
+					            
+					        } catch (Exception e) {
+								
+					            e.printStackTrace();
+					            }
+					}
+				});
+				
+				editButton.setActionCommand("Edit");
+				buttonPane.add(editButton);
+				
+				//JButton deleteButton = new JButton("Delete");
+				deleteButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+					
+					}
+				});
+				
+				deleteButton.setActionCommand("Delete");
+				buttonPane.add(deleteButton);
+				
 				getRootPane().setDefaultButton(okButton);
-			}
-			{
+				{
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					@Override
@@ -252,6 +322,7 @@ public class MachineManagementAdd extends JDialog {
 				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
+				}
 			}
 		}
 	}

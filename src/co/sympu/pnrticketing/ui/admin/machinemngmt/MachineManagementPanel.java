@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -17,6 +17,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import co.sympu.pnrticketing.ui.admin.MainFrame;
+
 import java.awt.SystemColor;
 
 import java.sql.*;
@@ -26,7 +29,9 @@ public class MachineManagementPanel extends JPanel {
 	static Connection objConn;
 	static ResultSet objResultSet;
 	static Statement objSQLQuery;
-
+	
+	protected MainFrame mainFrame;
+	
 	private static final long serialVersionUID = 1L;
 	private JTable tblMachineManagementTable;
 
@@ -92,6 +97,12 @@ public class MachineManagementPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				machineManagementAdd.setVisible(true);
+				machineManagementAdd.txtSerial.setText("");
+				machineManagementAdd.txtPassword.setText("");
+				machineManagementAdd.txtRePassword.setText("");
+				machineManagementAdd.okButton.setVisible(true);
+				machineManagementAdd.editButton.setVisible(false);
+				machineManagementAdd.deleteButton.setVisible(false);
 			}
 		});
 		btnAdd.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -103,6 +114,55 @@ public class MachineManagementPanel extends JPanel {
 		panel.add(btnAdd, gbc_btnAdd);
 
 		JButton btnUpload = new JButton("Update");
+		btnUpload.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(getTblMachineManagementTable().getSelectionModel().getSelectedItemsCount() == 0) {
+					// Output a friendly message telling the user to select a row first
+					JOptionPane.showMessageDialog(
+					mainFrame, 
+					"Please select a Machine first before clicking the update pricing button.",
+					"Notice",
+					JOptionPane.WARNING_MESSAGE);
+					
+					return;
+				}
+				
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app",
+							"password123");
+
+					String query = "select serial_number, "
+								+ "password,"
+								+ "assigned_station_id "
+								+ "from machine "
+							+ "where serial_number = '" + getTblMachineManagementTable().getValueAt(
+									getTblMachineManagementTable().getSelectedRow(), 0) + "'";
+					
+					Statement stmt = con.createStatement();
+					ResultSet rs = stmt.executeQuery(query);
+					rs.next();
+				
+				machineManagementAdd.setVisible(true);
+				machineManagementAdd.okButton.setVisible(false);
+				machineManagementAdd.editButton.setVisible(true);
+				machineManagementAdd.deleteButton.setVisible(false);
+				
+				machineManagementAdd.txtSerial.setText(rs.getString("serial_number"));
+				machineManagementAdd.txtPassword.setText(rs.getString("password"));
+				machineManagementAdd.txtRePassword.setText(rs.getString("password"));
+				
+
+				rs.close();
+				stmt.close();
+				con.close();
+				
+			}catch(Exception Exe) {
+				Exe.printStackTrace();
+			}
+			}
+		});
 		btnUpload.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_btnUpload = new GridBagConstraints();
 		gbc_btnUpload.anchor = GridBagConstraints.WEST;
@@ -112,6 +172,15 @@ public class MachineManagementPanel extends JPanel {
 		panel.add(btnUpload, gbc_btnUpload);
 
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				machineManagementAdd.setVisible(true);
+				machineManagementAdd.okButton.setVisible(false);
+				machineManagementAdd.editButton.setVisible(false);
+				machineManagementAdd.deleteButton.setVisible(true);
+			}
+		});
 		btnDelete.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
 		gbc_btnDelete.anchor = GridBagConstraints.WEST;
@@ -130,9 +199,9 @@ public class MachineManagementPanel extends JPanel {
 		gbc_scrMachineManagementPanel.gridy = 1;
 		add(scrMachineManagementPanel, gbc_scrMachineManagementPanel);
 
-		tblMachineManagementTable = new JTable();
-		scrMachineManagementPanel.add(tblMachineManagementTable);
-		scrMachineManagementPanel.setViewportView(tblMachineManagementTable);
+		setTblMachineManagementTable(new JTable());
+		scrMachineManagementPanel.add(getTblMachineManagementTable());
+		scrMachineManagementPanel.setViewportView(getTblMachineManagementTable());
 	}
 
 	public void refreshtbl() {
@@ -158,10 +227,18 @@ public class MachineManagementPanel extends JPanel {
 			stmt.close();
 			con.close();
 
-			tblMachineManagementTable.setModel(model);
+			getTblMachineManagementTable().setModel(model);
 		} catch (Exception e) {
 			// JOptionPane.showMessageDialog(null, e.printStackTrace());
 			e.printStackTrace();
 		}
+	}
+
+	public JTable getTblMachineManagementTable() {
+		return tblMachineManagementTable;
+	}
+
+	public void setTblMachineManagementTable(JTable tblMachineManagementTable) {
+		this.tblMachineManagementTable = tblMachineManagementTable;
 	}
 }
