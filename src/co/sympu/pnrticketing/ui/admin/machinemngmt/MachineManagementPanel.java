@@ -153,6 +153,7 @@ public class MachineManagementPanel extends JPanel {
 				machineManagementAdd.deleteButton.setVisible(false);
 				
 				machineManagementAdd.txtSerial.setText(rs.getString("serial_number"));
+				machineManagementAdd.txtSerial.setEnabled(false);
 				machineManagementAdd.txtPassword.setText(rs.getString("password"));
 				machineManagementAdd.txtRePassword.setText(rs.getString("password"));
 				
