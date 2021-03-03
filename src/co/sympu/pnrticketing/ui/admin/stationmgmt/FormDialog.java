@@ -1,5 +1,7 @@
 package co.sympu.pnrticketing.ui.admin.stationmgmt;
 
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -25,8 +27,6 @@ import javax.swing.border.EmptyBorder;
 
 import co.sympu.pnrticketing.domain.Station;
 import co.sympu.pnrticketing.exception.RepositoryAccessException;
-import java.awt.Color;
-import java.awt.Cursor;
 
 /**
  * Main Form Dialog of the Station Management Panel. Stations can be created and
@@ -305,6 +305,7 @@ public class FormDialog extends JDialog {
 	 * Initializes this dialog for inserting a new station.
 	 */
 	public void initialize() {
+		this.station = null;
 		// Clear the input fields
 		jtxtfldStationName.setText("");
 		jtxtareaDescription.setText("");
