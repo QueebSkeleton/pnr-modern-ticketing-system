@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -66,7 +67,7 @@ public class PastWeekSalesTableModel extends AbstractTableModel {
 		switch(columnIndex) {
 		
 		case 0:
-			return daySales.date;
+			return daySales.date.format(DateTimeFormatter.ofPattern("EEEE, MMMM-dd-yyyy"));
 			
 		case 1:
 			return daySales.ticketCount;
