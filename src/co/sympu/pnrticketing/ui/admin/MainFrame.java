@@ -82,26 +82,36 @@ public class MainFrame extends JFrame {
 		
 		/* jpnlSidebar - sidebar panel shown on the left, uses BoxLayout to lay its components */
 		JPanel jpnlSidebar = new JPanel();
-		jpnlSidebar.setBackground(Color.BLUE);
-		jpnlSidebar.setMaximumSize(new Dimension(180, 32767));
-		jpnlSidebar.setMinimumSize(new Dimension(180, 10));
+		jpnlSidebar.setBorder(null);
+		jpnlSidebar.setBackground(new Color(51, 102, 255));
+		jpnlSidebar.setMaximumSize(new Dimension(225, 32767));
+		jpnlSidebar.setMinimumSize(new Dimension(225, 10));
 		jpnlContentPane.add(jpnlSidebar);
 		jpnlSidebar.setLayout(new BoxLayout(jpnlSidebar, BoxLayout.Y_AXIS));
 		/* END OF jpnlSidebar */
 		
 		/* jlblSidebarHeader - header label in the sidebar */
+		
+		JLabel jlblMiniHeader = new JLabel("Philippine National Railways");
+		jlblMiniHeader.setAlignmentY(0.0f);
+		jlblMiniHeader.setForeground(Color.WHITE);
+		jlblMiniHeader.setFont(new Font("Roboto Light", Font.PLAIN, 11));
+		jlblMiniHeader.setBorder(new EmptyBorder(20, 20, 0, 20));
+		jpnlSidebar.add(jlblMiniHeader);
 		JLabel jlblSidebarHeader = new JLabel("<html>PNR Modern<br>Ticketing System</html>");
-		jlblSidebarHeader.setBorder(new EmptyBorder(10, 10, 10, 10));
+		jlblSidebarHeader.setAlignmentY(0.0f);
+		jlblSidebarHeader.setBorder(new EmptyBorder(0, 20, 0, 20));
 		jlblSidebarHeader.setForeground(Color.WHITE);
-		jlblSidebarHeader.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
+		jlblSidebarHeader.setFont(new Font("Roboto", Font.PLAIN, 20));
 		jpnlSidebar.add(jlblSidebarHeader);
 		/* END OF jlblSidebarHeader */
 		
 		// Spacing for the sidebar before the buttons
-		jpnlSidebar.add(Box.createRigidArea(new Dimension(0, 30)));
+		jpnlSidebar.add(Box.createRigidArea(new Dimension(0, 50)));
 		
 		/* jbtnStationPanel - button for showing the station management panel */
 		JButton jbtnStationPanel = new JButton("Stations");
+		jbtnStationPanel.setAlignmentY(0.0f);
 		jbtnStationPanel.setHorizontalAlignment(SwingConstants.LEFT);
 		jbtnStationPanel.addActionListener(new ActionListener() {
 			@Override
@@ -113,8 +123,10 @@ public class MainFrame extends JFrame {
 				
 				// Else, if the current shown panel is another,
 				// remove it from the content pane
-				else if(jpnlCurrentShownPanel != null)
+				else if(jpnlCurrentShownPanel != null) {
 					jpnlContentPane.remove(jpnlCurrentShownPanel);
+					revalidate();
+				}
 
 				// Refresh the table
 				stationManagementPanel.refreshTable();
@@ -126,17 +138,18 @@ public class MainFrame extends JFrame {
 				revalidate();
 			}
 		});
-		jbtnStationPanel.setMinimumSize(new Dimension(200, 35));
-		jbtnStationPanel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnStationPanel.setMinimumSize(new Dimension(200, 40));
+		jbtnStationPanel.setFont(new Font("Roboto", Font.PLAIN, 13));
 		jbtnStationPanel.setForeground(Color.WHITE);
-		jbtnStationPanel.setBackground(Color.BLUE);
-		jbtnStationPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
+		jbtnStationPanel.setBackground(new Color(51, 102, 255));
+		jbtnStationPanel.setBorder(new EmptyBorder(0, 20, 0, 20));
 		jbtnStationPanel.setFocusPainted(false);
 		jbtnStationPanel.setBorderPainted(false);
-		jbtnStationPanel.setMaximumSize(new Dimension(32767, 35));
+		jbtnStationPanel.setMaximumSize(new Dimension(32767, 40));
 		jpnlSidebar.add(jbtnStationPanel);
 		
 		JButton jbtnMachinesPanel = new JButton("Machine Management");
+		jbtnMachinesPanel.setAlignmentY(0.0f);
 		jbtnMachinesPanel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
@@ -144,8 +157,10 @@ public class MainFrame extends JFrame {
 				if(jpnlCurrentShownPanel == machineManagementPanel)
 					return;
 				
-				else if(jpnlCurrentShownPanel != null)
+				else if(jpnlCurrentShownPanel != null) {
 					jpnlContentPane.remove(jpnlCurrentShownPanel);
+					revalidate();
+				}
 				
 				machineManagementPanel.refreshtbl();
 				// Set current shown panel (pointer) to MachineManagementPanel
@@ -154,21 +169,21 @@ public class MainFrame extends JFrame {
 				jpnlContentPane.add(machineManagementPanel);
 				// Redraw the frame
 				revalidate();
-				repaint();
 			}
 		});
-		jbtnMachinesPanel.setMinimumSize(new Dimension(200, 35));
-		jbtnMachinesPanel.setMaximumSize(new Dimension(32767, 35));
+		jbtnMachinesPanel.setMinimumSize(new Dimension(200, 40));
+		jbtnMachinesPanel.setMaximumSize(new Dimension(32767, 40));
 		jbtnMachinesPanel.setHorizontalAlignment(SwingConstants.LEFT);
 		jbtnMachinesPanel.setForeground(Color.WHITE);
-		jbtnMachinesPanel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnMachinesPanel.setFont(new Font("Roboto", Font.PLAIN, 13));
 		jbtnMachinesPanel.setFocusPainted(false);
 		jbtnMachinesPanel.setBorderPainted(false);
-		jbtnMachinesPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
-		jbtnMachinesPanel.setBackground(Color.BLUE);
+		jbtnMachinesPanel.setBorder(new EmptyBorder(0, 20, 0, 20));
+		jbtnMachinesPanel.setBackground(new Color(51, 102, 255));
 		jpnlSidebar.add(jbtnMachinesPanel);
 		
 		JButton jbtnSalesPanel = new JButton("Ticket Sales");
+		jbtnSalesPanel.setAlignmentY(0.0f);
 		jbtnSalesPanel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -178,8 +193,10 @@ public class MainFrame extends JFrame {
 				
 				// Else, if the current shown panel is another,
 				// remove it from the content pane
-				else if(jpnlCurrentShownPanel != null)
+				else if(jpnlCurrentShownPanel != null) {
 					jpnlContentPane.remove(jpnlCurrentShownPanel);
+					revalidate();
+				}
 				
 				// Refresh the panel
 				salesMonitoringPanel.refresh();
@@ -191,15 +208,15 @@ public class MainFrame extends JFrame {
 				revalidate();
 			}
 		});
-		jbtnSalesPanel.setMinimumSize(new Dimension(200, 35));
-		jbtnSalesPanel.setMaximumSize(new Dimension(32767, 35));
+		jbtnSalesPanel.setMinimumSize(new Dimension(200, 40));
+		jbtnSalesPanel.setMaximumSize(new Dimension(32767, 40));
 		jbtnSalesPanel.setHorizontalAlignment(SwingConstants.LEFT);
 		jbtnSalesPanel.setForeground(Color.WHITE);
-		jbtnSalesPanel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnSalesPanel.setFont(new Font("Roboto", Font.PLAIN, 13));
 		jbtnSalesPanel.setFocusPainted(false);
 		jbtnSalesPanel.setBorderPainted(false);
-		jbtnSalesPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
-		jbtnSalesPanel.setBackground(Color.BLUE);
+		jbtnSalesPanel.setBorder(new EmptyBorder(0, 20, 0, 20));
+		jbtnSalesPanel.setBackground(new Color(51, 102, 255));
 		jpnlSidebar.add(jbtnSalesPanel);
 		/* END OF jbtnStationPanel */
 	}

@@ -1,30 +1,32 @@
 package co.sympu.pnrticketing.ui.admin.machinemngmt;
 
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import co.sympu.pnrticketing.ui.admin.MainFrame;
-
-import java.awt.SystemColor;
-
-import java.sql.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class MachineManagementPanel extends JPanel {
 
@@ -50,74 +52,55 @@ public class MachineManagementPanel extends JPanel {
 		// machineManagementAdd.machineManagementAdd = this;
 
 		setBorder(new EmptyBorder(10, 10, 10, 10));
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 172, 0 };
-		gridBagLayout.rowHeights = new int[] { 74, 216, 0, 0 };
-		gridBagLayout.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 1.0, 1.0, 1.0, Double.MIN_VALUE };
-		setLayout(gridBagLayout);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		JPanel panel = new JPanel();
-		panel.setBackground(SystemColor.activeCaption);
-		panel.setBorder(new EmptyBorder(0, 5, 0, 5));
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.gridwidth = 2;
-		gbc_panel.insets = new Insets(0, 0, 5, 0);
-		gbc_panel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 0;
-		add(panel, gbc_panel);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] { 106, 108, 51, 67, 63, 0 };
-		gbl_panel.rowHeights = new int[] { 32, 0 };
-		gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		panel.setLayout(gbl_panel);
+		JPanel jpnlHeader = new JPanel();
+		jpnlHeader.setAlignmentX(0.0f);
+		jpnlHeader.setBackground(UIManager.getColor("Button.background"));
+		jpnlHeader.setBorder(null);
+		add(jpnlHeader);
+		jpnlHeader.setLayout(new BoxLayout(jpnlHeader, BoxLayout.X_AXIS));
 
-		JLabel lblNewLabel = new JLabel("Machine\r\n: ");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 24));
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.anchor = GridBagConstraints.NORTHWEST;
-		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 0;
-		panel.add(lblNewLabel, gbc_lblNewLabel);
-
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 24));
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.anchor = GridBagConstraints.NORTHWEST;
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 0, 5);
-		gbc_lblNewLabel_1.gridx = 1;
-		gbc_lblNewLabel_1.gridy = 0;
-		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
-
-		JButton btnAdd = new JButton("Add");
-		btnAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				machineManagementAdd.setVisible(true);
-				machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
-				machineManagementAdd.txtSerial.setText("");
-				machineManagementAdd.txtPassword.setText("");
-				machineManagementAdd.txtRePassword.setText("");
-				machineManagementAdd.okButton.setVisible(true);
-				machineManagementAdd.editButton.setVisible(false);
-				machineManagementAdd.deleteButton.setVisible(false);
-			}
-		});
+		JLabel jlblHeader = new JLabel("Manage Machines");
+		jlblHeader.setAlignmentY(0.0f);
+		jlblHeader.setMaximumSize(new Dimension(32767, 200));
+		jlblHeader.setHorizontalAlignment(SwingConstants.LEFT);
+		jlblHeader.setFont(new Font("Roboto", Font.PLAIN, 24));
+		jpnlHeader.add(jlblHeader);
+		
+		JPanel jpnlButtonActions = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) jpnlButtonActions.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
+		jpnlButtonActions.setAlignmentY(0.0f);
+		jpnlButtonActions.setAlignmentX(0.0f);
+		jpnlHeader.add(jpnlButtonActions);
+		
+				JButton btnAdd = new JButton("Add");
+				btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				btnAdd.setBackground(Color.WHITE);
+				btnAdd.setFont(new Font("Roboto", Font.PLAIN, 12));
+				jpnlButtonActions.add(btnAdd);
+				btnAdd.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+						machineManagementAdd.setVisible(true);
+						machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
+						machineManagementAdd.txtSerial.setText("");
+						machineManagementAdd.txtPassword.setText("");
+						machineManagementAdd.txtRePassword.setText("");
+						machineManagementAdd.okButton.setVisible(true);
+						machineManagementAdd.editButton.setVisible(false);
+						machineManagementAdd.deleteButton.setVisible(false);
+					}
+				});
 		btnAdd.setHorizontalAlignment(SwingConstants.RIGHT);
-		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
-		gbc_btnAdd.anchor = GridBagConstraints.WEST;
-		gbc_btnAdd.insets = new Insets(0, 0, 0, 5);
-		gbc_btnAdd.gridx = 2;
-		gbc_btnAdd.gridy = 0;
-		panel.add(btnAdd, gbc_btnAdd);
 
 		JButton btnUpload = new JButton("Update");
+		btnUpload.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnUpload.setBackground(Color.WHITE);
+		btnUpload.setFont(new Font("Roboto", Font.PLAIN, 12));
+		jpnlButtonActions.add(btnUpload);
 		btnUpload.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -170,14 +153,12 @@ public class MachineManagementPanel extends JPanel {
 			}
 		});
 		btnUpload.setHorizontalAlignment(SwingConstants.RIGHT);
-		GridBagConstraints gbc_btnUpload = new GridBagConstraints();
-		gbc_btnUpload.anchor = GridBagConstraints.WEST;
-		gbc_btnUpload.insets = new Insets(0, 0, 0, 5);
-		gbc_btnUpload.gridx = 3;
-		gbc_btnUpload.gridy = 0;
-		panel.add(btnUpload, gbc_btnUpload);
 
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnDelete.setBackground(Color.WHITE);
+		btnDelete.setFont(new Font("Roboto", Font.PLAIN, 12));
+		jpnlButtonActions.add(btnDelete);
 		btnDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -213,22 +194,12 @@ public class MachineManagementPanel extends JPanel {
 			}
 		});
 		btnDelete.setHorizontalAlignment(SwingConstants.RIGHT);
-		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
-		gbc_btnDelete.anchor = GridBagConstraints.WEST;
-		gbc_btnDelete.gridx = 4;
-		gbc_btnDelete.gridy = 0;
-		panel.add(btnDelete, gbc_btnDelete);
 
 		scrMachineManagementPanel = new JScrollPane();
+		scrMachineManagementPanel.setAlignmentX(0.0f);
 		scrMachineManagementPanel.setToolTipText("Station\r\n");
 		scrMachineManagementPanel.setViewportBorder(null);
-		GridBagConstraints gbc_scrMachineManagementPanel = new GridBagConstraints();
-		gbc_scrMachineManagementPanel.gridwidth = 2;
-		gbc_scrMachineManagementPanel.insets = new Insets(0, 0, 5, 0);
-		gbc_scrMachineManagementPanel.fill = GridBagConstraints.BOTH;
-		gbc_scrMachineManagementPanel.gridx = 0;
-		gbc_scrMachineManagementPanel.gridy = 1;
-		add(scrMachineManagementPanel, gbc_scrMachineManagementPanel);
+		add(scrMachineManagementPanel);
 
 		setTblMachineManagementTable(new JTable());
 		scrMachineManagementPanel.add(getTblMachineManagementTable());
@@ -245,13 +216,13 @@ public class MachineManagementPanel extends JPanel {
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app",
 					"password123");
 
-			String query = "select serial_number, status, assigned_station_id from machine";
+			String query = "select machine.serial_number, machine.status, station.name as station_name from machine left join station on station.id = machine.assigned_station_id";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
 				model.addRow(new Object[] { rs.getString("serial_number"), rs.getString("status"),
-						rs.getString("assigned_station_id") });
+						rs.getString("station_name") });
 			}
 
 			rs.close();
@@ -271,6 +242,9 @@ public class MachineManagementPanel extends JPanel {
 
 	public void setTblMachineManagementTable(JTable tblMachineManagementTable) {
 		this.tblMachineManagementTable = tblMachineManagementTable;
+		tblMachineManagementTable.setFont(new Font("Roboto", Font.PLAIN, 12));
+		tblMachineManagementTable.setRowHeight(22);
+		tblMachineManagementTable.setIntercellSpacing(new Dimension(4, 4));
 		tblMachineManagementTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
