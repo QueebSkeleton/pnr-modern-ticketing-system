@@ -201,6 +201,22 @@ public class MainFrame extends JFrame {
 		jbtnSalesPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
 		jbtnSalesPanel.setBackground(Color.BLUE);
 		jpnlSidebar.add(jbtnSalesPanel);
+		
+		JButton jbtnAccountsPanel = new JButton("Accounts Management");
+		jbtnAccountsPanel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		jbtnAccountsPanel.setMinimumSize(new Dimension(200, 35));
+		jbtnAccountsPanel.setMaximumSize(new Dimension(32767, 35));
+		jbtnAccountsPanel.setHorizontalAlignment(SwingConstants.LEFT);
+		jbtnAccountsPanel.setForeground(Color.WHITE);
+		jbtnAccountsPanel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnAccountsPanel.setFocusPainted(false);
+		jbtnAccountsPanel.setBorderPainted(false);
+		jbtnAccountsPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
+		jbtnAccountsPanel.setBackground(Color.BLUE);
+		jpnlSidebar.add(jbtnAccountsPanel);
 		/* END OF jbtnStationPanel */
 	}
 	
