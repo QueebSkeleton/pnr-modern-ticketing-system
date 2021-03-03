@@ -27,6 +27,8 @@ public class LoginFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	// class scope variables 
 	private JPanel contentPane;
 	private JTextField jtxtfldUsername;
 	private JPasswordField jpsswrdfldPassword;
@@ -42,8 +44,11 @@ public class LoginFrame extends JFrame {
 	 */
 	public LoginFrame() {
 		
+		// reference for later 
 		ticketCashierPrompt = new TicketCashierPrompt();
 		
+		
+		// Frame entitle Cashier Login with its properties 
 		setTitle("Cashier Login ");
 		setBounds(100, 100, 293, 217);
 		contentPane = new JPanel();
@@ -51,6 +56,7 @@ public class LoginFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		
+		// A login panel for the frame
 		JPanel jpnlLogin = new JPanel();
 		jpnlLogin.setBorder(new EmptyBorder(0, 10, 0, 14));
 		jpnlLogin.setMaximumSize(new Dimension(16000, 32767));
@@ -62,6 +68,7 @@ public class LoginFrame extends JFrame {
 		gbl_jpnlLogin.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		jpnlLogin.setLayout(gbl_jpnlLogin);
 		
+		// Label component for Username part
 		JLabel jlblUsername = new JLabel("Username:");
 		GridBagConstraints gbc_jlblUsername = new GridBagConstraints();
 		gbc_jlblUsername.insets = new Insets(0, 0, 5, 5);
@@ -70,6 +77,7 @@ public class LoginFrame extends JFrame {
 		gbc_jlblUsername.gridy = 2;
 		jpnlLogin.add(jlblUsername, gbc_jlblUsername);
 		
+		// Textfield component for the username 
 		jtxtfldUsername = new JTextField();
 		jtxtfldUsername.setFont(new Font("Tahoma", Font.ITALIC, 11));
 		GridBagConstraints gbc_jtxtfldUsername = new GridBagConstraints();
@@ -80,6 +88,7 @@ public class LoginFrame extends JFrame {
 		jpnlLogin.add(jtxtfldUsername, gbc_jtxtfldUsername);
 		jtxtfldUsername.setColumns(10);
 		
+		// Label component for the password 
 		JLabel jlblPassword = new JLabel("Password:");
 		GridBagConstraints gbc_jlblPassword = new GridBagConstraints();
 		gbc_jlblPassword.anchor = GridBagConstraints.EAST;
@@ -88,6 +97,7 @@ public class LoginFrame extends JFrame {
 		gbc_jlblPassword.gridy = 3;
 		jpnlLogin.add(jlblPassword, gbc_jlblPassword);
 		
+		// Password field for the user's password input
 		jpsswrdfldPassword = new JPasswordField();
 		GridBagConstraints gbc_jpsswrdfldPassword = new GridBagConstraints();
 		gbc_jpsswrdfldPassword.insets = new Insets(0, 0, 5, 0);
@@ -96,6 +106,8 @@ public class LoginFrame extends JFrame {
 		gbc_jpsswrdfldPassword.gridy = 3;
 		jpnlLogin.add(jpsswrdfldPassword, gbc_jpsswrdfldPassword);
 		
+		// Login button that retrieves user's credentials as input
+		// to be passed on to the database query
 		JButton jbtnLogin = new JButton("Login");
 		jbtnLogin.addActionListener(event -> {
 			try {
