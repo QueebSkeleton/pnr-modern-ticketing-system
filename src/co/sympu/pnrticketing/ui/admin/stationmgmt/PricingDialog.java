@@ -1,5 +1,7 @@
 package co.sympu.pnrticketing.ui.admin.stationmgmt;
 
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -85,7 +87,7 @@ public class PricingDialog extends JDialog {
 		
 		/* jpnlContentPane - Main panel of this dialog. Contains 3 JPanels: Header, Main Form, and Buttons Panel */
 		JPanel jpnlContentPane = new JPanel();
-		jpnlContentPane.setBorder(new EmptyBorder(10, 10, 0, 10));
+		jpnlContentPane.setBorder(new EmptyBorder(20, 20, 0, 20));
 		jpnlContentPane.setLayout(new BoxLayout(jpnlContentPane, BoxLayout.Y_AXIS));
 		setContentPane(jpnlContentPane);
 		/* END OF SPACING */
@@ -93,7 +95,7 @@ public class PricingDialog extends JDialog {
 		/* jlblOriginStation - label for origin station field input */
 		jlblOriginStation = new JLabel("Origin Station:");
 		jlblOriginStation.setAlignmentY(0.0f);
-		jlblOriginStation.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		jlblOriginStation.setFont(new Font("Roboto", Font.PLAIN, 18));
 		jpnlContentPane.add(jlblOriginStation);
 		/* END OF jlblOriginStation */
 		
@@ -124,7 +126,7 @@ public class PricingDialog extends JDialog {
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		jpnlButtonActions.setMaximumSize(new Dimension(32767, 70));
 		jpnlButtonActions.setMinimumSize(new Dimension(10, 70));
-		jpnlButtonActions.setBorder(new EmptyBorder(10, 0, 5, 0));
+		jpnlButtonActions.setBorder(new EmptyBorder(10, 0, 20, 0));
 		jpnlButtonActions.setAlignmentY(0.0f);
 		jpnlButtonActions.setAlignmentX(0.0f);
 		jpnlContentPane.add(jpnlButtonActions);
@@ -135,7 +137,9 @@ public class PricingDialog extends JDialog {
 
 		/* jbtnCancel - close dialog button */
 		JButton jbtnCancel = new JButton("Cancel");
-		jbtnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		jbtnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnCancel.setBackground(Color.WHITE);
+		jbtnCancel.setFont(new Font("Roboto", Font.PLAIN, 12));
 		
 		// Cancel Button Click Event
 		// When this button is clicked, just hide this dialog
@@ -148,7 +152,9 @@ public class PricingDialog extends JDialog {
 		});
 		jpnlButtonActions.add(jbtnCancel);
 		JButton jbtnSave = new JButton("Finalize");
-		jbtnSave.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		jbtnSave.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnSave.setBackground(Color.WHITE);
+		jbtnSave.setFont(new Font("Roboto", Font.PLAIN, 12));
 		
 		// Save Button Click Event
 		// When this button is clicked, save ticket prices
@@ -271,7 +277,7 @@ public class PricingDialog extends JDialog {
 			
 			/* jlblPricingToThisStation - label for this input field */
 			JLabel jlblPricingToThisStation = new JLabel(stationToPopulate.getName() + ":");
-			jlblPricingToThisStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+			jlblPricingToThisStation.setFont(new Font("Roboto", Font.PLAIN, 12));
 			GridBagConstraints gbc_jlblPricingToThisStation = new GridBagConstraints();
 			gbc_jlblPricingToThisStation.anchor = GridBagConstraints.EAST;
 			gbc_jlblPricingToThisStation.insets = new Insets(0, 0, 5, 5);
@@ -282,7 +288,8 @@ public class PricingDialog extends JDialog {
 			
 			/* jtxtfldPricingToThisStation - text field input for pricing to this station */
 			JTextField jtxtfldPricingToThisStation = new JTextField("" + this.station.getTicketPrice(stationToPopulate.getId()));
-			jtxtfldPricingToThisStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+			jtxtfldPricingToThisStation.setFont(new Font("Roboto", Font.PLAIN, 12));
+			jtxtfldPricingToThisStation.setMargin(new Insets(2, 2, 2, 2));
 			GridBagConstraints gbc_jtxtfldPricingToThisStation = new GridBagConstraints();
 			gbc_jtxtfldPricingToThisStation.insets = new Insets(0, 0, 5, 0);
 			gbc_jtxtfldPricingToThisStation.fill = GridBagConstraints.HORIZONTAL;

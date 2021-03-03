@@ -1,5 +1,7 @@
 package co.sympu.pnrticketing.ui.admin.stationmgmt;
 
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -70,48 +72,58 @@ public class FormDialog extends JDialog {
 
 		/* jpnlForm - container for all form elements */
 		JPanel jpnlForm = new JPanel();
-		jpnlForm.setBorder(new EmptyBorder(10, 10, 10, 10));
+		jpnlForm.setBorder(new EmptyBorder(20, 20, 10, 20));
 		getContentPane().add(jpnlForm);
 		GridBagLayout gbl_jpnlForm = new GridBagLayout();
 		gbl_jpnlForm.columnWidths = new int[] { 0, 0, 0 };
-		gbl_jpnlForm.rowHeights = new int[] { 0, 0, 0 };
+		gbl_jpnlForm.rowHeights = new int[] { 0, 0, 0, 0 };
 		gbl_jpnlForm.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gbl_jpnlForm.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_jpnlForm.rowWeights = new double[] { 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		jpnlForm.setLayout(gbl_jpnlForm);
 		/* END OF jpnlForm */
 
 		/* jlblStationName - label for station name input */
+		
+		JLabel jlblHeader = new JLabel("Save a Station");
+		jlblHeader.setFont(new Font("Roboto", Font.PLAIN, 24));
+		GridBagConstraints gbc_jlblHeader = new GridBagConstraints();
+		gbc_jlblHeader.anchor = GridBagConstraints.WEST;
+		gbc_jlblHeader.gridwidth = 2;
+		gbc_jlblHeader.insets = new Insets(0, 0, 15, 5);
+		gbc_jlblHeader.gridx = 0;
+		gbc_jlblHeader.gridy = 0;
+		jpnlForm.add(jlblHeader, gbc_jlblHeader);
 		JLabel jlblStationName = new JLabel("Station Name:");
-		jlblStationName.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jlblStationName.setFont(new Font("Roboto", Font.PLAIN, 12));
 		GridBagConstraints gbc_jlblStationName = new GridBagConstraints();
-		gbc_jlblStationName.insets = new Insets(0, 0, 5, 5);
+		gbc_jlblStationName.insets = new Insets(0, 0, 10, 5);
 		gbc_jlblStationName.anchor = GridBagConstraints.EAST;
 		gbc_jlblStationName.gridx = 0;
-		gbc_jlblStationName.gridy = 0;
+		gbc_jlblStationName.gridy = 1;
 		jpnlForm.add(jlblStationName, gbc_jlblStationName);
 		/* END OF jlblStationName */
 
 		/* jtxtfldStationName - station name input field */
 		jtxtfldStationName = new JTextField();
 		jtxtfldStationName.setMargin(new Insets(4, 4, 4, 4));
-		jtxtfldStationName.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jtxtfldStationName.setFont(new Font("Roboto", Font.PLAIN, 12));
 		GridBagConstraints gbc_jtxtfldStationName = new GridBagConstraints();
-		gbc_jtxtfldStationName.insets = new Insets(0, 0, 5, 0);
+		gbc_jtxtfldStationName.insets = new Insets(0, 0, 10, 0);
 		gbc_jtxtfldStationName.fill = GridBagConstraints.HORIZONTAL;
 		gbc_jtxtfldStationName.gridx = 1;
-		gbc_jtxtfldStationName.gridy = 0;
+		gbc_jtxtfldStationName.gridy = 1;
 		jpnlForm.add(jtxtfldStationName, gbc_jtxtfldStationName);
 		jtxtfldStationName.setColumns(10);
 		/* END OF jtxtfldStationName */
 
 		/* jlblDescription - label for description input */
 		JLabel jlblDescription = new JLabel("Description:");
-		jlblDescription.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jlblDescription.setFont(new Font("Roboto", Font.PLAIN, 12));
 		GridBagConstraints gbc_jlblDescription = new GridBagConstraints();
 		gbc_jlblDescription.anchor = GridBagConstraints.NORTHEAST;
 		gbc_jlblDescription.insets = new Insets(0, 0, 0, 5);
 		gbc_jlblDescription.gridx = 0;
-		gbc_jlblDescription.gridy = 1;
+		gbc_jlblDescription.gridy = 2;
 		jpnlForm.add(jlblDescription, gbc_jlblDescription);
 		/* END OF jlblDescription */
 
@@ -120,20 +132,20 @@ public class FormDialog extends JDialog {
 		GridBagConstraints gbc_jscrlpnDescription = new GridBagConstraints();
 		gbc_jscrlpnDescription.fill = GridBagConstraints.BOTH;
 		gbc_jscrlpnDescription.gridx = 1;
-		gbc_jscrlpnDescription.gridy = 1;
+		gbc_jscrlpnDescription.gridy = 2;
 		jpnlForm.add(jscrlpnDescription, gbc_jscrlpnDescription);
 		/* END OF jsclpnDescription */
 
 		/* jtxtareaDescription - text area input for description field */
 		jtxtareaDescription = new JTextArea();
 		jtxtareaDescription.setMargin(new Insets(4, 4, 4, 4));
-		jtxtareaDescription.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jtxtareaDescription.setFont(new Font("Roboto", Font.PLAIN, 12));
 		jscrlpnDescription.setViewportView(jtxtareaDescription);
 		/* END OF jtxtareaDescription */
 
 		/* jpnlButtonActions - container for action buttons */
 		JPanel jpnlButtonActions = new JPanel();
-		jpnlButtonActions.setBorder(new EmptyBorder(0, 10, 10, 10));
+		jpnlButtonActions.setBorder(new EmptyBorder(0, 20, 20, 20));
 		FlowLayout flowLayout = (FlowLayout) jpnlButtonActions.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		jpnlButtonActions.setPreferredSize(new Dimension(10, 50));
@@ -144,6 +156,8 @@ public class FormDialog extends JDialog {
 
 		/* jbtnSave - save button */
 		JButton jbtnSave = new JButton("Save");
+		jbtnSave.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnSave.setBackground(Color.WHITE);
 
 		// Save Button Action Listener
 		// When this button is clicked, insert or update the station inputted
@@ -262,12 +276,14 @@ public class FormDialog extends JDialog {
 				setVisible(false);
 			}
 		});
-		jbtnSave.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnSave.setFont(new Font("Roboto", Font.PLAIN, 12));
 		jpnlButtonActions.add(jbtnSave);
 		/* END OF jbtnSave */
 
 		/* jbtnCancel - hide dialog button */
 		JButton jbtnCancel = new JButton("Cancel");
+		jbtnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnCancel.setBackground(Color.WHITE);
 
 		// Cancel Button Action Listener
 		// When this button is clicked, simply hide the dialog
@@ -280,7 +296,7 @@ public class FormDialog extends JDialog {
 				setVisible(false);
 			}
 		});
-		jbtnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnCancel.setFont(new Font("Roboto", Font.PLAIN, 12));
 		jpnlButtonActions.add(jbtnCancel);
 		/* END OF jbtnCancel */
 	}
@@ -289,6 +305,7 @@ public class FormDialog extends JDialog {
 	 * Initializes this dialog for inserting a new station.
 	 */
 	public void initialize() {
+		this.station = null;
 		// Clear the input fields
 		jtxtfldStationName.setText("");
 		jtxtareaDescription.setText("");

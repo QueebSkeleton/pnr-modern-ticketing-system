@@ -1,6 +1,7 @@
 package co.sympu.pnrticketing.ui.admin.salesmonitoring;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -38,28 +39,29 @@ public class DaySalesDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public DaySalesDialog() {
+		setMinimumSize(new Dimension(250, 400));
 		setTitle("Sales for this Day");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 
 		jpnlMainContentPanel = new JPanel();
-		jpnlMainContentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		jpnlMainContentPanel.setBorder(new EmptyBorder(20, 20, 10, 20));
 		getContentPane().add(jpnlMainContentPanel, BorderLayout.CENTER);
 		jpnlMainContentPanel.setLayout(new BoxLayout(jpnlMainContentPanel, BoxLayout.Y_AXIS));
 		
 		jlblDateShown = new JLabel("Selected Date:");
 		jlblDateShown.setAlignmentY(0.0f);
-		jlblDateShown.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jlblDateShown.setFont(new Font("Roboto", Font.PLAIN, 15));
 		jpnlMainContentPanel.add(jlblDateShown);
 		
-		jpnlMainContentPanel.add(Box.createRigidArea(new Dimension(0, 7)));
+		jpnlMainContentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 		
 		jlblTotalSales = new JLabel("Total Sales:");
 		jlblTotalSales.setAlignmentY(0.0f);
-		jlblTotalSales.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jlblTotalSales.setFont(new Font("Roboto", Font.PLAIN, 15));
 		jpnlMainContentPanel.add(jlblTotalSales);
 		
-		jpnlMainContentPanel.add(Box.createRigidArea(new Dimension(0, 7)));
+		jpnlMainContentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 		
 		JScrollPane jscrlpnTicketSales = new JScrollPane();
 		jscrlpnTicketSales.setAlignmentY(0.0f);
@@ -67,19 +69,23 @@ public class DaySalesDialog extends JDialog {
 		jpnlMainContentPanel.add(jscrlpnTicketSales);
 		
 		jtblTicketsSold = new JTable();
+		jtblTicketsSold.setRowHeight(22);
+		jtblTicketsSold.setIntercellSpacing(new Dimension(4, 4));
 		dayTicketSalesTableModel = new DayTicketSalesTableModel();
 		jtblTicketsSold.setModel(dayTicketSalesTableModel);
 		jscrlpnTicketSales.setViewportView(jtblTicketsSold);
 
 		JPanel jpnlButtonActions = new JPanel();
+		jpnlButtonActions.setBorder(new EmptyBorder(0, 20, 20, 20));
 		jpnlButtonActions.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(jpnlButtonActions, BorderLayout.SOUTH);
 
 		JButton jbtnExit = new JButton("Exit");
+		jbtnExit.setBackground(Color.WHITE);
 		jbtnExit.addActionListener(event -> {
 			setVisible(false);
 		});
-		jbtnExit.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		jbtnExit.setFont(new Font("Roboto", Font.PLAIN, 12));
 		jbtnExit.setActionCommand("X");
 		jpnlButtonActions.add(jbtnExit);
 		getRootPane().setDefaultButton(jbtnExit);

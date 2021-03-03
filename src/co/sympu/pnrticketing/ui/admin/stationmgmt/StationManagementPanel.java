@@ -1,5 +1,7 @@
 package co.sympu.pnrticketing.ui.admin.stationmgmt;
 
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -90,7 +92,7 @@ public class StationManagementPanel extends JPanel {
 		
 		/* jlblHeader - main header label of the frame */
 		JLabel jlblHeader = new JLabel("Manage Stations");
-		jlblHeader.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 24));
+		jlblHeader.setFont(new Font("Roboto", Font.PLAIN, 24));
 		jpnlHeader.add(jlblHeader);
 		/* END OF jlblHeader */
 		
@@ -103,7 +105,10 @@ public class StationManagementPanel extends JPanel {
 		
 		/* jbtnAddStationDialog - Button for showing an add form dialog box */
 		JButton jbtnAddStation = new JButton("Add a Station");
-		jbtnAddStation.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		jbtnAddStation.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnAddStation.setForeground(Color.BLACK);
+		jbtnAddStation.setBackground(Color.WHITE);
+		jbtnAddStation.setFont(new Font("Roboto", Font.PLAIN, 12));
 		
 		// Add Station Button Click Event
 		// When this button is clicked, initialize form dialog then show
@@ -127,7 +132,10 @@ public class StationManagementPanel extends JPanel {
 		
 		/* jbtnPricing - Button for updating a station's pricing */
 		JButton jbtnPricing = new JButton("Pricing");
-		jbtnPricing.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		jbtnPricing.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnPricing.setForeground(Color.BLACK);
+		jbtnPricing.setBackground(Color.WHITE);
+		jbtnPricing.setFont(new Font("Roboto", Font.PLAIN, 12));
 		
 		// Pricing Button Click Event
 		// When this button is clicked, show the Pricing Dialog.
@@ -162,7 +170,10 @@ public class StationManagementPanel extends JPanel {
 
 		/* jbtnUpdateStation - Button for updating a station */
 		JButton jbtnUpdateStation = new JButton("Update");
-		jbtnUpdateStation.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		jbtnUpdateStation.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnUpdateStation.setForeground(Color.BLACK);
+		jbtnUpdateStation.setBackground(Color.WHITE);
+		jbtnUpdateStation.setFont(new Font("Roboto", Font.PLAIN, 12));
 		
 		// Update Button Click Event
 		// When this button is clicked, setup the update dialog and show the selected record
@@ -200,7 +211,10 @@ public class StationManagementPanel extends JPanel {
 
 		/* jbtnDelete - Button for removing a station */
 		JButton jbtnDelete = new JButton("Delete");
-		jbtnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		jbtnDelete.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnDelete.setForeground(Color.BLACK);
+		jbtnDelete.setBackground(Color.WHITE);
+		jbtnDelete.setFont(new Font("Roboto", Font.PLAIN, 12));
 		
 		// Delete Button Click Event
 		// When this button is clicked, delete the selected row on the table
@@ -288,7 +302,7 @@ public class StationManagementPanel extends JPanel {
 		jtblStation = new JTable();
 		jtblStation.setRowHeight(22);
 		jtblStation.setIntercellSpacing(new Dimension(4, 4));
-		jtblStation.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		jtblStation.setFont(new Font("Roboto", Font.PLAIN, 12));
 		
 		// stationTableModel - TableModel for this Table.
 		stationTableModel = new StationTableModel();
