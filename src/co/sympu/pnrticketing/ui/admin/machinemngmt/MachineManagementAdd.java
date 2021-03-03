@@ -226,6 +226,20 @@ public class MachineManagementAdd extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
+						String pass1 = txtPassword.getText(),
+							   pass2 = txtRePassword.getText();
+						
+						if(!(pass1.equals(pass2))) {
+							
+							JOptionPane.showMessageDialog(
+							okButton, 
+							"Passwords do not Match",
+							"Notice",
+							JOptionPane.WARNING_MESSAGE);
+							
+							return;
+						}
+						
 						try {
 							Class.forName("com.mysql.cj.jdbc.Driver");
 							Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db",
