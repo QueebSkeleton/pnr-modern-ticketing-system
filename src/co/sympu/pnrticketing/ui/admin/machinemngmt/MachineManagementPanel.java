@@ -23,6 +23,8 @@ import co.sympu.pnrticketing.ui.admin.MainFrame;
 import java.awt.SystemColor;
 
 import java.sql.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MachineManagementPanel extends JPanel {
 
@@ -96,7 +98,9 @@ public class MachineManagementPanel extends JPanel {
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				machineManagementAdd.setVisible(true);
+				machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
 				machineManagementAdd.txtSerial.setText("");
 				machineManagementAdd.txtPassword.setText("");
 				machineManagementAdd.txtRePassword.setText("");
@@ -118,10 +122,10 @@ public class MachineManagementPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(getTblMachineManagementTable().getSelectionModel().getSelectedItemsCount() == 0) {
-					// Output a friendly message telling the user to select a row first
+					
 					JOptionPane.showMessageDialog(
 					mainFrame, 
-					"Please select a Machine first before clicking the update pricing button.",
+					"Please select a Machine first before clicking the Update button.",
 					"Notice",
 					JOptionPane.WARNING_MESSAGE);
 					
@@ -145,11 +149,13 @@ public class MachineManagementPanel extends JPanel {
 					rs.next();
 				
 				machineManagementAdd.setVisible(true);
+				machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
 				machineManagementAdd.okButton.setVisible(false);
 				machineManagementAdd.editButton.setVisible(true);
 				machineManagementAdd.deleteButton.setVisible(false);
 				
 				machineManagementAdd.txtSerial.setText(rs.getString("serial_number"));
+				machineManagementAdd.txtSerial.setEnabled(false);
 				machineManagementAdd.txtPassword.setText(rs.getString("password"));
 				machineManagementAdd.txtRePassword.setText(rs.getString("password"));
 				
@@ -175,10 +181,35 @@ public class MachineManagementPanel extends JPanel {
 		btnDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				machineManagementAdd.setVisible(true);
-				machineManagementAdd.okButton.setVisible(false);
-				machineManagementAdd.editButton.setVisible(false);
-				machineManagementAdd.deleteButton.setVisible(true);
+				if(getTblMachineManagementTable().getSelectionModel().getSelectedItemsCount() == 0) {
+					
+					JOptionPane.showMessageDialog(
+					mainFrame, 
+					"Please select a Machine first before clicking the Delete button.",
+					"Notice",
+					JOptionPane.WARNING_MESSAGE);
+					
+					return;
+				}
+				DefaultTableModel bagModel = (DefaultTableModel)tblMachineManagementTable.getModel();
+		        int intSelectedRow = tblMachineManagementTable.getSelectedRow();
+		        int result = JOptionPane.showConfirmDialog(tblMachineManagementTable, "Confirm Deletion", "Notice", JOptionPane.INFORMATION_MESSAGE);
+		        
+		        if (result == JOptionPane.OK_OPTION) {
+		        try {
+		            Class.forName("com.mysql.cj.jdbc.Driver");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
+
+		            Statement stmt = con.createStatement();
+			    stmt.execute("DELETE FROM machine WHERE serial_number = '" + 
+		                    (bagModel.getValueAt(intSelectedRow, 0)).toString() +"'");
+		            
+			    refreshtbl();
+		        }catch(Exception e1){
+		            e1.printStackTrace();
+		            JOptionPane.showMessageDialog(null, "Error Deleting");
+		        }
+		        }
 			}
 		});
 		btnDelete.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -240,5 +271,11 @@ public class MachineManagementPanel extends JPanel {
 
 	public void setTblMachineManagementTable(JTable tblMachineManagementTable) {
 		this.tblMachineManagementTable = tblMachineManagementTable;
+		tblMachineManagementTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 	}
 }
