@@ -100,6 +100,7 @@ public class MachineManagementPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				
 				machineManagementAdd.setVisible(true);
+				machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
 				machineManagementAdd.txtSerial.setText("");
 				machineManagementAdd.txtPassword.setText("");
 				machineManagementAdd.txtRePassword.setText("");
@@ -148,6 +149,7 @@ public class MachineManagementPanel extends JPanel {
 					rs.next();
 				
 				machineManagementAdd.setVisible(true);
+				machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
 				machineManagementAdd.okButton.setVisible(false);
 				machineManagementAdd.editButton.setVisible(true);
 				machineManagementAdd.deleteButton.setVisible(false);
