@@ -292,7 +292,7 @@ public class AddDialog extends JDialog {
 		/*   */
 
 		/*   */
-		jlblRePassword = new JLabel("Re-type Password:");
+		jlblRePassword = new JLabel("Confirm Password:");
 		jlblRePassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		GridBagConstraints gbc_jlblRePassword = new GridBagConstraints();
 		gbc_jlblRePassword.anchor = GridBagConstraints.EAST;
@@ -470,6 +470,8 @@ public class AddDialog extends JDialog {
 					
 					// show output message ofc
 					accountsManagementPanel.refreshTable();
+					thisDialog.setVisible(false);
+					thisDialog.resetForm();
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(thisDialog, "An error occured while trying to add Account.\n\nDetails: " + e1.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
 				}
@@ -491,6 +493,16 @@ public class AddDialog extends JDialog {
 
 	public void resetForm() {
 		// Clear the combobox first, then fetch all stations from the database
+		jtxtfldFirstName.setText("");
+		jtxtfldMiddleName.setText("");
+		jtxtfldLastName.setText("");
+		jtxtfldUsername.setText("");
+		jtxtfldContactNumber.setText("");
+		jpwdPassword.setText("");
+		jpwdRePassword.setText("");
+		jtxtfldTIN.setText("");
+		jtxtfldSSSNumber.setText("");
+		
 		jcmbAssignedStation.removeAllItems();
 		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app",
 				"password123");

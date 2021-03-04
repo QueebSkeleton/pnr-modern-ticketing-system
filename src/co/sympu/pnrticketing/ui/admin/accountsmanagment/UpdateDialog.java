@@ -290,7 +290,7 @@ public class UpdateDialog extends JDialog {
 		/*   */
 
 		/*   */
-		jlblRePassword = new JLabel("Re-type Password:");
+		jlblRePassword = new JLabel("Confirm Password:");
 		jlblRePassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		GridBagConstraints gbc_jlblRePassword = new GridBagConstraints();
 		gbc_jlblRePassword.anchor = GridBagConstraints.EAST;
@@ -355,7 +355,9 @@ public class UpdateDialog extends JDialog {
 		jtxtfldSSSNumber.setColumns(10);
 		/*   */
 		
-		/*   
+		/* 
+		 * GHOST CODE  
+		 * 
 		jlblAssignedStation = new JLabel("Assigned Station:");
 		jlblAssignedStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		GridBagConstraints gbc_jlblAssignedStation = new GridBagConstraints();
