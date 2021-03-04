@@ -44,6 +44,9 @@ public class TicketCashierPrompt extends JFrame {
 	private JTextField jtxtfldNoOfTickets;
 	private JTextField jtxtfldCash;
 	
+	// reference for the ticket error handling prompt
+	protected TicketErrorDialog ticketErrorDialog; 
+	
 	// output variables for Summary of Billing
 	private JLabel jlblSoBDestinationOutput;
 	private JLabel jlblSoBNoOfTicketsOutput;
@@ -79,6 +82,10 @@ public class TicketCashierPrompt extends JFrame {
 	 * Create the frame.
 	 */
 	public TicketCashierPrompt() {
+		
+		// for ticket error prompt reference later 
+		ticketErrorDialog = new TicketErrorDialog();
+		
 		setTitle("Cashier Module");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 888, 539);
@@ -257,6 +264,9 @@ public class TicketCashierPrompt extends JFrame {
 		jbtnTicketError.setFont(new Font("Roboto", Font.BOLD, 18));
 		jbtnTicketError.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		jbtnTicketError.setBounds(25, 6, 162, 37);
+		jbtnTicketError.addActionListener (event -> {
+			ticketErrorDialog.setVisible(true);
+		});
 		jpnlButtons.add(jbtnTicketError);
 		
 		JButton jbtnUpdateTicket = new JButton("UPDATE BILL");
@@ -407,4 +417,6 @@ public class TicketCashierPrompt extends JFrame {
 		JOptionPane.showMessageDialog(null, "Ticket order done!\nNow Printing...");
 		
 	}
+	
+	
 }
