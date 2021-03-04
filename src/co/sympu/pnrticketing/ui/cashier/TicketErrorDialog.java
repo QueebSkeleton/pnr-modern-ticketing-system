@@ -54,9 +54,9 @@ public class TicketErrorDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_contentPanel.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel jlblOriginalControlNumber = new JLabel("Control Number:");
@@ -84,7 +84,7 @@ public class TicketErrorDialog extends JDialog {
 			gbc_jlblBalance.anchor = GridBagConstraints.EAST;
 			gbc_jlblBalance.insets = new Insets(0, 0, 5, 5);
 			gbc_jlblBalance.gridx = 1;
-			gbc_jlblBalance.gridy = 3;
+			gbc_jlblBalance.gridy = 2;
 			contentPanel.add(jlblBalance, gbc_jlblBalance);
 		}
 		{
@@ -94,7 +94,7 @@ public class TicketErrorDialog extends JDialog {
 			gbc_jtxtfldBalance.insets = new Insets(0, 0, 5, 5);
 			gbc_jtxtfldBalance.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jtxtfldBalance.gridx = 2;
-			gbc_jtxtfldBalance.gridy = 3;
+			gbc_jtxtfldBalance.gridy = 2;
 			contentPanel.add(jtxtfldBalance, gbc_jtxtfldBalance);
 			jtxtfldBalance.setColumns(10);
 		}
@@ -104,7 +104,7 @@ public class TicketErrorDialog extends JDialog {
 			gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
 			gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 			gbc_lblNewLabel.gridx = 1;
-			gbc_lblNewLabel.gridy = 4;
+			gbc_lblNewLabel.gridy = 3;
 			contentPanel.add(lblNewLabel, gbc_lblNewLabel);
 		}
 		{
@@ -115,9 +115,19 @@ public class TicketErrorDialog extends JDialog {
 			gbc_jtxtfldCash.insets = new Insets(0, 0, 5, 5);
 			gbc_jtxtfldCash.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jtxtfldCash.gridx = 2;
-			gbc_jtxtfldCash.gridy = 4;
+			gbc_jtxtfldCash.gridy = 3;
 			contentPanel.add(jtxtfldCash, gbc_jtxtfldCash);
 			jtxtfldCash.setColumns(10);
+		}
+		{
+			JButton btnNewButton = new JButton("UPDATE TICKET");
+			btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 15));
+			GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+			gbc_btnNewButton.fill = GridBagConstraints.HORIZONTAL;
+			gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+			gbc_btnNewButton.gridx = 2;
+			gbc_btnNewButton.gridy = 4;
+			contentPanel.add(btnNewButton, gbc_btnNewButton);
 		}
 		{
 			JLabel lblNewLabel_1 = new JLabel("Origin Control Number:");
@@ -129,8 +139,10 @@ public class TicketErrorDialog extends JDialog {
 			contentPanel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		}
 		{
-			JLabel jlblOriginControlNumber_Output = new JLabel("New label");
+			JLabel jlblOriginControlNumber_Output = new JLabel("XXXX-XXXXX");
+			jlblOriginControlNumber_Output.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
 			GridBagConstraints gbc_jlblOriginControlNumber_Output = new GridBagConstraints();
+			gbc_jlblOriginControlNumber_Output.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jlblOriginControlNumber_Output.insets = new Insets(0, 0, 5, 5);
 			gbc_jlblOriginControlNumber_Output.gridx = 2;
 			gbc_jlblOriginControlNumber_Output.gridy = 6;
