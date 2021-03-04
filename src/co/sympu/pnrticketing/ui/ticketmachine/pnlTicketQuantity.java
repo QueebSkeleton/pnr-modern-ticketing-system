@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -16,14 +18,15 @@ import javax.swing.JTextPane;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
+import java.awt.Cursor;
 
 @SuppressWarnings("serial")
 public class pnlTicketQuantity extends JPanel {
-	private JTextField txtQuantity;
+	
+	//static JTextField txtQuantity;
 
-
+	private int intQty = 0;
 	public pnlTicketQuantity() {
-		KioskMachine.Counter = 1;
 		this.setLayout(new BorderLayout());
 		
 		JPanel pnlSteps = new JPanel();
@@ -48,22 +51,50 @@ public class pnlTicketQuantity extends JPanel {
 		lblNewLabel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 37));
 		
 		JButton btnMinus = new JButton("-");
+		btnMinus.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnMinus.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
 		
 		JButton btnPlus = new JButton("+\r\n");
+		btnPlus.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnPlus.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
 		
-		txtQuantity = new JTextField();
+		JTextField txtQuantity = new JTextField();
 		txtQuantity.setEditable(false);
 		txtQuantity.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 37));
 		txtQuantity.setBackground(Color.LIGHT_GRAY);
 		txtQuantity.setColumns(10);
 		txtQuantity.setHorizontalAlignment(JTextField.CENTER);
 		
-		//int quantity
-		int intQuantity = 0;
-		String strQuantity = Integer.toString(intQuantity);
-		txtQuantity.setText(strQuantity);
+		txtQuantity.setText(Integer.toString(intQty));
+		
+		Ticket objTicket = new Ticket();
+		
+		btnPlus.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtQuantity.setText(Integer.toString(++intQty));
+				objTicket.setQuantity(intQty);
+			}		
+		});
+		
+		btnMinus.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (intQty == 0) {
+					txtQuantity.setText(Integer.toString(intQty));
+					objTicket.setQuantity(intQty);
+				}else {
+					txtQuantity.setText(Integer.toString(--intQty));
+					objTicket.setQuantity(intQty);
+				}
+				
+			}
+			
+			
+		});
+		
 		
 		GroupLayout gl_pnlContent = new GroupLayout(pnlContent);
 		gl_pnlContent.setHorizontalGroup(

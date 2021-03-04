@@ -16,8 +16,9 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class pnlPayment extends JPanel {
 	
-	 static JTextField txtMoney;
-
+	 
+	protected JTextField txtMoney;
+	
 	public pnlPayment() {
 		this.setLayout(new BorderLayout());
 		
@@ -49,10 +50,10 @@ public class pnlPayment extends JPanel {
 		txtMoney.setColumns(10);
 		txtMoney.setHorizontalAlignment(JTextField.CENTER);
 		
-		/*if ((txtMoney.getText() != null)) {
-			intMoney = Integer.parseInt(txtMoney.getText());
-		}
-		*/
+		//Ticket objTicket = new Ticket();
+		//objTicket.setMoney(Float.parseFloat(txtMoney.getText()));
+		
+		
 		
 		GroupLayout gl_pnlContent = new GroupLayout(pnlContent);
 		gl_pnlContent.setHorizontalGroup(

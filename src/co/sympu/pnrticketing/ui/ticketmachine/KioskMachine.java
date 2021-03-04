@@ -22,11 +22,11 @@ import java.awt.Cursor;
 
 
 @SuppressWarnings("serial")
+
+
 public class KioskMachine extends JFrame {
 	
-	protected static int Counter;
-	private int btnClick;
-
+private int btnClick = 1;	
 	public KioskMachine() {
 		
 		setTitle("Ticket Machine");
@@ -109,6 +109,30 @@ public class KioskMachine extends JFrame {
 		btnProceed.setPreferredSize(new Dimension(320, 80));
 		btnProceed.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 
+		// create Confirm button
+		
+				JButton btnConfirm = new JButton("Confirm");
+				btnConfirm.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+				btnConfirm.setForeground(Color.WHITE);
+				btnConfirm.setBackground(Color.GRAY);
+				btnConfirm.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 40));
+				btnConfirm.setPreferredSize(new Dimension(320, 80));
+				btnConfirm.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+				btnConfirm.setVisible(false);
+				
+		// create Complete button
+				
+				JButton btnComplete = new JButton("Complete");
+				btnComplete.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+				btnComplete.setForeground(Color.WHITE);
+				btnComplete.setBackground(Color.GRAY);
+				btnComplete.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 40));
+				btnComplete.setPreferredSize(new Dimension(320, 80));
+				btnComplete.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+				btnComplete.setVisible(false);
+		
 		// setting the layout
 		pnlButtons.setLayout(new BorderLayout(0, 0));
 		pnlButtons.add(btnProceed, BorderLayout.EAST);
@@ -121,43 +145,80 @@ public class KioskMachine extends JFrame {
 		btnGoback.setBackground(Color.GRAY);
 		pnlButtons.add(btnGoback, BorderLayout.WEST);
 
-		this.setExtendedState(MAXIMIZED_BOTH);
+		//get objTicket
 		
-		btnClick = 0;
-		
+		Ticket objTicket = new Ticket();
 			
+			btnGoback.setVisible(false);
 			
-			// adding action listener for btnProceed
+			// adding action listener for btnGoback
 			btnGoback.addActionListener(new ActionListener() {	
 			public void actionPerformed(ActionEvent e) {
-				cl.previous(pnlContent);;
-				--btnClick;
+				 --btnClick;
+				 cl.previous(pnlContent);
+				 if (btnClick == 1) {
+					 btnGoback.setVisible(false);
+				 }
+				
 				}
 			});
 		
 		
 			// adding action listener for btnProceed
 			btnProceed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				btnProceedActionPerformed(e);
-				cl.next(pnlContent);
-			    //++btnClick;		
+				public void actionPerformed(ActionEvent e) { 
+					cl.next(pnlContent);
+					++btnClick;
+					
+					if (btnClick == 2) {
+						btnGoback.setVisible(true);
+						//objTicket.setQuantity(Integer.parseInt(pnlTicketQuantity.txtQuantity.getText()));
+					}else if (btnClick == 3) {
+						
+						objConfirm.Qty.setText(Integer.toString(objTicket.getQuantity()));
+					}else if (btnClick == 4) {
+						objConfirm.Payment.setText(Float.toString(objTicket.getMoney()));
+						objConfirm.Payment.setText(Integer.toString(objTicket.getQuantity()));
+						btnProceed.setVisible(false);
+						btnConfirm.setVisible(true);
+						pnlButtons.add(btnConfirm, BorderLayout.EAST);
+					}
 				}
 			});
 			
-			if (btnClick == 0) {
-				btnGoback.setVisible(false);
-			}else {
-				btnGoback.setVisible(true);
-			}
-		
+			// adding action listener for btnConfirm
+						btnConfirm.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) { 
+								btnClick = 0;
+								cl.next(pnlContent);
+								btnGoback.setVisible(false);
+								btnConfirm.setVisible(false);
+								btnProceed.setVisible(false);
+								btnComplete.setVisible(true);
+								pnlButtons.add(btnComplete, BorderLayout.EAST);
+							}
+						});
+			
+			// adding action listener for btnConfirm
+						btnComplete.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) { 
+								++btnClick;
+								cl.next(pnlContent);
+								btnGoback.setVisible(false);
+								btnConfirm.setVisible(false);
+								btnComplete.setVisible(false);
+								btnProceed.setVisible(true);
+								pnlButtons.add(btnProceed, BorderLayout.EAST);
+							}
+						});
+				
+
+			this.setExtendedState(MAXIMIZED_BOTH);
+			
+			
 
 		}
 	
-		private void btnProceedActionPerformed(java.awt.event.ActionEvent evt) {                                         
-		    ++btnClick;	
-		}     
 	}
 
 

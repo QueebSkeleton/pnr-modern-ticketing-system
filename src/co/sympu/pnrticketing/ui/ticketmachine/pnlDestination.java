@@ -34,8 +34,7 @@ public class pnlDestination extends JPanel {
 		
 		Createconn();
 			
-		//counter for each panel shown	
-		KioskMachine.Counter = 0;
+		
 		
 		//establish connection
 		Createconn();

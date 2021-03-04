@@ -16,8 +16,14 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 @SuppressWarnings("serial")
 public class pnlConfirmation extends JPanel {
 	
+	protected JLabel Qty;
+	protected JLabel Payment;
+	
 	public pnlConfirmation() {
 		this.setLayout(new BorderLayout());
+		
+		//create objTicket
+		Ticket objTicket = new Ticket();
 		
 		// panel for the steps
 		JPanel pnlSteps = new JPanel();
@@ -57,6 +63,23 @@ public class pnlConfirmation extends JPanel {
 		JLabel ttlPayment = new JLabel("Payment:\r\n");
 		ttlPayment.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
 		
+		JLabel Destination = new JLabel("\r\n");
+		Destination.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
+		
+		JLabel Price = new JLabel("");
+		Price.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
+		
+		JLabel Change = new JLabel("");
+		Change.setForeground(Color.BLACK);
+		Change.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
+		
+		Payment = new JLabel("");
+		Payment.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
+		//Payment.setText(Float.toString(objTicket.getMoney()));
+		
+		Qty = new JLabel("");
+		Qty.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
+		
 
 		
 		GroupLayout gl_pnlContent = new GroupLayout(pnlContent);
@@ -67,19 +90,35 @@ public class pnlConfirmation extends JPanel {
 						.addGroup(gl_pnlContent.createSequentialGroup()
 							.addGap(190)
 							.addGroup(gl_pnlContent.createParallelGroup(Alignment.LEADING)
-								.addComponent(ttlChange)
+								.addGroup(gl_pnlContent.createSequentialGroup()
+									.addComponent(ttlChange)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(Change, GroupLayout.PREFERRED_SIZE, 321, GroupLayout.PREFERRED_SIZE))
 								.addGroup(gl_pnlContent.createSequentialGroup()
 									.addGroup(gl_pnlContent.createParallelGroup(Alignment.LEADING)
-										.addComponent(ttlDestination)
-										.addComponent(ttlPrice))
-									.addGap(327)
+										.addGroup(gl_pnlContent.createSequentialGroup()
+											.addComponent(ttlDestination)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(Destination, GroupLayout.PREFERRED_SIZE, 299, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_pnlContent.createSequentialGroup()
+											.addComponent(ttlPrice)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(Price, GroupLayout.PREFERRED_SIZE, 279, GroupLayout.PREFERRED_SIZE)))
+									.addGap(80)
 									.addGroup(gl_pnlContent.createParallelGroup(Alignment.LEADING)
-										.addComponent(ttlPayment)
-										.addComponent(ttlQty)))))
+										.addGroup(gl_pnlContent.createSequentialGroup()
+											.addComponent(ttlPayment)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(Payment, GroupLayout.PREFERRED_SIZE, 282, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_pnlContent.createSequentialGroup()
+											.addComponent(ttlQty)
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addComponent(Qty, GroupLayout.PREFERRED_SIZE, 241, GroupLayout.PREFERRED_SIZE)))))
+							.addPreferredGap(ComponentPlacement.RELATED))
 						.addGroup(gl_pnlContent.createSequentialGroup()
 							.addGap(230)
 							.addComponent(lblPayment)))
-					.addContainerGap(199, Short.MAX_VALUE))
+					.addContainerGap(195, Short.MAX_VALUE))
 		);
 		gl_pnlContent.setVerticalGroup(
 			gl_pnlContent.createParallelGroup(Alignment.LEADING)
@@ -89,18 +128,27 @@ public class pnlConfirmation extends JPanel {
 					.addGap(31)
 					.addGroup(gl_pnlContent.createParallelGroup(Alignment.BASELINE)
 						.addComponent(ttlDestination)
-						.addComponent(ttlQty))
+						.addComponent(ttlQty)
+						.addComponent(Destination, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+						.addComponent(Qty, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
+					.addGroup(gl_pnlContent.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlContent.createSequentialGroup()
+							.addGap(18)
+							.addGroup(gl_pnlContent.createParallelGroup(Alignment.BASELINE)
+								.addComponent(ttlPrice)
+								.addComponent(ttlPayment)
+								.addComponent(Payment, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_pnlContent.createSequentialGroup()
+							.addGap(18)
+							.addComponent(Price, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)))
 					.addGap(18)
-					.addGroup(gl_pnlContent.createParallelGroup(Alignment.BASELINE)
-						.addComponent(ttlPrice)
-						.addComponent(ttlPayment))
-					.addGap(18)
-					.addComponent(ttlChange)
-					.addContainerGap(76, Short.MAX_VALUE))
+					.addGroup(gl_pnlContent.createParallelGroup(Alignment.LEADING)
+						.addComponent(ttlChange)
+						.addComponent(Change, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(84, Short.MAX_VALUE))
 		);
 		pnlContent.setLayout(gl_pnlContent);
 		
 		this.setSize(1500, 400);
 	}
-
 }
