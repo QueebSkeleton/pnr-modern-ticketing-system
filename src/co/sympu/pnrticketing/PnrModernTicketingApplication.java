@@ -7,6 +7,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import co.sympu.pnrticketing.repository.StationRepository;
 import co.sympu.pnrticketing.ui.EntryFrame;
 import co.sympu.pnrticketing.ui.admin.MainFrame;
+import co.sympu.pnrticketing.ui.admin.accountsmanagment.AccountsManagementPanel;
 import co.sympu.pnrticketing.ui.admin.machinemngmt.MachineManagementPanel;
 import co.sympu.pnrticketing.ui.admin.salesmonitoring.SalesMonitoringPanel;
 import co.sympu.pnrticketing.ui.admin.stationmgmt.StationManagementPanel;
@@ -41,6 +42,9 @@ public class PnrModernTicketingApplication {
 		
 		// Create the sales monitoring panel
 		SalesMonitoringPanel salesMonitoringPanel = new SalesMonitoringPanel();
+		
+		// Create the accounts management panel
+		AccountsManagementPanel accountsManagementPanel = new AccountsManagementPanel();
     
 		// Create the 3 Entry Point Frames (or whatever)
 		// TODO: THIS SHOULD BE 3 LOGIN DIALOGS! (JDialog)
@@ -52,6 +56,7 @@ public class PnrModernTicketingApplication {
 		mainFrame.setStationManagementPanel(stationManagementPanel);
 		mainFrame.setMachineManagementPanel(machineManagementPanel);
 		mainFrame.setSalesMonitoringPanel(salesMonitoringPanel);
+		mainFrame.setAccountsManagementPanel(accountsManagementPanel);
 		/* END OF MainFrame */
 		/* LoginFrame - Cashier Entry Point */
 		LoginFrame loginFrame = new LoginFrame();

@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import co.sympu.pnrticketing.ui.admin.accountsmanagment.AccountsManagementPanel;
 import co.sympu.pnrticketing.ui.admin.machinemngmt.MachineManagementPanel;
 import co.sympu.pnrticketing.ui.admin.salesmonitoring.SalesMonitoringPanel;
 import co.sympu.pnrticketing.ui.admin.stationmgmt.StationManagementPanel;
@@ -61,6 +62,10 @@ public class MainFrame extends JFrame {
 	 * Sales Monitoring Panel of this module.
 	 */
 	private SalesMonitoringPanel salesMonitoringPanel;
+	/**
+	 * Accounts Management Panel of this module.
+	 */
+	private AccountsManagementPanel accountsManagementPanel;
 
 	/**
 	 * Create the frame.
@@ -204,7 +209,25 @@ public class MainFrame extends JFrame {
 		
 		JButton jbtnAccountsPanel = new JButton("Accounts Management");
 		jbtnAccountsPanel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// If the current shown panel is accounts management panel
+					if(jpnlCurrentShownPanel == accountsManagementPanel)
+						return;
+					
+					// Else, if the current shown panel is another,
+					// remove it from the content pane
+					else if(jpnlCurrentShownPanel != null)
+						jpnlContentPane.remove(jpnlCurrentShownPanel);
+					
+					// Refresh table when the panel is shown
+					accountsManagementPanel.refreshTable();
+					// Set current shown panel (pointer) to accountsManagementPanel
+					jpnlCurrentShownPanel = accountsManagementPanel;
+					// Add accountsManagementPanel to the content pane
+					jpnlContentPane.add(accountsManagementPanel);
+					// Redraw the frame
+					revalidate();
 			}
 		});
 		jbtnAccountsPanel.setMinimumSize(new Dimension(200, 35));
@@ -239,6 +262,9 @@ public class MainFrame extends JFrame {
 	
 	public void setSalesMonitoringPanel(SalesMonitoringPanel salesMonitoringPanel) {
 		this.salesMonitoringPanel = salesMonitoringPanel;
+	}
+	public void setAccountsManagementPanel(AccountsManagementPanel accountsManagementPanel) {
+		this.accountsManagementPanel = accountsManagementPanel;
 	}
 
 }
