@@ -202,7 +202,7 @@ private int btnClick = 1;
 			// adding action listener for btnConfirm
 						btnComplete.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) { 
-								++btnClick;
+								btnClick = 1;
 								cl.next(pnlContent);
 								btnGoback.setVisible(false);
 								btnConfirm.setVisible(false);
