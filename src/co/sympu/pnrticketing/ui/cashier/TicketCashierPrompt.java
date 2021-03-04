@@ -69,6 +69,7 @@ public class TicketCashierPrompt extends JFrame {
 	TicketCashierPrompt ticketCashierPrompt = this;
 	
 	// value holders for calculatePrice method
+	private float fltVHPrice;
 	private String strVHDestination;  
 	private int intVHStationID; 
 	
@@ -350,7 +351,7 @@ public class TicketCashierPrompt extends JFrame {
 		
 		// Value Holder for the price from station_pricing
 		resultSetPricing.next();
-		float fltVHPrice = resultSetPricing.getFloat("price");
+		fltVHPrice = resultSetPricing.getFloat("price");
 		
 		// Calculations for the Payable amount 
 		fltAmount = fltVHPrice * (Integer.parseInt(jtxtfldNoOfTickets.getText())); 
@@ -398,7 +399,7 @@ public class TicketCashierPrompt extends JFrame {
 		
 		do {
 			
-			insertSqlStatement += "(NULL," + assignedStationID + ", " + intVHStationID + ", NOW(), " + fltAmount + ")";
+			insertSqlStatement += "(NULL," + assignedStationID + ", " + intVHStationID + ", NOW(), " + fltVHPrice + ")";
 			
 			if (intTerminator == 1)
 				break; 
