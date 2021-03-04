@@ -82,7 +82,6 @@ public class TicketCashierPrompt extends JFrame {
 		ticketErrorDialog = new TicketErrorDialog();
 		
 		setTitle("Cashier Module");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 888, 539);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
