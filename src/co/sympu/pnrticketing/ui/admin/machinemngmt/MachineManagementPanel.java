@@ -33,9 +33,9 @@ public class MachineManagementPanel extends JPanel {
 	static Connection objConn;
 	static ResultSet objResultSet;
 	static Statement objSQLQuery;
-	
+
 	protected MainFrame mainFrame;
-	
+
 	private static final long serialVersionUID = 1L;
 	private JTable tblMachineManagementTable;
 
@@ -67,33 +67,35 @@ public class MachineManagementPanel extends JPanel {
 		jlblHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		jlblHeader.setFont(new Font("Roboto", Font.PLAIN, 24));
 		jpnlHeader.add(jlblHeader);
-		
+
 		JPanel jpnlButtonActions = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) jpnlButtonActions.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		jpnlButtonActions.setAlignmentY(0.0f);
 		jpnlButtonActions.setAlignmentX(0.0f);
 		jpnlHeader.add(jpnlButtonActions);
-		
-				JButton btnAdd = new JButton("Add");
-				btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				btnAdd.setBackground(Color.WHITE);
-				btnAdd.setFont(new Font("Roboto", Font.PLAIN, 12));
-				jpnlButtonActions.add(btnAdd);
-				btnAdd.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						machineManagementAdd.setVisible(true);
-						machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
-						machineManagementAdd.txtSerial.setText("");
-						machineManagementAdd.txtPassword.setText("");
-						machineManagementAdd.txtRePassword.setText("");
-						machineManagementAdd.okButton.setVisible(true);
-						machineManagementAdd.editButton.setVisible(false);
-						machineManagementAdd.deleteButton.setVisible(false);
-					}
-				});
+
+		JButton btnAdd = new JButton("Add");
+		btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnAdd.setBackground(Color.WHITE);
+		btnAdd.setFont(new Font("Roboto", Font.PLAIN, 12));
+		jpnlButtonActions.add(btnAdd);
+		btnAdd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				machineManagementAdd.setVisible(true);
+				machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
+				machineManagementAdd.txtSerial.setEnabled(true);
+				machineManagementAdd.txtSerial.setText("");
+				machineManagementAdd.txtPassword.setText("");
+				machineManagementAdd.txtRePassword.setText("");
+				machineManagementAdd.okButton.setVisible(true);
+				machineManagementAdd.editButton.setVisible(false);
+				machineManagementAdd.deleteButton.setVisible(false);
+				machineManagementAdd.resetForm();
+			}
+		});
 		btnAdd.setHorizontalAlignment(SwingConstants.RIGHT);
 
 		JButton btnUpload = new JButton("Update");
@@ -104,52 +106,48 @@ public class MachineManagementPanel extends JPanel {
 		btnUpload.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(getTblMachineManagementTable().getSelectionModel().getSelectedItemsCount() == 0) {
-					
-					JOptionPane.showMessageDialog(
-					mainFrame, 
-					"Please select a Machine first before clicking the Update button.",
-					"Notice",
-					JOptionPane.WARNING_MESSAGE);
-					
+				if (getTblMachineManagementTable().getSelectionModel().getSelectedItemsCount() == 0) {
+
+					JOptionPane.showMessageDialog(mainFrame,
+							"Please select a Machine first before clicking the Update button.", "Notice",
+							JOptionPane.WARNING_MESSAGE);
+
 					return;
 				}
-				
+
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app",
 							"password123");
 
-					String query = "select serial_number, "
-								+ "password,"
-								+ "assigned_station_id "
-								+ "from machine "
-							+ "where serial_number = '" + getTblMachineManagementTable().getValueAt(
-									getTblMachineManagementTable().getSelectedRow(), 0) + "'";
-					
+					String query = "select serial_number, " + "password," + "assigned_station_id " + "from machine "
+							+ "where serial_number = '" + getTblMachineManagementTable()
+									.getValueAt(getTblMachineManagementTable().getSelectedRow(), 0)
+							+ "'";
+
 					Statement stmt = con.createStatement();
 					ResultSet rs = stmt.executeQuery(query);
 					rs.next();
-				
-				machineManagementAdd.setVisible(true);
-				machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
-				machineManagementAdd.okButton.setVisible(false);
-				machineManagementAdd.editButton.setVisible(true);
-				machineManagementAdd.deleteButton.setVisible(false);
-				
-				machineManagementAdd.txtSerial.setText(rs.getString("serial_number"));
-				machineManagementAdd.txtSerial.setEnabled(false);
-				machineManagementAdd.txtPassword.setText(rs.getString("password"));
-				machineManagementAdd.txtRePassword.setText(rs.getString("password"));
-				
 
-				rs.close();
-				stmt.close();
-				con.close();
-				
-			}catch(Exception Exe) {
-				Exe.printStackTrace();
-			}
+					machineManagementAdd.setVisible(true);
+					machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
+					machineManagementAdd.okButton.setVisible(false);
+					machineManagementAdd.editButton.setVisible(true);
+					machineManagementAdd.deleteButton.setVisible(false);
+					machineManagementAdd.resetForm();
+
+					machineManagementAdd.txtSerial.setText(rs.getString("serial_number"));
+					machineManagementAdd.txtSerial.setEnabled(false);
+					machineManagementAdd.txtPassword.setText(rs.getString("password"));
+					machineManagementAdd.txtRePassword.setText(rs.getString("password"));
+
+					rs.close();
+					stmt.close();
+					con.close();
+
+				} catch (Exception Exe) {
+					Exe.printStackTrace();
+				}
 			}
 		});
 		btnUpload.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -162,35 +160,40 @@ public class MachineManagementPanel extends JPanel {
 		btnDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(getTblMachineManagementTable().getSelectionModel().getSelectedItemsCount() == 0) {
-					
-					JOptionPane.showMessageDialog(
-					mainFrame, 
-					"Please select a Machine first before clicking the Delete button.",
-					"Notice",
-					JOptionPane.WARNING_MESSAGE);
-					
+				if (getTblMachineManagementTable().getSelectionModel().getSelectedItemsCount() == 0) {
+
+					JOptionPane.showMessageDialog(mainFrame,
+							"Please select a Machine first before clicking the Delete button.", "Notice",
+							JOptionPane.WARNING_MESSAGE);
+
 					return;
 				}
-				DefaultTableModel bagModel = (DefaultTableModel)tblMachineManagementTable.getModel();
-		        int intSelectedRow = tblMachineManagementTable.getSelectedRow();
-		        int result = JOptionPane.showConfirmDialog(tblMachineManagementTable, "Confirm Deletion", "Notice", JOptionPane.INFORMATION_MESSAGE);
-		        
-		        if (result == JOptionPane.OK_OPTION) {
-		        try {
-		            Class.forName("com.mysql.cj.jdbc.Driver");
-		            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
+				DefaultTableModel bagModel = (DefaultTableModel) tblMachineManagementTable.getModel();
+				int intSelectedRow = tblMachineManagementTable.getSelectedRow();
+				int result = JOptionPane.showConfirmDialog(tblMachineManagementTable, "Confirm Deletion", "Notice",
+						JOptionPane.INFORMATION_MESSAGE);
 
-		            Statement stmt = con.createStatement();
-			    stmt.execute("DELETE FROM machine WHERE serial_number = '" + 
-		                    (bagModel.getValueAt(intSelectedRow, 0)).toString() +"'");
-		            
-			    refreshtbl();
-		        }catch(Exception e1){
-		            e1.printStackTrace();
-		            JOptionPane.showMessageDialog(null, "Error Deleting");
-		        }
-		        }
+				if (result == JOptionPane.OK_OPTION) {
+					try {
+						Class.forName("com.mysql.cj.jdbc.Driver");
+						Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app",
+								"password123");
+
+						Statement stmt = con.createStatement();
+						stmt.execute("DELETE FROM machine WHERE serial_number = '"
+								+ (bagModel.getValueAt(intSelectedRow, 0)).toString() + "'");
+
+						refreshtbl();
+
+						stmt.close();
+						con.close();
+
+						JOptionPane.showMessageDialog(null, "Successfully removed machine.");
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Error Deleting");
+					}
+				}
 			}
 		});
 		btnDelete.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -248,7 +251,7 @@ public class MachineManagementPanel extends JPanel {
 		tblMachineManagementTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+
 			}
 		});
 	}
