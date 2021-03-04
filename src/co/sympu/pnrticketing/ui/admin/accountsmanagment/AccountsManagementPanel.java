@@ -1,6 +1,7 @@
 package co.sympu.pnrticketing.ui.admin.accountsmanagment;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -22,7 +23,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Cursor;
 
 public class AccountsManagementPanel extends JPanel {
 
@@ -47,8 +47,6 @@ public class AccountsManagementPanel extends JPanel {
 	 */
 	public AccountsManagementPanel() {
 		AccountsManagementPanel thisPanel = this;
-		// Set background to white
-		setBackground(Color.WHITE);
 		// Set border to EmptyBorder for spacing
 		setBorder(new EmptyBorder(10, 10, 10, 10));
 		// Use BoxLayout to lay the internal 3 panels: Header, Table, Pagination Actions
@@ -59,7 +57,6 @@ public class AccountsManagementPanel extends JPanel {
 		jpnlHeader.setBorder(new EmptyBorder(0, 0, 10, 0));
 		jpnlHeader.setMinimumSize(new Dimension(10, 45));
 		jpnlHeader.setMaximumSize(new Dimension(32767, 55));
-		jpnlHeader.setBackground(Color.WHITE);
 		add(jpnlHeader);
 		jpnlHeader.setLayout(new BoxLayout(jpnlHeader, BoxLayout.X_AXIS));
 		/* END OF jpnlHeader */
@@ -77,7 +74,6 @@ public class AccountsManagementPanel extends JPanel {
 		jpnlButtonActions.setAlignmentX(0.0f);
 		FlowLayout fl_jpnlButtonActions = (FlowLayout) jpnlButtonActions.getLayout();
 		fl_jpnlButtonActions.setAlignment(FlowLayout.RIGHT);
-		jpnlButtonActions.setBackground(Color.WHITE);
 		jpnlHeader.add(jpnlButtonActions);
 		/* END OF jpnlButtonActions */
 
@@ -173,16 +169,6 @@ public class AccountsManagementPanel extends JPanel {
 		jtblAccounts.setRowHeight(22);
 		jtblAccounts.setIntercellSpacing(new Dimension(4, 4));
 		jscrlpnAccounts.setViewportView(jtblAccounts);
-		/* END OF jtblAccounts */
-
-		/* jpnlTablePagination - Panel for Pagination Components */
-		JPanel jpnlTablePagination = new JPanel();
-		jpnlTablePagination.setBorder(new EmptyBorder(10, 0, 0, 0));
-		jpnlTablePagination.setBackground(Color.WHITE);
-		jpnlTablePagination.setMaximumSize(new Dimension(32767, 60));
-		jpnlTablePagination.setMinimumSize(new Dimension(10, 50));
-		add(jpnlTablePagination);
-		jpnlTablePagination.setLayout(new BoxLayout(jpnlTablePagination, BoxLayout.X_AXIS));
 
 		// Create the add form dialog
 		addDialog = new AddDialog();

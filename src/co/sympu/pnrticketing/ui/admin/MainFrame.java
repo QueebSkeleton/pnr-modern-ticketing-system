@@ -251,11 +251,11 @@ public class MainFrame extends JFrame {
 		jbtnAccountsPanel.setMaximumSize(new Dimension(32767, 35));
 		jbtnAccountsPanel.setHorizontalAlignment(SwingConstants.LEFT);
 		jbtnAccountsPanel.setForeground(Color.WHITE);
-		jbtnAccountsPanel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jbtnAccountsPanel.setFont(new Font("Roboto", Font.PLAIN, 13));
 		jbtnAccountsPanel.setFocusPainted(false);
 		jbtnAccountsPanel.setBorderPainted(false);
 		jbtnAccountsPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
-		jbtnAccountsPanel.setBackground(Color.BLUE);
+		jbtnAccountsPanel.setBackground(new Color(51, 102, 255));
 		jpnlSidebar.add(jbtnAccountsPanel);
 		/* END OF jbtnStationPanel */
 	}
