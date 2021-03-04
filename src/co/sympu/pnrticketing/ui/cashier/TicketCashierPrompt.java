@@ -22,11 +22,15 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.SystemColor;
 
 public class TicketCashierPrompt extends JFrame {
 
@@ -75,205 +79,189 @@ public class TicketCashierPrompt extends JFrame {
 	 * Create the frame.
 	 */
 	public TicketCashierPrompt() {
-		setResizable(false);
 		setTitle("Cashier Module");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 752, 521);
+		setBounds(100, 100, 888, 539);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-		
-		JPanel jpnlDestinationHeader = new JPanel();
-		jpnlDestinationHeader.setMaximumSize(new Dimension(32767, 22000));
-		contentPane.add(jpnlDestinationHeader);
-		jpnlDestinationHeader.setLayout(null);
-		
-		JLabel jlblDestinationHeader = new JLabel("Philippine National Railways ");
-		jlblDestinationHeader.setFont(new Font("Times New Roman", Font.BOLD, 26));
-		jlblDestinationHeader.setBounds(151, 11, 338, 25);
-		jpnlDestinationHeader.add(jlblDestinationHeader);
 		
 		
 		JPanel jpnlPayment = new JPanel();
 		contentPane.add(jpnlPayment);
 		jpnlPayment.setLayout(new BoxLayout(jpnlPayment, BoxLayout.X_AXIS));
 		
-		JPanel jpnlTicketAndPayment = new JPanel();
-		jpnlTicketAndPayment.setBorder(new EmptyBorder(0, 10, 0, 0));
-		jpnlTicketAndPayment.setMaximumSize(new Dimension(3000, 1000));
-		jpnlPayment.add(jpnlTicketAndPayment);
-		GridBagLayout gbl_jpnlTicketAndPayment = new GridBagLayout();
-		gbl_jpnlTicketAndPayment.columnWidths = new int[]{0, 109, 68, 0};
-		gbl_jpnlTicketAndPayment.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_jpnlTicketAndPayment.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_jpnlTicketAndPayment.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		jpnlTicketAndPayment.setLayout(gbl_jpnlTicketAndPayment);
-		
-		JLabel jlblStations = new JLabel("Stations:");
-		GridBagConstraints gbc_jlblStations = new GridBagConstraints();
-		gbc_jlblStations.insets = new Insets(0, 0, 5, 5);
-		gbc_jlblStations.anchor = GridBagConstraints.EAST;
-		gbc_jlblStations.gridx = 0;
-		gbc_jlblStations.gridy = 1;
-		jpnlTicketAndPayment.add(jlblStations, gbc_jlblStations);
-		
-		jcmbStations = new JComboBox();
-		GridBagConstraints gbc_jcmbStations = new GridBagConstraints();
-		gbc_jcmbStations.insets = new Insets(0, 0, 5, 5);
-		gbc_jcmbStations.fill = GridBagConstraints.HORIZONTAL;
-		gbc_jcmbStations.gridx = 1;
-		gbc_jcmbStations.gridy = 1;
-		jpnlTicketAndPayment.add(jcmbStations, gbc_jcmbStations);
-		
-		Component verticalStrut = Box.createVerticalStrut(20);
-		GridBagConstraints gbc_verticalStrut = new GridBagConstraints();
-		gbc_verticalStrut.insets = new Insets(0, 0, 5, 5);
-		gbc_verticalStrut.gridx = 1;
-		gbc_verticalStrut.gridy = 2;
-		jpnlTicketAndPayment.add(verticalStrut, gbc_verticalStrut);
-		
-		JLabel jlblNoOfTickets = new JLabel("No. Of Tickets:");
-		GridBagConstraints gbc_jlblNoOfTickets = new GridBagConstraints();
-		gbc_jlblNoOfTickets.anchor = GridBagConstraints.EAST;
-		gbc_jlblNoOfTickets.insets = new Insets(0, 0, 5, 5);
-		gbc_jlblNoOfTickets.gridx = 0;
-		gbc_jlblNoOfTickets.gridy = 3;
-		jpnlTicketAndPayment.add(jlblNoOfTickets, gbc_jlblNoOfTickets);
-		
-		jtxtfldNoOfTickets = new JTextField();
-		jtxtfldNoOfTickets.setHorizontalAlignment(SwingConstants.CENTER);
-		jtxtfldNoOfTickets.setText("1");
-		jtxtfldNoOfTickets.setToolTipText("");
-		GridBagConstraints gbc_jtxtfldNoOfTickets = new GridBagConstraints();
-		gbc_jtxtfldNoOfTickets.insets = new Insets(0, 0, 5, 5);
-		gbc_jtxtfldNoOfTickets.gridx = 1;
-		gbc_jtxtfldNoOfTickets.gridy = 3;
-		jpnlTicketAndPayment.add(jtxtfldNoOfTickets, gbc_jtxtfldNoOfTickets);
-		jtxtfldNoOfTickets.setColumns(10);
-		
-		JLabel jlblCash = new JLabel("Cash:");
-		jlblCash.setHorizontalAlignment(SwingConstants.TRAILING);
-		GridBagConstraints gbc_jlblCash = new GridBagConstraints();
-		gbc_jlblCash.anchor = GridBagConstraints.EAST;
-		gbc_jlblCash.insets = new Insets(0, 0, 0, 5);
-		gbc_jlblCash.gridx = 0;
-		gbc_jlblCash.gridy = 5;
-		jpnlTicketAndPayment.add(jlblCash, gbc_jlblCash);
-		
-		jtxtfldCash = new JTextField();
-		GridBagConstraints gbc_jtxtfldCash = new GridBagConstraints();
-		gbc_jtxtfldCash.insets = new Insets(0, 0, 0, 5);
-		gbc_jtxtfldCash.gridx = 1;
-		gbc_jtxtfldCash.gridy = 5;
-		jpnlTicketAndPayment.add(jtxtfldCash, gbc_jtxtfldCash);
-		jtxtfldCash.setColumns(10);
-		
 		JPanel jpnlBilling = new JPanel();
+		jpnlBilling.setBackground(SystemColor.menu);
 		jpnlBilling.setBorder(new BevelBorder(BevelBorder.RAISED, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.DARK_GRAY, null));
 		jpnlPayment.add(jpnlBilling);
 		jpnlBilling.setLayout(null);
 		
 		
 		/* START of Summary Billing GUI*/
+		
+		jcmbStations = new JComboBox();
+		jcmbStations.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jcmbStations.setBackground(SystemColor.menu);
+		jcmbStations.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		jcmbStations.setBounds(158, 177, 279, 33);
+		jpnlBilling.add(jcmbStations);
+		
+		JLabel jlblStations = new JLabel("Stations:");
+		jlblStations.setFont(new Font("Roboto", Font.PLAIN, 18));
+		jlblStations.setBounds(69, 179, 79, 33);
+		jpnlBilling.add(jlblStations);
+		
+		JLabel jlblNoOfTickets = new JLabel("No. Of Tickets:");
+		jlblNoOfTickets.setFont(new Font("Roboto", Font.PLAIN, 18));
+		jlblNoOfTickets.setBounds(27, 223, 123, 33);
+		jpnlBilling.add(jlblNoOfTickets);
+		
+		jtxtfldNoOfTickets = new JTextField();
+		jtxtfldNoOfTickets.setFont(new Font("Tahoma", Font.BOLD, 18));
+		jtxtfldNoOfTickets.setBounds(158, 221, 279, 35);
+		jpnlBilling.add(jtxtfldNoOfTickets);
+		jtxtfldNoOfTickets.setHorizontalAlignment(SwingConstants.CENTER);
+		jtxtfldNoOfTickets.setToolTipText("");
+		jtxtfldNoOfTickets.setColumns(10);
+		
+		JLabel jlblCash = new JLabel("Cash:");
+		jlblCash.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		jlblCash.setBounds(37, 299, 108, 33);
+		jpnlBilling.add(jlblCash);
+		jlblCash.setHorizontalAlignment(SwingConstants.TRAILING);
+		
+		jtxtfldCash = new JTextField();
+		jtxtfldCash.setHorizontalAlignment(SwingConstants.CENTER);
+		jtxtfldCash.setFont(new Font("Tahoma", Font.BOLD, 18));
+		jtxtfldCash.setBounds(158, 297, 279, 42);
+		jpnlBilling.add(jtxtfldCash);
+		jtxtfldCash.setColumns(10);
+		
+		JPanel jpnlSummaryOfBilling = new JPanel();
+		jpnlSummaryOfBilling.setBorder(new LineBorder(new Color(0, 0, 255), 2, true));
+		jpnlSummaryOfBilling.setBackground(Color.WHITE);
+		jpnlSummaryOfBilling.setBounds(459, 107, 380, 305);
+		jpnlBilling.add(jpnlSummaryOfBilling);
+		jpnlSummaryOfBilling.setLayout(null);
 		JLabel jlblSummary = new JLabel("Summary of Billing");
-		jlblSummary.setFont(new Font("Tahoma", Font.BOLD, 12));
-		jlblSummary.setBounds(20, 11, 121, 14);
-		jpnlBilling.add(jlblSummary);
+		jlblSummary.setBounds(28, 21, 324, 42);
+		jpnlSummaryOfBilling.add(jlblSummary);
+		jlblSummary.setFont(new Font("Roboto Black", Font.BOLD, 35));
 		
 		JLabel jlblSoBDestination = new JLabel("Destination: ");
-		jlblSoBDestination.setBounds(20, 47, 80, 14);
-		jpnlBilling.add(jlblSoBDestination);
+		jlblSoBDestination.setBounds(28, 96, 130, 14);
+		jpnlSummaryOfBilling.add(jlblSoBDestination);
+		jlblSoBDestination.setFont(new Font("Roboto Light", Font.BOLD, 18));
 		
 		JLabel jlblSoBNoOfTickets = new JLabel("No. of Tickets:");
-		jlblSoBNoOfTickets.setBounds(20, 68, 80, 14);
-		jpnlBilling.add(jlblSoBNoOfTickets);
+		jlblSoBNoOfTickets.setBounds(28, 121, 128, 14);
+		jpnlSummaryOfBilling.add(jlblSoBNoOfTickets);
+		jlblSoBNoOfTickets.setFont(new Font("Roboto Light", Font.BOLD, 18));
 		
 		JLabel jlblSoBTotal = new JLabel("TOTAL");
-		jlblSoBTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
-		jlblSoBTotal.setBounds(20, 93, 69, 14);
-		jpnlBilling.add(jlblSoBTotal);
+		jlblSoBTotal.setBounds(28, 153, 69, 14);
+		jpnlSummaryOfBilling.add(jlblSoBTotal);
+		jlblSoBTotal.setFont(new Font("Roboto", Font.BOLD, 18));
 		
-		JLabel lblNewLabel_4 = new JLabel("________________________________________________");
-		lblNewLabel_4.setBounds(20, 72, 298, 14);
-		jpnlBilling.add(lblNewLabel_4);
+		JLabel lblNewLabel_4 = new JLabel("_______________________________________________________");
+		lblNewLabel_4.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_4.setBounds(28, 123, 331, 22);
+		jpnlSummaryOfBilling.add(lblNewLabel_4);
 		
 		JLabel jlblSoBCash = new JLabel("Cash:\r\n");
-		jlblSoBCash.setBounds(20, 118, 46, 14);
-		jpnlBilling.add(jlblSoBCash);
+		jlblSoBCash.setBounds(28, 178, 46, 14);
+		jpnlSummaryOfBilling.add(jlblSoBCash);
+		jlblSoBCash.setFont(new Font("Roboto", Font.PLAIN, 18));
 		
 		jlblSoBDestinationOutput = new JLabel("Pacita Main Gate");
+		jlblSoBDestinationOutput.setBounds(139, 88, 213, 26);
+		jpnlSummaryOfBilling.add(jlblSoBDestinationOutput);
 		jlblSoBDestinationOutput.setVerticalAlignment(SwingConstants.BOTTOM);
-		jlblSoBDestinationOutput.setFont(new Font("Tahoma", Font.BOLD, 14));
+		jlblSoBDestinationOutput.setFont(new Font("Roboto Black", Font.BOLD, 18));
 		jlblSoBDestinationOutput.setHorizontalAlignment(SwingConstants.TRAILING);
-		jlblSoBDestinationOutput.setBounds(183, 37, 113, 26);
-		jpnlBilling.add(jlblSoBDestinationOutput);
 		
 		jlblSoBNoOfTicketsOutput = new JLabel("1");
+		jlblSoBNoOfTicketsOutput.setBounds(239, 113, 113, 26);
+		jpnlSummaryOfBilling.add(jlblSoBNoOfTicketsOutput);
 		jlblSoBNoOfTicketsOutput.setVerticalAlignment(SwingConstants.BOTTOM);
 		jlblSoBNoOfTicketsOutput.setHorizontalAlignment(SwingConstants.TRAILING);
-		jlblSoBNoOfTicketsOutput.setFont(new Font("Tahoma", Font.BOLD, 14));
-		jlblSoBNoOfTicketsOutput.setBounds(183, 58, 113, 26);
-		jpnlBilling.add(jlblSoBNoOfTicketsOutput);
+		jlblSoBNoOfTicketsOutput.setFont(new Font("Roboto Black", Font.BOLD, 18));
 		
 		jlblSoBTotalOutput = new JLabel("20.00");
+		jlblSoBTotalOutput.setBounds(239, 152, 113, 14);
+		jpnlSummaryOfBilling.add(jlblSoBTotalOutput);
 		jlblSoBTotalOutput.setHorizontalAlignment(SwingConstants.TRAILING);
-		jlblSoBTotalOutput.setFont(new Font("Tahoma", Font.BOLD, 14));
-		jlblSoBTotalOutput.setBounds(183, 93, 113, 14);
-		jpnlBilling.add(jlblSoBTotalOutput);
+		jlblSoBTotalOutput.setFont(new Font("Tahoma", Font.BOLD, 18));
 		
 		JLabel jlblSoBPesoSign = new JLabel("\u20B1");
+		jlblSoBPesoSign.setBounds(147, 146, 28, 26);
+		jpnlSummaryOfBilling.add(jlblSoBPesoSign);
 		jlblSoBPesoSign.setHorizontalAlignment(SwingConstants.TRAILING);
-		jlblSoBPesoSign.setFont(new Font("Tahoma", Font.BOLD, 14));
-		jlblSoBPesoSign.setBounds(137, 85, 28, 26);
-		jpnlBilling.add(jlblSoBPesoSign);
+		jlblSoBPesoSign.setFont(new Font("Tahoma", Font.BOLD, 18));
 		
 		JLabel jlblSoBChange = new JLabel("CHANGE");
-		jlblSoBChange.setFont(new Font("Tahoma", Font.BOLD, 14));
-		jlblSoBChange.setBounds(20, 150, 69, 14);
-		jpnlBilling.add(jlblSoBChange);
-		
-		JLabel jlblSoBPesoSign_1 = new JLabel("\u20B1");
-		jlblSoBPesoSign_1.setHorizontalAlignment(SwingConstants.TRAILING);
-		jlblSoBPesoSign_1.setFont(new Font("Tahoma", Font.BOLD, 14));
-		jlblSoBPesoSign_1.setBounds(137, 142, 28, 26);
-		jpnlBilling.add(jlblSoBPesoSign_1);
+		jlblSoBChange.setBounds(28, 221, 95, 14);
+		jpnlSummaryOfBilling.add(jlblSoBChange);
+		jlblSoBChange.setFont(new Font("Roboto", Font.BOLD, 18));
 		
 		jlblSoBChangeOutput = new JLabel("30.00");
+		jlblSoBChangeOutput.setBounds(239, 220, 113, 14);
+		jpnlSummaryOfBilling.add(jlblSoBChangeOutput);
 		jlblSoBChangeOutput.setForeground(Color.BLUE);
 		jlblSoBChangeOutput.setHorizontalAlignment(SwingConstants.TRAILING);
 		jlblSoBChangeOutput.setFont(new Font("Tahoma", Font.BOLD, 18));
-		jlblSoBChangeOutput.setBounds(183, 150, 113, 14);
-		jpnlBilling.add(jlblSoBChangeOutput);
 		
 		jlblSoBCashOutput = new JLabel("50.00");
+		jlblSoBCashOutput.setBounds(231, 173, 121, 22);
+		jpnlSummaryOfBilling.add(jlblSoBCashOutput);
 		jlblSoBCashOutput.setHorizontalAlignment(SwingConstants.TRAILING);
-		jlblSoBCashOutput.setFont(new Font("Tahoma", Font.BOLD, 14));
-		jlblSoBCashOutput.setBounds(175, 116, 121, 14);
-		jpnlBilling.add(jlblSoBCashOutput);
+		jlblSoBCashOutput.setFont(new Font("Tahoma", Font.BOLD, 18));
 		
 		JLabel lblPleaseDoubleCheck = new JLabel("Please double check before printing");
-		lblPleaseDoubleCheck.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		lblPleaseDoubleCheck.setBounds(10, 272, 301, 22);
+		jpnlSummaryOfBilling.add(lblPleaseDoubleCheck);
+		lblPleaseDoubleCheck.setFont(new Font("Tahoma", Font.ITALIC, 15));
 		lblPleaseDoubleCheck.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblPleaseDoubleCheck.setBounds(10, 189, 223, 14);
-		jpnlBilling.add(lblPleaseDoubleCheck);
+		
+		JLabel jlblSoBPesoSign_1 = new JLabel("\u20B1");
+		jlblSoBPesoSign_1.setBounds(147, 171, 28, 26);
+		jpnlSummaryOfBilling.add(jlblSoBPesoSign_1);
+		jlblSoBPesoSign_1.setHorizontalAlignment(SwingConstants.TRAILING);
+		jlblSoBPesoSign_1.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		JLabel lblNewLabel = new JLabel("PHILIPPINE NATIONAL RAILWAYS");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 30));
+		lblNewLabel.setBounds(149, 11, 594, 42);
+		jpnlBilling.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Serving the Nation and the Filipino People since 1892");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		lblNewLabel_1.setBounds(191, 46, 510, 22);
+		jpnlBilling.add(lblNewLabel_1);
 		
 		/*END of Summary of Billing GUI*/
 		
 		// Buttons Panel for Ticket Error Handling, Update Billing, and Print Ticket
 		JPanel jpnlButtons = new JPanel();
+		jpnlButtons.setBackground(new Color(240,240,240));
 		jpnlButtons.setMinimumSize(new Dimension(10, 1000));
-		jpnlButtons.setMaximumSize(new Dimension(32767, 10000));
+		jpnlButtons.setMaximumSize(new Dimension(32767, 4000));
 		contentPane.add(jpnlButtons);
 		jpnlButtons.setLayout(null);
 		
 		JButton jbtnTicketError = new JButton("TICKET ERROR");
-		jbtnTicketError.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		jbtnTicketError.setBounds(10, 11, 119, 23);
+		jbtnTicketError.setFont(new Font("Roboto", Font.BOLD, 18));
+		jbtnTicketError.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnTicketError.setBounds(25, 6, 162, 37);
 		jpnlButtons.add(jbtnTicketError);
 		
-		JButton jbtnPrintTicket = new JButton("UPDATE BILLING");
-		jbtnPrintTicket.addActionListener(new ActionListener() {
+		JButton jbtnUpdateTicket = new JButton("UPDATE BILL");
+		jbtnUpdateTicket.setFont(new Font("Roboto", Font.BOLD, 18));
+		jbtnUpdateTicket.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 					try {
@@ -285,16 +273,26 @@ public class TicketCashierPrompt extends JFrame {
 					}
 			}
 		});
-		jbtnPrintTicket.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		jbtnPrintTicket.setBounds(509, 11, 119, 23);
-		jpnlButtons.add(jbtnPrintTicket);
+		jbtnUpdateTicket.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnUpdateTicket.setBounds(349, 7, 162, 35);
+		jpnlButtons.add(jbtnUpdateTicket);
 		
-		JButton btnNewButton = new JButton("PRINT TICKET");
-		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton.setBackground(Color.ORANGE);
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnNewButton.setBounds(266, 11, 119, 23);
-		jpnlButtons.add(btnNewButton);
+		JButton jbtnPrintTicket = new JButton("PRINT TICKET");
+		jbtnPrintTicket.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jbtnPrintTicket.setFont(new Font("Roboto", Font.BOLD, 18));
+		jbtnPrintTicket.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+					try {
+						printTicket();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			}
+		});
+		jbtnPrintTicket.setBounds(673, 8, 162, 35);
+		jpnlButtons.add(jbtnPrintTicket);
 		
 		
 	
@@ -350,6 +348,10 @@ public class TicketCashierPrompt extends JFrame {
 		// Calculation for passenger's change
 		fltChange = (Float.parseFloat(jtxtfldCash.getText())) - fltAmount; 
 		
+		resultSetPricing.close();
+		statement.close(); 
+		connection.close();
+		
 	}
 	
 	/*This method updates the following variables: 
@@ -366,5 +368,43 @@ public class TicketCashierPrompt extends JFrame {
 		jlblSoBCashOutput.setText(jtxtfldCash.getText());
 		jlblSoBChangeOutput.setText("" + fltChange);
 	
+	}
+	
+	// This method will submit the ticket order to the pnr_db under ticket table 
+	public void printTicket() throws SQLException {
+		
+		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
+		Statement insertStatement = connection.createStatement();
+		
+		String insertSqlStatement = "INSERT INTO ticket VALUES";
+		// using a loop, get all inputs, concatenate to this insertSqlStatement in this format:
+		// INSERT INTO ticket VALUES (NULL, 65, 66, NOW(), 20), (NULL, 65, 66, NOW(), 20), (NULL, 64, 65, NOW(), 10)
+		
+		
+		// Terminator of the loop
+		int intTerminator = Integer.parseInt(jlblSoBNoOfTicketsOutput.getText());
+		
+	
+		
+		do {
+			
+			insertSqlStatement += "(NULL," + assignedStationID + ", " + intVHStationID + ", NOW(), " + fltAmount + ")";
+			
+			if (intTerminator == 1)
+				break; 
+			else 
+				insertSqlStatement += ",";
+			
+			intTerminator--;
+			
+		} while (intTerminator != 0); 
+		
+		insertStatement.execute(insertSqlStatement);
+		
+		insertStatement.close();
+		connection.close();
+		
+		JOptionPane.showMessageDialog(null, "Ticket order done!\nNow Printing...");
+		
 	}
 }

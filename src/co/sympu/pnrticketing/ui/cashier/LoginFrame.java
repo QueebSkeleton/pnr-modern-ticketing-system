@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import java.awt.Cursor;
 
 public class LoginFrame extends JFrame {
 
@@ -79,7 +80,7 @@ public class LoginFrame extends JFrame {
 		
 		// Textfield component for the username 
 		jtxtfldUsername = new JTextField();
-		jtxtfldUsername.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		jtxtfldUsername.setFont(new Font("Tahoma", Font.BOLD, 11));
 		GridBagConstraints gbc_jtxtfldUsername = new GridBagConstraints();
 		gbc_jtxtfldUsername.insets = new Insets(0, 0, 5, 0);
 		gbc_jtxtfldUsername.fill = GridBagConstraints.HORIZONTAL;
@@ -109,6 +110,7 @@ public class LoginFrame extends JFrame {
 		// Login button that retrieves user's credentials as input
 		// to be passed on to the database query
 		JButton jbtnLogin = new JButton("Login");
+		jbtnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		jbtnLogin.addActionListener(event -> {
 			try {
 			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
