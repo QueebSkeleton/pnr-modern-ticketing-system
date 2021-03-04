@@ -128,6 +128,7 @@ public class LoginFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, "Login Successfully!");
 				ticketCashierPrompt.setVisible(true);
 				ticketCashierPrompt.initializeUI();
+				this.setVisible(false);
 			}
 			else 
 				JOptionPane.showMessageDialog(null, "Failed to login. Please double check your credentials and try again.");

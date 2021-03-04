@@ -1,13 +1,10 @@
 package co.sympu.pnrticketing.ui.cashier;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -16,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,8 +25,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.SystemColor;
 
 public class TicketCashierPrompt extends JFrame {
 
@@ -43,6 +37,9 @@ public class TicketCashierPrompt extends JFrame {
 	private JPanel contentPane;
 	private JTextField jtxtfldNoOfTickets;
 	private JTextField jtxtfldCash;
+	
+	// reference for the ticket error handling prompt
+	protected TicketErrorDialog ticketErrorDialog; 
 	
 	// output variables for Summary of Billing
 	private JLabel jlblSoBDestinationOutput;
@@ -66,6 +63,7 @@ public class TicketCashierPrompt extends JFrame {
 	TicketCashierPrompt ticketCashierPrompt = this;
 	
 	// value holders for calculatePrice method
+	private float fltVHPrice;
 	private String strVHDestination;  
 	private int intVHStationID; 
 	
@@ -79,8 +77,11 @@ public class TicketCashierPrompt extends JFrame {
 	 * Create the frame.
 	 */
 	public TicketCashierPrompt() {
+		
+		// for ticket error prompt reference later 
+		ticketErrorDialog = new TicketErrorDialog();
+		
 		setTitle("Cashier Module");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 888, 539);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -257,6 +258,9 @@ public class TicketCashierPrompt extends JFrame {
 		jbtnTicketError.setFont(new Font("Roboto", Font.BOLD, 18));
 		jbtnTicketError.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		jbtnTicketError.setBounds(25, 6, 162, 37);
+		jbtnTicketError.addActionListener (event -> {
+			ticketErrorDialog.setVisible(true);
+		});
 		jpnlButtons.add(jbtnTicketError);
 		
 		JButton jbtnUpdateTicket = new JButton("UPDATE BILL");
@@ -340,7 +344,7 @@ public class TicketCashierPrompt extends JFrame {
 		
 		// Value Holder for the price from station_pricing
 		resultSetPricing.next();
-		float fltVHPrice = resultSetPricing.getFloat("price");
+		fltVHPrice = resultSetPricing.getFloat("price");
 		
 		// Calculations for the Payable amount 
 		fltAmount = fltVHPrice * (Integer.parseInt(jtxtfldNoOfTickets.getText())); 
@@ -388,7 +392,7 @@ public class TicketCashierPrompt extends JFrame {
 		
 		do {
 			
-			insertSqlStatement += "(NULL," + assignedStationID + ", " + intVHStationID + ", NOW(), " + fltAmount + ")";
+			insertSqlStatement += "(NULL," + assignedStationID + ", " + intVHStationID + ", NOW(), " + fltVHPrice + ")";
 			
 			if (intTerminator == 1)
 				break; 
@@ -407,4 +411,6 @@ public class TicketCashierPrompt extends JFrame {
 		JOptionPane.showMessageDialog(null, "Ticket order done!\nNow Printing...");
 		
 	}
+	
+	
 }
