@@ -2,25 +2,29 @@ package co.sympu.pnrticketing.ui.cashier;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import java.awt.Dimension;
-import java.awt.SystemColor;
 
 public class TicketErrorDialog extends JDialog {
 
@@ -32,12 +36,20 @@ public class TicketErrorDialog extends JDialog {
 	private JTextField jtxtfldOriginalControlNumber;
 	private JTextField jtxtfldBalance;
 	private JTextField jtxtfldCash;
-
+    private JLabel jlblOriginControlNumber_Output;
+    private JLabel jlblBalance_Output;
+    private JLabel jlblChange_Output;
+    
 	// reference for TicketCashierPrompt
 	protected TicketCashierPrompt ticketCashierPrompt;
 	
 	// Self referencing 
 	TicketErrorDialog ticketErrorDialog = this;
+	
+	//value holders for computing balances
+	private float fltVHOriginalPrice;
+	private float fltNewPrice; 
+	private float fltChange;
 
 	/**
 	 * Create the dialog.
@@ -69,6 +81,7 @@ public class TicketErrorDialog extends JDialog {
 		}
 		{
 			jtxtfldOriginalControlNumber = new JTextField();
+			jtxtfldOriginalControlNumber.setHorizontalAlignment(SwingConstants.CENTER);
 			jtxtfldOriginalControlNumber.setFont(new Font("Tahoma", Font.BOLD, 14));
 			GridBagConstraints gbc_jtxtfldOriginalControlNumber = new GridBagConstraints();
 			gbc_jtxtfldOriginalControlNumber.insets = new Insets(0, 0, 5, 5);
@@ -89,6 +102,7 @@ public class TicketErrorDialog extends JDialog {
 		}
 		{
 			jtxtfldBalance = new JTextField();
+			jtxtfldBalance.setHorizontalAlignment(SwingConstants.CENTER);
 			jtxtfldBalance.setFont(new Font("Tahoma", Font.BOLD, 14));
 			GridBagConstraints gbc_jtxtfldBalance = new GridBagConstraints();
 			gbc_jtxtfldBalance.insets = new Insets(0, 0, 5, 5);
@@ -120,14 +134,25 @@ public class TicketErrorDialog extends JDialog {
 			jtxtfldCash.setColumns(10);
 		}
 		{
-			JButton btnNewButton = new JButton("UPDATE TICKET");
-			btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 15));
-			GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-			gbc_btnNewButton.fill = GridBagConstraints.HORIZONTAL;
-			gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-			gbc_btnNewButton.gridx = 2;
-			gbc_btnNewButton.gridy = 4;
-			contentPanel.add(btnNewButton, gbc_btnNewButton);
+			JButton jbtnUpdateTicket = new JButton("UPDATE TICKET");
+			jbtnUpdateTicket.setFont(new Font("Tahoma", Font.BOLD, 15));
+			GridBagConstraints gbc_jbtnUpdateTicket = new GridBagConstraints();
+			gbc_jbtnUpdateTicket.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jbtnUpdateTicket.insets = new Insets(0, 0, 5, 5);
+			gbc_jbtnUpdateTicket.gridx = 2;
+			gbc_jbtnUpdateTicket.gridy = 4;
+			jbtnUpdateTicket.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+						try {
+							updateTicket();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				}
+			});
+			contentPanel.add(jbtnUpdateTicket, gbc_jbtnUpdateTicket);
 		}
 		{
 			JLabel lblNewLabel_1 = new JLabel("Origin Control Number:");
@@ -139,7 +164,7 @@ public class TicketErrorDialog extends JDialog {
 			contentPanel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		}
 		{
-			JLabel jlblOriginControlNumber_Output = new JLabel("XXXX-XXXXX");
+			jlblOriginControlNumber_Output = new JLabel("XXXX-XXXXX");
 			jlblOriginControlNumber_Output.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
 			GridBagConstraints gbc_jlblOriginControlNumber_Output = new GridBagConstraints();
 			gbc_jlblOriginControlNumber_Output.fill = GridBagConstraints.HORIZONTAL;
@@ -149,7 +174,7 @@ public class TicketErrorDialog extends JDialog {
 			contentPanel.add(jlblOriginControlNumber_Output, gbc_jlblOriginControlNumber_Output);
 		}
 		{
-			JLabel lblNewLabel_2 = new JLabel("Price:");
+			JLabel lblNewLabel_2 = new JLabel("Balance:");
 			lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 11));
 			lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
 			GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
@@ -160,14 +185,14 @@ public class TicketErrorDialog extends JDialog {
 			contentPanel.add(lblNewLabel_2, gbc_lblNewLabel_2);
 		}
 		{
-			JLabel jlblNewPrice_Output = new JLabel("0.00");
-			jlblNewPrice_Output.setForeground(SystemColor.windowText);
-			jlblNewPrice_Output.setFont(new Font("Tahoma", Font.BOLD, 18));
-			GridBagConstraints gbc_jlblNewPrice_Output = new GridBagConstraints();
-			gbc_jlblNewPrice_Output.insets = new Insets(0, 0, 5, 5);
-			gbc_jlblNewPrice_Output.gridx = 2;
-			gbc_jlblNewPrice_Output.gridy = 7;
-			contentPanel.add(jlblNewPrice_Output, gbc_jlblNewPrice_Output);
+			jlblBalance_Output = new JLabel("0.00");
+			jlblBalance_Output.setForeground(SystemColor.windowText);
+			jlblBalance_Output.setFont(new Font("Tahoma", Font.BOLD, 18));
+			GridBagConstraints gbc_jlblBalance_Output = new GridBagConstraints();
+			gbc_jlblBalance_Output.insets = new Insets(0, 0, 5, 5);
+			gbc_jlblBalance_Output.gridx = 2;
+			gbc_jlblBalance_Output.gridy = 7;
+			contentPanel.add(jlblBalance_Output, gbc_jlblBalance_Output);
 		}
 		{
 			JLabel lblNewLabel_3 = new JLabel("Change: ");
@@ -180,7 +205,7 @@ public class TicketErrorDialog extends JDialog {
 			contentPanel.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		}
 		{
-			JLabel jlblChange_Output = new JLabel("0.00");
+			jlblChange_Output = new JLabel("0.00");
 			jlblChange_Output.setForeground(SystemColor.textHighlight);
 			jlblChange_Output.setFont(new Font("Tahoma", Font.BOLD, 18));
 			GridBagConstraints gbc_jlblChange_Output = new GridBagConstraints();
@@ -196,9 +221,19 @@ public class TicketErrorDialog extends JDialog {
 			{
 				JButton jbtnConfirm = 	new JButton("CONFIRM");
 				jbtnConfirm.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				jbtnConfirm.setActionCommand("OK");
+				jbtnConfirm.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+							try {
+								confirmChanges();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+					}
+				});
 				buttonPane.add(jbtnConfirm);
-				getRootPane().setDefaultButton(jbtnConfirm);
+				
 			}
 			{
 				JButton jbtnCancel = new JButton("Cancel");
@@ -209,16 +244,56 @@ public class TicketErrorDialog extends JDialog {
 		}
 	}
 	
+	
+	public void updateTicket() throws SQLException {
+		// connection statements for the database to work 
+		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
+		Statement statement = connection.createStatement();
+		
+		// statement that executes selecting all data inside tickets table 
+		ResultSet resultSet = statement.executeQuery("SELECT * FROM ticket WHERE control_number = " + jtxtfldOriginalControlNumber.getText());
+		
+		if (resultSet.next()) {
+			
+			fltVHOriginalPrice = resultSet.getFloat("price");
+			
+			//Calculation for the new price & change
+			fltNewPrice = (Float.parseFloat(jtxtfldBalance.getText())) + fltVHOriginalPrice;
+			
+			fltChange = (Float.parseFloat(jtxtfldCash.getText())) - (Float.parseFloat(jtxtfldBalance.getText()));
+			
+			jlblOriginControlNumber_Output.setText(jtxtfldOriginalControlNumber.getText());
+			jlblBalance_Output.setText(jtxtfldBalance.getText());
+			jlblChange_Output.setText("" + fltChange);
+			
+		} else {
+			JOptionPane.showMessageDialog(null, "Sorry\n Ticket Control Number not found.");
+		}
+		
+		
+		//close all opened SQL operations
+		resultSet.close();
+		statement.close();
+		connection.close();
+	}
 	public void confirmChanges() throws SQLException {
 		
 				// connection statements for the database to work 
 				Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app", "password123");
 				Statement statement = connection.createStatement();
 				
-				// statement that executes selecting all data inside tickets table 
-				statement.executeQuery("SELECT * FROM ticket WHERE control_number = " + jtxtfldOriginalControlNumber.getText());
 				
-				// statement to update ticket error 
+				// statement to update ticket entity on ticket table
+				statement.execute("UPDATE ticket SET price = " + fltNewPrice + "WHERE control_number =" + jtxtfldOriginalControlNumber.getText());
+				
+				JOptionPane.showMessageDialog(null, "Ticket Updated!");
+				
+				//close all opened SQL operations
+				statement.close();
+				connection.close();
+				
+				this.setVisible(false);
+				
 	}
 
 }
