@@ -9,9 +9,14 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class pnlPayment extends JPanel {
+	
+	 static JTextField txtMoney;
 
 	public pnlPayment() {
 		this.setLayout(new BorderLayout());
@@ -35,11 +40,44 @@ public class pnlPayment extends JPanel {
 		pnlContent.setBackground(Color.WHITE);
 		add(pnlContent, BorderLayout.CENTER);
 		
-		JLabel lblNewLabel = new JLabel("PAYMENT");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 99));
-		pnlContent.add(lblNewLabel);
+		JLabel lblTitle = new JLabel("Please enter your money:\r\n");
+		lblTitle.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 37));
+		
+		txtMoney = new JTextField();
+		txtMoney.setBackground(Color.LIGHT_GRAY);
+		txtMoney.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 37));
+		txtMoney.setColumns(10);
+		txtMoney.setHorizontalAlignment(JTextField.CENTER);
+		
+		/*if ((txtMoney.getText() != null)) {
+			intMoney = Integer.parseInt(txtMoney.getText());
+		}
+		*/
+		
+		GroupLayout gl_pnlContent = new GroupLayout(pnlContent);
+		gl_pnlContent.setHorizontalGroup(
+			gl_pnlContent.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_pnlContent.createSequentialGroup()
+					.addGroup(gl_pnlContent.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlContent.createSequentialGroup()
+							.addGap(233)
+							.addComponent(lblTitle))
+						.addGroup(gl_pnlContent.createSequentialGroup()
+							.addGap(505)
+							.addComponent(txtMoney, GroupLayout.PREFERRED_SIZE, 412, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(421, Short.MAX_VALUE))
+		);
+		gl_pnlContent.setVerticalGroup(
+			gl_pnlContent.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlContent.createSequentialGroup()
+					.addGap(35)
+					.addComponent(lblTitle)
+					.addGap(71)
+					.addComponent(txtMoney, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(135, Short.MAX_VALUE))
+		);
+		pnlContent.setLayout(gl_pnlContent);
 		
 		this.setSize(1500, 400);
 	}
-
 }

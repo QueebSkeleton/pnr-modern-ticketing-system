@@ -25,8 +25,10 @@ import java.awt.Cursor;
 public class KioskMachine extends JFrame {
 	
 	protected static int Counter;
+	private int btnClick;
 
 	public KioskMachine() {
+		
 		setTitle("Ticket Machine");
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		this.setPreferredSize(new Dimension(1370, 768));
@@ -118,33 +120,44 @@ public class KioskMachine extends JFrame {
 		btnGoback.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnGoback.setBackground(Color.GRAY);
 		pnlButtons.add(btnGoback, BorderLayout.WEST);
+
+		this.setExtendedState(MAXIMIZED_BOTH);
 		
-		btnGoback.addActionListener(new ActionListener() {
+		btnClick = 0;
+		
 			
+			
+			// adding action listener for btnProceed
+			btnGoback.addActionListener(new ActionListener() {	
 			public void actionPerformed(ActionEvent e) {
 				cl.previous(pnlContent);;
-				
-			}
-			
-		});
-		
-		//counter for goback button visibility
-		Counter = 0;
-		
-		// adding action listener for btnProceed
-		btnProceed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cl.next(pnlContent);
-				
-					
+				--btnClick;
 				}
 			});
 		
-		this.setExtendedState(MAXIMIZED_BOTH);
+		
+			// adding action listener for btnProceed
+			btnProceed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				btnProceedActionPerformed(e);
+				cl.next(pnlContent);
+			    //++btnClick;		
+				}
+			});
+			
+			if (btnClick == 0) {
+				btnGoback.setVisible(false);
+			}else {
+				btnGoback.setVisible(true);
+			}
 		
 
-
 		}
+	
+		private void btnProceedActionPerformed(java.awt.event.ActionEvent evt) {                                         
+		    ++btnClick;	
+		}     
 	}
 
 

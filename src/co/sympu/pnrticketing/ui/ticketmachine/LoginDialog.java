@@ -110,8 +110,7 @@ public class LoginDialog extends JDialog {
 						objRS.next();
 						
 						if (objRS != null) {
-							//setAssigned_id(objRS.getInt("assigned_station_id"));
-							//JOptionPane.showMessageDialog(null, getAssigned_id());
+							
 							assigned_id = objRS.getInt("assigned_station_id");
 							KioskMachine objMachine = new KioskMachine();
 							objMachine.setVisible(true);
@@ -125,7 +124,7 @@ public class LoginDialog extends JDialog {
 						
 						
 					}catch(Exception objE) {
-						JOptionPane.showMessageDialog(null, "Incorrect MachineID/Password");
+						JOptionPane.showMessageDialog(null,  objE); //"Incorrect MachineID/ Password"
 					}
 			}
 			

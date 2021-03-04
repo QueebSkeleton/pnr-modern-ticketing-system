@@ -4,15 +4,22 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
@@ -24,6 +31,8 @@ public class pnlDestination extends JPanel {
 	Connection objCon;
 	
 		public pnlDestination() {
+		
+		Createconn();
 			
 		//counter for each panel shown	
 		KioskMachine.Counter = 0;
@@ -59,17 +68,47 @@ public class pnlDestination extends JPanel {
 		
 		JPanel pnlButtons = new JPanel();
 		scrollPane.setViewportView(pnlButtons);
-		pnlButtons.setLayout(new GridLayout(0,4,10,10));
+		pnlButtons.setLayout(new GridLayout(0,5,5,5));
 		
-				//lblNewLabel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
+				//[REFERENCE FONT]lblNewLabel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
 		
+		//Adding JButtons
 		
-		int i = 0;
-		while(i<20) {
-			pnlButtons.add(new JRadioButton("Henlo"));
-			i++;
+		//create a statement
+		
+		try {
+			
+			Statement objStmt = objCon.createStatement();
+			
+			//execute query
+			
+			ResultSet objRS = objStmt.executeQuery("SELECT name FROM station WHERE id != '"+LoginDialog.assigned_id+"' ");
+		
+			
+			while(objRS.next()) {
+				String strStation = objRS.getString("name");
+				pnlButtons.add(new JRadioButton(strStation));
+			}
+			
+			objRS.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
+		//create a button group for jradiobuttons
+		
+		ButtonGroup grpStations = new ButtonGroup();
+		
+		Component[] cmpButtons = pnlButtons.getComponents();
+		for(Component component : cmpButtons) {
+			grpStations.add((JRadioButton) component);
+			component.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 25));
+		}
+		
+		
+		
+	
 		
 		this.setSize(1370, 460);
 
