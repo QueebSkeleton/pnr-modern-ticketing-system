@@ -86,6 +86,7 @@ public class MachineManagementPanel extends JPanel {
 						
 						machineManagementAdd.setVisible(true);
 						machineManagementAdd.setLocationRelativeTo(tblMachineManagementTable);
+						machineManagementAdd.txtSerial.setEnabled(true);
 						machineManagementAdd.txtSerial.setText("");
 						machineManagementAdd.txtPassword.setText("");
 						machineManagementAdd.txtRePassword.setText("");
