@@ -2,6 +2,7 @@ package co.sympu.pnrticketing.ui.admin.machinemngmt;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -26,7 +27,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import java.awt.Dimension;
 
 @SuppressWarnings("unused")
 public class MachineManagementAdd extends JDialog {
@@ -155,16 +155,7 @@ public class MachineManagementAdd extends JDialog {
 			System.out.println(objEx);
 		}
 
-		try {
-			String strQuery = "SELECT id, name FROM station";
-			ResultSet rs = objSQLQuery.executeQuery(strQuery);
-
-			while (rs.next()) {
-				cmbStation.addItem(rs.getString("id") + " - " + rs.getString("name"));
-			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error");
-		}
+		
 		{
 			JLabel lblStatus = new JLabel("Status");
 			lblStatus.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -366,6 +357,20 @@ public class MachineManagementAdd extends JDialog {
 				buttonPane.add(cancelButton);
 				}
 			}
+		}
+	}
+	
+	public void resetForm() {
+		try {
+			String strQuery = "SELECT id, name FROM station";
+			ResultSet rs = objSQLQuery.executeQuery(strQuery);
+
+			cmbStation.removeAllItems();
+			while (rs.next()) {
+				cmbStation.addItem(rs.getString("id") + " - " + rs.getString("name"));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error");
 		}
 	}
 }

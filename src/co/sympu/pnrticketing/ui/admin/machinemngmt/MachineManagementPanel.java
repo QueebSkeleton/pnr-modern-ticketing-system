@@ -93,6 +93,7 @@ public class MachineManagementPanel extends JPanel {
 						machineManagementAdd.okButton.setVisible(true);
 						machineManagementAdd.editButton.setVisible(false);
 						machineManagementAdd.deleteButton.setVisible(false);
+						machineManagementAdd.resetForm();
 					}
 				});
 		btnAdd.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -137,6 +138,7 @@ public class MachineManagementPanel extends JPanel {
 				machineManagementAdd.okButton.setVisible(false);
 				machineManagementAdd.editButton.setVisible(true);
 				machineManagementAdd.deleteButton.setVisible(false);
+				machineManagementAdd.resetForm();
 				
 				machineManagementAdd.txtSerial.setText(rs.getString("serial_number"));
 				machineManagementAdd.txtSerial.setEnabled(false);
