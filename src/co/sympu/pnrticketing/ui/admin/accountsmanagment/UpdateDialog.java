@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -76,6 +77,9 @@ public class UpdateDialog extends JDialog {
 	private JLabel jlblName;
 	private JLabel jlblInstruction;
 	private int accountIdCurrentlyBeingUpdated;
+	private JLabel jlblSex;
+	private JRadioButton jrdbtnMale;
+	private JRadioButton jrdbtnFemale;
 
 	public UpdateDialog() {
 		// For reference later
@@ -332,7 +336,7 @@ public class UpdateDialog extends JDialog {
 		jpnlContentPane.add(jtxtfldTIN, gbc_jtxtfldTIN);
 		jtxtfldTIN.setColumns(10);
 		/*   */
-		
+
 		/*   */
 		jlblSSSNumber = new JLabel("SSS number:");
 		jlblSSSNumber.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -354,30 +358,51 @@ public class UpdateDialog extends JDialog {
 		jpnlContentPane.add(jtxtfldSSSNumber, gbc_jtxtfldSSSNumber);
 		jtxtfldSSSNumber.setColumns(10);
 		/*   */
+				
+				jlblSex = new JLabel("Sex:");
+				jlblSex.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+				GridBagConstraints gbc_jlblSex = new GridBagConstraints();
+				gbc_jlblSex.insets = new Insets(0, 0, 5, 5);
+				gbc_jlblSex.gridx = 0;
+				gbc_jlblSex.gridy = 8;
+				jpnlContentPane.add(jlblSex, gbc_jlblSex);
+				
+				ButtonGroup sexButtonGroup = new ButtonGroup();
+				
+				jrdbtnMale = new JRadioButton("Male");
+				GridBagConstraints gbc_jrdbtnMale = new GridBagConstraints();
+				gbc_jrdbtnMale.insets = new Insets(0, 0, 5, 5);
+				gbc_jrdbtnMale.gridx = 1;
+				gbc_jrdbtnMale.gridy = 8;
+				jpnlContentPane.add(jrdbtnMale, gbc_jrdbtnMale);
+				sexButtonGroup.add(jrdbtnMale);
+				
+				jrdbtnFemale = new JRadioButton("Female");
+				GridBagConstraints gbc_jrdbtnFemale = new GridBagConstraints();
+				gbc_jrdbtnFemale.insets = new Insets(0, 0, 5, 5);
+				gbc_jrdbtnFemale.gridx = 2;
+				gbc_jrdbtnFemale.gridy = 8;
+				jpnlContentPane.add(jrdbtnFemale, gbc_jrdbtnFemale);
+				sexButtonGroup.add(jrdbtnFemale);
 		
-		/* 
-		 * GHOST CODE  
-		 * 
-		jlblAssignedStation = new JLabel("Assigned Station:");
-		jlblAssignedStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		GridBagConstraints gbc_jlblAssignedStation = new GridBagConstraints();
-		gbc_jlblAssignedStation.anchor = GridBagConstraints.EAST;
-		gbc_jlblAssignedStation.insets = new Insets(0, 0, 5, 5);
-		gbc_jlblAssignedStation.gridx = 1;
-		gbc_jlblAssignedStation.gridy = 9;
-		jpnlContentPane.add(jlblAssignedStation, gbc_jlblAssignedStation);
+				jlblAssignedStation = new JLabel("Assigned Station:");
+				jlblAssignedStation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+				GridBagConstraints gbc_jlblAssignedStation = new GridBagConstraints();
+				gbc_jlblAssignedStation.anchor = GridBagConstraints.EAST;
+				gbc_jlblAssignedStation.insets = new Insets(0, 0, 5, 5);
+				gbc_jlblAssignedStation.gridx = 0;
+				gbc_jlblAssignedStation.gridy = 9;
+				jpnlContentPane.add(jlblAssignedStation, gbc_jlblAssignedStation);
 		
-		jcmbAssignedStation = new JComboBox<>();
-		jcmbAssignedStation.setToolTipText("");
-		GridBagConstraints gbc_jcmbAssignedStation = new GridBagConstraints();
-		gbc_jcmbAssignedStation.insets = new Insets(0, 0, 5, 5);
-		gbc_jcmbAssignedStation.fill = GridBagConstraints.HORIZONTAL;
-		gbc_jcmbAssignedStation.gridx = 2;
-		gbc_jcmbAssignedStation.gridy = 9;
-		jpnlContentPane.add(jcmbAssignedStation, gbc_jcmbAssignedStation);
-	  */
-		
-		
+				jcmbAssignedStation = new JComboBox<>();
+				jcmbAssignedStation.setToolTipText("");
+				GridBagConstraints gbc_jcmbAssignedStation = new GridBagConstraints();
+				gbc_jcmbAssignedStation.insets = new Insets(0, 0, 5, 5);
+				gbc_jcmbAssignedStation.fill = GridBagConstraints.HORIZONTAL;
+				gbc_jcmbAssignedStation.gridx = 1;
+				gbc_jcmbAssignedStation.gridy = 9;
+				jpnlContentPane.add(jcmbAssignedStation, gbc_jcmbAssignedStation);
+
 		buttonPane = new JPanel();
 		GridBagConstraints gbc_buttonPane = new GridBagConstraints();
 		gbc_buttonPane.gridwidth = 4;
@@ -395,7 +420,7 @@ public class UpdateDialog extends JDialog {
 				String middleName = jtxtfldMiddleName.getText();
 				String lastName = jtxtfldLastName.getText();
 				String userName = jtxtfldUsername.getText();
-				if(userName.contains(" ")) {
+				if (userName.contains(" ")) {
 					JOptionPane.showMessageDialog(thisDialog, "Username must not have spaces!");
 					return;
 				}
@@ -408,13 +433,22 @@ public class UpdateDialog extends JDialog {
 					// dont proceed to insert
 					return;
 				}
+				
+				String sex = "";
+				if(jrdbtnMale.isSelected())
+					sex = "Male";
+				else if(jrdbtnFemale.isSelected())
+					sex = "Female";
 
 				String tin = jtxtfldTIN.getText();
 				String sssNumber = jtxtfldSSSNumber.getText();
-				try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db","pnr_app", "password123");
-						PreparedStatement updateStatement = connection.prepareStatement("UPDATE cashier SET first_name = ?, middle_name = ?, last_name = ?, contact_number = ?, username = ?, password = ?,"
-								+ " sss_number = ?, tax_identification_number = ?  WHERE id = ?")) {
-						
+				int assignedStationId = Integer.parseInt(((String) jcmbAssignedStation.getSelectedItem()).split("-")[0].trim());
+				try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db",
+						"pnr_app", "password123");
+						PreparedStatement updateStatement = connection.prepareStatement(
+								"UPDATE cashier SET first_name = ?, middle_name = ?, last_name = ?, contact_number = ?, username = ?, password = ?,"
+										+ " sss_number = ?, tax_identification_number = ?, assigned_station_id = ?, sex = ?  WHERE id = ?")) {
+
 					updateStatement.setString(1, firstName);
 					updateStatement.setString(2, middleName);
 					updateStatement.setString(3, lastName);
@@ -423,23 +457,27 @@ public class UpdateDialog extends JDialog {
 					updateStatement.setString(6, password);
 					updateStatement.setString(7, sssNumber);
 					updateStatement.setString(8, tin);
-					updateStatement.setInt(9, accountIdCurrentlyBeingUpdated); // station id
-					
+					updateStatement.setInt(9, assignedStationId); // station id
+					updateStatement.setString(10, sex);
+					updateStatement.setInt(11, accountIdCurrentlyBeingUpdated);
 					updateStatement.execute();
-						
-						JOptionPane.showMessageDialog(thisDialog, "Successfully updated contact.", "Success!", JOptionPane.INFORMATION_MESSAGE);
-						
-						// hide this dialog
-						thisDialog.setVisible(false);
-						
-						// refresh the table in mainframe, but how?
-						accountsManagementPanel.refreshTable();
-					} catch(SQLException e1) {
-						JOptionPane.showMessageDialog(thisDialog, "An error occured while trying to save contact.\n\nDetails: " + e1.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
-					}
-					
+
+					JOptionPane.showMessageDialog(thisDialog, "Successfully updated contact.", "Success!",
+							JOptionPane.INFORMATION_MESSAGE);
+
+					// hide this dialog
+					thisDialog.setVisible(false);
+
+					// refresh the table in mainframe, but how?
+					accountsManagementPanel.refreshTable();
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(thisDialog,
+							"An error occured while trying to save contact.\n\nDetails: " + e1.getMessage(), "Error!",
+							JOptionPane.ERROR_MESSAGE);
 				}
-			});
+
+			}
+		});
 		jbtnSave.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		jbtnSave.setBackground(Color.WHITE);
 		buttonPane.add(jbtnSave);
@@ -451,53 +489,60 @@ public class UpdateDialog extends JDialog {
 			thisDialog.setVisible(false);
 		});
 		buttonPane.add(jbtnCancel);
-
 	}
 
-	public void resetForm() {
-		// Clear the combobox first, then fetch all stations from the database
-		jcmbAssignedStation.removeAllItems();
+	public void initializeWithAccountId(int accountID) {
+		// do select query here by id, then get the data, then set the ui text inputs
+
 		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db", "pnr_app",
 				"password123");
-				Statement retrieveStationsStatement = connection.createStatement();
-				ResultSet stationsResultSet = retrieveStationsStatement.executeQuery("SELECT id, name FROM station")) {
+				PreparedStatement retrieveAccountByIdStatement = connection
+						.prepareStatement("SELECT * FROM cashier WHERE id = ?");
+				Statement retrieveAllStationsStatement = connection.createStatement();
+				ResultSet stationsResultSet = retrieveAllStationsStatement.executeQuery("SELECT * FROM station")) {
 
-			while (stationsResultSet.next()) {
-				jcmbAssignedStation.addItem(stationsResultSet.getInt("id") + "-" + stationsResultSet.getString("name"));
+			retrieveAccountByIdStatement.setInt(1, accountID);
+
+			retrieveAccountByIdStatement.execute();
+
+			ResultSet accountResult = retrieveAccountByIdStatement.getResultSet();
+
+			accountResult.next();
+			// fetch the contact, store the id in class-scope variable
+			accountIdCurrentlyBeingUpdated = accountResult.getInt("id");
+			// update the ui fields from the fetched contact
+			jtxtfldFirstName.setText(accountResult.getString("first_name"));
+			jtxtfldMiddleName.setText(accountResult.getString("middle_name"));
+			jtxtfldLastName.setText(accountResult.getString("last_name"));
+			jtxtfldContactNumber.setText(accountResult.getString("contact_number"));
+			jtxtfldUsername.setText(accountResult.getString("username"));
+			jtxtfldTIN.setText(accountResult.getString("tax_identification_number"));
+			jtxtfldSSSNumber.setText(accountResult.getString("sss_number"));
+			
+			String sex = accountResult.getString("sex");
+			if(sex.equals("Male"))
+				jrdbtnMale.setSelected(true);
+			else if(sex.equals("Female"))
+				jrdbtnFemale.setSelected(true);
+			
+			jcmbAssignedStation.removeAllItems();
+			int selectedIndex = 0,
+				currentIndex = 0;
+			while(stationsResultSet.next()) {
+				int stationId = stationsResultSet.getInt("id");
+				jcmbAssignedStation.addItem(stationId + "-" + stationsResultSet.getString("name"));
+				
+				if(stationId == accountResult.getInt("assigned_station_id"))
+					selectedIndex = currentIndex;
+				
+				currentIndex++;
 			}
-		} catch (SQLException e1) {
+			jcmbAssignedStation.setSelectedIndex(selectedIndex);
+		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this,
-					"An error occured while trying to read stations into combo box.\n\nDetails:" + e1.getMessage());
+					"An error occured while trying to fetch account data. Please try again.\n\nDetails: "
+							+ e.getMessage());
 		}
 	}
-
-public void initializeWithAccountId(int accountID) {
-	// do select query here by id, then get the data, then set the ui text inputs
-	
-	try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db","pnr_app", "password123");
-		PreparedStatement retrieveAccountByIdStatement = connection.prepareStatement("SELECT * FROM cashier WHERE id = ?")) {
-		
-		retrieveAccountByIdStatement.setInt(1, accountID);
-		
-		retrieveAccountByIdStatement.execute();
-		
-		ResultSet accountResult = retrieveAccountByIdStatement.getResultSet();
-		
-		accountResult.next();
-		// fetch the contact, store the id in class-scope variable
-		accountIdCurrentlyBeingUpdated = accountResult.getInt("id");
-		// update the ui fields from the fetched contact
-		 jtxtfldFirstName.setText(accountResult.getString("first_name"));
-		 jtxtfldMiddleName.setText(accountResult.getString("middle_name"));
-		 jtxtfldLastName.setText(accountResult.getString("last_name"));
-		 jtxtfldContactNumber.setText(accountResult.getString("contact_number"));
-		 jtxtfldUsername.setText(accountResult.getString("username"));
-		 jtxtfldTIN.setText(accountResult.getString("tax_identification_number"));
-		 jtxtfldSSSNumber.setText(accountResult.getString("sss_number"));
-		
-	} catch(SQLException e) {
-		JOptionPane.showMessageDialog(this, "An error occured while trying to fetch account data. Please try again.\n\nDetails: " + e.getMessage());
-	}
-}
 
 }
