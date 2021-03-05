@@ -5,6 +5,9 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 
 import java.awt.Image;
@@ -17,6 +20,12 @@ import java.awt.Dimension;
 import javax.swing.border.BevelBorder;
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Enumeration;
 import java.awt.event.ActionEvent;
 import java.awt.Cursor;
 
@@ -27,9 +36,14 @@ public class KioskMachine extends JFrame {
 	
 	protected static JButton btnProceed;
 	
-private int btnClick = 1;	
+	private int btnClick = 1;	
+	private double price;
+	private int destination_assigned_id;
+	private double change;
+	Connection objCon;
 
 	public KioskMachine() {	
+		Createconn();
 		setTitle("Ticket Machine");
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		this.setPreferredSize(new Dimension(1370, 768));
@@ -68,26 +82,28 @@ private int btnClick = 1;
 		pnlDestination objDestination = new pnlDestination();
 		objDestination.setPreferredSize(new Dimension(1370, 460));
 		pnlContent.add(objDestination, "1");
-		this.add(objDestination);
+		objDestination.objKiosk = this;
 
 		// --------adding the new panel Ticket Quantity
 
 		pnlTicketQuantity TicketQuantity = new pnlTicketQuantity();
 		TicketQuantity.setPreferredSize(new Dimension(1370, 460));
 		pnlContent.add(TicketQuantity, "2");
-		this.add(TicketQuantity);
+		TicketQuantity.objKiosk = this;
 
 		// --------adding the new panel Payment
 
 		pnlPayment objPayment = new pnlPayment();
 		objPayment.setPreferredSize(new Dimension(1370, 460));
 		pnlContent.add(objPayment, "3");
+		objPayment.objKiosk = this;
 
 		// --------adding the new panel Confirmation
 
 		pnlConfirmation objConfirm = new pnlConfirmation();
 		objConfirm.setPreferredSize(new Dimension(1370, 460));
 		pnlContent.add(objConfirm, "4");
+		objConfirm.objKiosk = this;
 		
 
 		// --------adding the new panel ThankU
@@ -95,7 +111,7 @@ private int btnClick = 1;
 		pnlThankU objThanks = new pnlThankU();
 		objThanks.setPreferredSize(new Dimension(1370, 460));
 		pnlContent.add(objThanks, "5");
-		this.add(objThanks);
+		objThanks.objKiosk = this;
 
 		// first show
 		cl.show(pnlContent, "1");
@@ -114,7 +130,7 @@ private int btnClick = 1;
 		btnProceed.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 40));
 		btnProceed.setPreferredSize(new Dimension(320, 80));
 		btnProceed.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-
+		/*
 		// create Confirm button
 		
 				JButton btnConfirm = new JButton("Confirm");
@@ -138,7 +154,7 @@ private int btnClick = 1;
 				btnComplete.setPreferredSize(new Dimension(320, 80));
 				btnComplete.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 				btnComplete.setVisible(false);
-		
+		*/
 		// setting the layout
 		pnlButtons.setLayout(new BorderLayout(0, 0));
 		pnlButtons.add(btnProceed, BorderLayout.EAST);
@@ -177,15 +193,116 @@ private int btnClick = 1;
 						
 					}else if (btnClick == 4) {
 						
-						objConfirm.Payment.setText(objPayment.txtMoney.getText());
+					//showcase the 	receipt
 						
-						btnProceed.setVisible(false);
-						btnConfirm.setVisible(true);
-						pnlButtons.add(btnConfirm, BorderLayout.EAST);
+						String Destination = getSelectedButtonText(objDestination.grpStations);
+						
+						//get the destination id
+						
+						//create a statement
+						Statement objStmt;
+						
+						
+
+						try {
+							objStmt = objCon.createStatement();
+							//execute query
+							ResultSet objRS = objStmt.executeQuery("SELECT id FROM station WHERE name = '"+Destination+"' ");
+							objRS.next();
+							
+							if (objRS != null) {
+								
+								destination_assigned_id = objRS.getInt("id");	
+							}
+							objRS.close();
+							objStmt.close();
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						try {
+							objStmt = objCon.createStatement();
+							//execute query
+							ResultSet objRS = objStmt.executeQuery("SELECT price FROM station_pricing WHERE from_id = '"+LoginDialog.assigned_id+"' AND to_id = '"+destination_assigned_id+"' ");
+							objRS.next();
+							
+							if (objRS != null) {
+								price = objRS.getDouble("price");
+							}
+							objRS.close();
+							objStmt.close();
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						
+						
+						objConfirm.Price.setText(Double.toString(price));
+						objConfirm.Destination.setText(Destination);
+						
+						double money = Double.parseDouble(objPayment.txtMoney.getText());
+						int quantity = Integer.parseInt(TicketQuantity.txtQuantity.getText());
+						
+						change = money - (quantity * price);
+						
+						objConfirm.Change.setText(Double.toString(change));
+						objConfirm.Payment.setText(objPayment.txtMoney.getText());
+						objConfirm.Qty.setText(TicketQuantity.txtQuantity.getText());
+						
+					}else if (btnClick == 5) {
+					
+					//jdbc 
+						
+						try {
+	
+							Statement insertStatement = objCon.createStatement();
+
+							String insertSqlStatement = "INSERT INTO ticket VALUES";
+							
+							int intTerminator = Integer.parseInt(TicketQuantity.txtQuantity.getText());
+							
+							// depending on quantity inputted, loop then construct the sql string
+							do {
+							            
+							    insertSqlStatement += "(NULL," + LoginDialog.assigned_id + ", " + destination_assigned_id + ", NOW(), " + price + ")";
+							            
+							  if (intTerminator == 1)
+							    break; 
+							  else 
+							    insertSqlStatement += ",";
+							            
+							  intTerminator--;
+							} while (intTerminator != 0); 
+							        
+							insertStatement.execute(insertSqlStatement);
+							
+							insertStatement.close();
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+					//clear selection
+					objDestination.grpStations.clearSelection();
+					objPayment.txtMoney.setText("");
+					TicketQuantity.txtQuantity.setText("");
+						
+					//setVisible false to btnGoback
+						btnGoback.setVisible(false);
+					//btnClick reset to 0
+						btnClick = 0;
+						
+						
 					}
 				}
 			});
 			
+			/*
 			// adding action listener for btnConfirm
 						btnConfirm.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) { 
@@ -211,7 +328,7 @@ private int btnClick = 1;
 								pnlButtons.add(btnProceed, BorderLayout.EAST);
 							}
 						});
-				
+				*/
 
 			this.setExtendedState(MAXIMIZED_BOTH);
 			
@@ -219,6 +336,31 @@ private int btnClick = 1;
 
 		}
 	
+		public static String getSelectedButtonText(ButtonGroup buttonGroup) {
+			for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+				AbstractButton button = buttons.nextElement();
+				if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+			return null;
+	
 	}
+		void Createconn() {
+			
+			try {
+				
+				//load the driver
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				
+				//connect to the database
+				objCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/pnr_db","pnr_app", "password123");
+				
+				
+			}catch(Exception objEx) {
+				JOptionPane.showMessageDialog(null, objEx);
+			}
+			
 
-
+}
+}

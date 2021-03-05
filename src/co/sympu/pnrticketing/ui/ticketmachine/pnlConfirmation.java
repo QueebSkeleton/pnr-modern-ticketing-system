@@ -18,7 +18,10 @@ public class pnlConfirmation extends JPanel {
 	
 	protected JLabel Qty;
 	protected JLabel Payment;
-	protected KioskMachine objMachine;
+	protected KioskMachine objKiosk;
+	protected JLabel Destination;
+	protected JLabel Price;
+	protected JLabel Change;
 	
 	public pnlConfirmation() {
 		this.setLayout(new BorderLayout());
@@ -62,22 +65,23 @@ public class pnlConfirmation extends JPanel {
 		JLabel ttlPayment = new JLabel("Payment:\r\n");
 		ttlPayment.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
 		
-		JLabel Destination = new JLabel("\r\n");
+		Destination = new JLabel(" ");
 		Destination.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
 		
-		JLabel Price = new JLabel("");
+		Price = new JLabel("");
 		Price.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
 		
-		JLabel Change = new JLabel("");
+		Change = new JLabel("");
 		Change.setForeground(Color.BLACK);
 		Change.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
 		
 		Payment = new JLabel("");
 		Payment.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
-	
+		//Payment.setText(pnlPayment.txtMoney.getText());
 		
 		Qty = new JLabel("");
 		Qty.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 30));
+		//Qty.setText(pnlTicketQuantity.txtQuantity.getText());
 		
 		
 

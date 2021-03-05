@@ -12,6 +12,8 @@ import javax.swing.GroupLayout.Alignment;
 @SuppressWarnings("serial")
 public class pnlThankU extends JPanel {
 
+
+	protected KioskMachine objKiosk;
 	
 	public pnlThankU() {
 

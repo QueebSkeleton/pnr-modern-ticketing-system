@@ -30,6 +30,7 @@ public class pnlDestination extends JPanel {
 	
 	Connection objCon;
 	protected ButtonGroup grpStations;
+	protected KioskMachine objKiosk;
 		public pnlDestination() {	
 		
 		//establish connection
@@ -100,6 +101,8 @@ public class pnlDestination extends JPanel {
 			grpStations.add((JRadioButton) component);
 			component.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 25));
 		}
+		
+		
 		
 		this.setSize(1370, 460);
 
